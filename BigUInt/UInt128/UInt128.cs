@@ -22,12 +22,18 @@ namespace BigUInt {
             return new UInt128(s);
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 Hi => UIntUtil.Pack(e3, e2);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 Lo => UIntUtil.Pack(e1, e0);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 E3 => e3;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 E2 => e2;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 E1 => e1;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 E0 => e0;
 
         public static bool operator ==(UInt128 a, UInt128 b) {
