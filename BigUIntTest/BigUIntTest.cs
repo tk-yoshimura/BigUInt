@@ -182,6 +182,12 @@ namespace BigUIntTest {
                 Assert.AreEqual(u.ToString(), w.ToString(), $"{sft}");
             }
 
+            for (int sft = 1; sft <= 127; sft++) {
+                Assert.ThrowsException<OverflowException>(() => {
+                    UInt128 w = (UInt128)(v >> (sft - 1)).ToString() << sft;
+                });
+            }
+
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
                 UInt128 b = new(0u, 0u, 0u, 123456u);
 
