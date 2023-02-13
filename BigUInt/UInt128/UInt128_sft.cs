@@ -1,4 +1,7 @@
-﻿namespace BigUInt {
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
+
+namespace BigUInt {
     public readonly partial struct UInt128 {
         public static UInt128 operator >>(UInt128 v, int sft) {
             unchecked {
@@ -59,6 +62,10 @@
         }
 
         public static UInt128 operator <<(UInt128 v, int sft) {
+            if (sft > LeadingZeroCount(v) && v != Zero) {
+                throw new OverflowException();
+            }
+
             unchecked {
                 if (sft > UIntUtil.UInt32Bits * 4) {
                     return Zero;
@@ -114,6 +121,18 @@
             }
 
             throw new ArgumentOutOfRangeException(nameof(sft));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int LeadingZeroCount(UInt128 v) {
+            uint cnt = 
+                (v.e3 > 0u) ? Lzcnt.LeadingZeroCount(v.e3) : 
+                (v.e2 > 0u) ? Lzcnt.LeadingZeroCount(v.e2) + UIntUtil.UInt32Bits:
+                (v.e1 > 0u) ? Lzcnt.LeadingZeroCount(v.e1) + UIntUtil.UInt32Bits * 2:
+                (v.e0 > 0u) ? Lzcnt.LeadingZeroCount(v.e0) + UIntUtil.UInt32Bits * 3:
+                UIntUtil.UInt32Bits * 4;
+
+            return unchecked((int)cnt);
         }
     }
 }
