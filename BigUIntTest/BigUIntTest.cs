@@ -152,5 +152,41 @@ namespace BigUIntTest {
             Assert.IsTrue(v1 <= v6);
             Assert.IsTrue(v1 >= v6);
         }
+
+        [TestMethod]
+        public void RightShiftTest() {
+            BigInteger v = BigInteger.Parse("234567891234567891234567891234567891234");
+
+            for (int sft = 0; sft <= 130; sft++) {
+                BigInteger u = v >> sft;
+                UInt128 w = (UInt128)v.ToString() >> sft;
+
+                Assert.AreEqual(u.ToString(), w.ToString(), $"{sft}");
+            }
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                UInt128 b = new(0u, 0u, 0u, 123456u);
+
+                UInt128 c = b >> -1;
+            });
+        }
+
+        [TestMethod]
+        public void LeftShiftTest() {
+            BigInteger v = BigInteger.Parse("234567891234567891234567891234567891234");
+
+            for (int sft = 0; sft <= 130; sft++) {
+                BigInteger u = (v >> sft) << sft;
+                UInt128 w = (UInt128)(v >> sft).ToString() << sft;
+
+                Assert.AreEqual(u.ToString(), w.ToString(), $"{sft}");
+            }
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                UInt128 b = new(0u, 0u, 0u, 123456u);
+
+                UInt128 c = b << -1;
+            });
+        }
     }
 }

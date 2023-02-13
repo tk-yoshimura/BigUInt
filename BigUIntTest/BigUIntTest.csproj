@@ -16,12 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BigUInt\BigUInt.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="UInt128">
-      <HintPath>..\UInt128\bin\Debug\net6.0\BigUInt.dll</HintPath>
+    <Reference Include="BigUInt">
+      <HintPath>..\BigUInt\bin\Debug\net6.0\BigUInt.dll</HintPath>
     </Reference>
   </ItemGroup>
 

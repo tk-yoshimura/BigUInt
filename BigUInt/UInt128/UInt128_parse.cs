@@ -68,7 +68,7 @@ namespace BigUInt {
                 return true;
             }
             catch (Exception e) when (e is FormatException || e is OverflowException) {
-                result = new UInt128();
+                result = Zero;
                 return false;
             }
         }
