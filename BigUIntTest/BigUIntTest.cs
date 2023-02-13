@@ -93,5 +93,64 @@ namespace BigUIntTest {
                 UInt128 v7 = "3402823669209384634633746074317682114560";
             });
         }
+
+        [TestMethod]
+        public void CmpTest() {
+            UInt128 v1 = new(1u, 2u, 3u, 4u);
+            UInt128 v2 = new(2u, 2u, 3u, 4u);
+            UInt128 v3 = new(1u, 3u, 3u, 4u);
+            UInt128 v4 = new(1u, 2u, 4u, 4u);
+            UInt128 v5 = new(1u, 2u, 3u, 5u);
+            UInt128 v6 = new(1u, 2u, 3u, 4u);
+
+            Assert.IsTrue(v1 < v2);
+            Assert.IsTrue(v1 < v3);
+            Assert.IsTrue(v1 < v4);
+            Assert.IsTrue(v1 < v5);
+            Assert.IsTrue(v2 > v3);
+            Assert.IsTrue(v2 > v4);
+            Assert.IsTrue(v2 > v5);
+            Assert.IsTrue(v3 > v4);
+            Assert.IsTrue(v3 > v5);
+            Assert.IsTrue(v4 > v5);
+
+            Assert.IsTrue(v1 <= v2);
+            Assert.IsTrue(v1 <= v3);
+            Assert.IsTrue(v1 <= v4);
+            Assert.IsTrue(v1 <= v5);
+            Assert.IsTrue(v2 >= v3);
+            Assert.IsTrue(v2 >= v4);
+            Assert.IsTrue(v2 >= v5);
+            Assert.IsTrue(v3 >= v4);
+            Assert.IsTrue(v3 >= v5);
+            Assert.IsTrue(v4 >= v5);
+
+            Assert.IsFalse(v1 > v2);
+            Assert.IsFalse(v1 > v3);
+            Assert.IsFalse(v1 > v4);
+            Assert.IsFalse(v1 > v5);
+            Assert.IsFalse(v2 < v3);
+            Assert.IsFalse(v2 < v4);
+            Assert.IsFalse(v2 < v5);
+            Assert.IsFalse(v3 < v4);
+            Assert.IsFalse(v3 < v5);
+            Assert.IsFalse(v4 < v5);
+
+            Assert.IsFalse(v1 >= v2);
+            Assert.IsFalse(v1 >= v3);
+            Assert.IsFalse(v1 >= v4);
+            Assert.IsFalse(v1 >= v5);
+            Assert.IsFalse(v2 <= v3);
+            Assert.IsFalse(v2 <= v4);
+            Assert.IsFalse(v2 <= v5);
+            Assert.IsFalse(v3 <= v4);
+            Assert.IsFalse(v3 <= v5);
+            Assert.IsFalse(v4 <= v5);
+
+            Assert.IsTrue(v1 == v6);
+            Assert.IsFalse(v1 != v6);
+            Assert.IsTrue(v1 <= v6);
+            Assert.IsTrue(v1 >= v6);
+        }
     }
 }
