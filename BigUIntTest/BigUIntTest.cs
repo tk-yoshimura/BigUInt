@@ -6,6 +6,24 @@ namespace BigUIntTest {
     [TestClass]
     public class UInt128Test {
         [TestMethod]
+        public void BigIntegarTest() {
+            BigInteger v = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
+            BigInteger mask = UInt64.MaxValue;
+
+            while (v > 0) {
+                UInt128 u = new((UInt64)((v >> 64) & mask), (UInt64)(v & mask));
+                UInt128 w = new UInt128(u.ToString());
+
+                Console.WriteLine(v);
+
+                Assert.AreEqual(v.ToString(), u.ToString());
+                Assert.AreEqual(w, u);
+
+                v /= 3;
+            }
+        }
+
+        [TestMethod]
         public void ToStringTest() {
             UInt128 v0 = new(0uL, 0uL);
             UInt128 v1 = new(0uL, 1uL);
@@ -27,19 +45,32 @@ namespace BigUIntTest {
         }
 
         [TestMethod]
-        public void BigIntegarTest() {
-            BigInteger v = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            BigInteger mask = UInt64.MaxValue;
+        public void ParseTest() {
+            UInt128 v0 = new("0");
+            UInt128 v1 = new("1");
+            UInt128 v2 = new("10");
+            UInt128 v3 = new("100");
+            UInt128 v4 = new("10000000000000");
+            UInt128 v5 = new("1000000000000000000000000000");
+            UInt128 v6 = new("10000000000000000000000000000000000");
+            UInt128 v7 = new("340282366920938463463374607431768211455");
 
-            while (v > 0) {
-                UInt128 u = new((UInt64)((v >> 64) & mask), (UInt64)(v & mask));
+            Assert.AreEqual("0", v0.ToString());
+            Assert.AreEqual("1", v1.ToString());
+            Assert.AreEqual("10", v2.ToString());
+            Assert.AreEqual("100", v3.ToString());
+            Assert.AreEqual("10000000000000", v4.ToString());
+            Assert.AreEqual("1000000000000000000000000000", v5.ToString());
+            Assert.AreEqual("10000000000000000000000000000000000", v6.ToString());
+            Assert.AreEqual("340282366920938463463374607431768211455", v7.ToString());
 
-                Console.WriteLine(v);
+            Assert.ThrowsException<OverflowException>(() => {
+                UInt128 v7 = new("340282366920938463463374607431768211456");
+            });
 
-                Assert.AreEqual(v.ToString(), u.ToString());
-
-                v /= 3;
-            }
+            Assert.ThrowsException<OverflowException>(() => {
+                UInt128 v7 = new("3402823669209384634633746074317682114560");
+            });
         }
     }
 }
