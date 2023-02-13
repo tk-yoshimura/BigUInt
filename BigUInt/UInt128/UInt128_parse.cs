@@ -18,7 +18,7 @@ namespace BigUInt {
                 return;
             }
 
-            if (s.Length > 39) {
+            if (s.Length > MaxValueDigits) {
                 throw new OverflowException();
             }
 

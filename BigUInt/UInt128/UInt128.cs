@@ -3,7 +3,7 @@
 namespace BigUInt {
     [DebuggerDisplay("{ToString(),nq}")]
     public readonly partial struct UInt128 {
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly UInt32 e3, e2, e1, e0;
 
         public UInt128(UInt64 hi, UInt64 lo) {
@@ -38,6 +38,12 @@ namespace BigUInt {
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static UInt128 Zero { get; } = new(0u, 0u, 0u, 0u);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public static UInt128 MaxValue { get; } = new(UInt64.MaxValue, UInt64.MaxValue);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public static int MaxValueDigits { get; } = MaxValue.ToString().Length;
 
         public static bool operator ==(UInt128 a, UInt128 b) {
             return a.E3 == b.E3 && a.E2 == b.E2 && a.E1 == b.E1 && a.E0 == b.E0;
