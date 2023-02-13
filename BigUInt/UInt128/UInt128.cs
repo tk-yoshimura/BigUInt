@@ -18,6 +18,10 @@ namespace BigUInt {
             this.e0 = e0;
         }
 
+        public static implicit operator UInt128(string s) {
+            return new UInt128(s);
+        }
+
         public UInt64 Hi => UIntUtil.Pack(e3, e2);
         public UInt64 Lo => UIntUtil.Pack(e1, e0);
 
@@ -25,5 +29,53 @@ namespace BigUInt {
         public UInt32 E2 => e2;
         public UInt32 E1 => e1;
         public UInt32 E0 => e0;
+
+        public static bool operator ==(UInt128 a, UInt128 b) {
+            return a.E3 == b.E3 && a.E2 == b.E2 && a.E1 == b.E1 && a.E0 == b.E0;
+        }
+
+        public static bool operator !=(UInt128 a, UInt128 b) {
+            return !(a == b);
+        }
+
+        public static bool operator <(UInt128 a, UInt128 b) {
+            return
+                a.E3 < b.E3 ? true : a.E3 > b.E3 ? false :
+                a.E2 < b.E2 ? true : a.E2 > b.E2 ? false :
+                a.E1 < b.E1 ? true : a.E1 > b.E1 ? false :
+                a.E0 < b.E0;
+        }
+
+        public static bool operator <=(UInt128 a, UInt128 b) {
+            return
+                a.E3 < b.E3 ? true : a.E3 > b.E3 ? false :
+                a.E2 < b.E2 ? true : a.E2 > b.E2 ? false :
+                a.E1 < b.E1 ? true : a.E1 > b.E1 ? false :
+                a.E0 <= b.E0;
+        }
+
+        public static bool operator >(UInt128 a, UInt128 b) {
+            return
+                a.E3 > b.E3 ? true : a.E3 < b.E3 ? false :
+                a.E2 > b.E2 ? true : a.E2 < b.E2 ? false :
+                a.E1 > b.E1 ? true : a.E1 < b.E1 ? false :
+                a.E0 > b.E0;
+        }
+
+        public static bool operator >=(UInt128 a, UInt128 b) {
+            return
+                a.E3 > b.E3 ? true : a.E3 < b.E3 ? false :
+                a.E2 > b.E2 ? true : a.E2 < b.E2 ? false :
+                a.E1 > b.E1 ? true : a.E1 < b.E1 ? false :
+                a.E0 >= b.E0;
+        }
+
+        public override bool Equals(object? obj) {
+            return obj is not null && obj is UInt128 v && v == this;
+        }
+
+        public override int GetHashCode() {
+            return (int)unchecked(E3 ^ E2 ^ E1 ^ E0);
+        }
     }
 }
