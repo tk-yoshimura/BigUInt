@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BigUInt", "BigUInt\BigUInt.csproj", "{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigUIntTest", "BigUIntTest\BigUIntTest.csproj", "{15881B60-04F6-4F06-9640-CD3F694E9F01}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1} = {8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DB7A1F0-E416-46BA-BB5B-FADC53B31EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15881B60-04F6-4F06-9640-CD3F694E9F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15881B60-04F6-4F06-9640-CD3F694E9F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15881B60-04F6-4F06-9640-CD3F694E9F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15881B60-04F6-4F06-9640-CD3F694E9F01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E5C3BEC5-FB53-42D0-A669-E79A538CD336}
+	EndGlobalSection
+EndGlobal
