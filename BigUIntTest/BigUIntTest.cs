@@ -210,7 +210,7 @@ namespace BigUIntTest {
             }
             vs.Add(0);
 
-            for (int i = 0; i < vs.Count; i++) { 
+            for (int i = 0; i < vs.Count; i++) {
                 for (int j = 0; j < vs.Count; j++) {
                     UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
 
@@ -246,7 +246,7 @@ namespace BigUIntTest {
             }
             vs.Add(0);
 
-            for (int i = 0; i < vs.Count; i++) { 
+            for (int i = 0; i < vs.Count; i++) {
                 for (int j = 0; j < vs.Count; j++) {
                     UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
 
@@ -267,7 +267,7 @@ namespace BigUIntTest {
         [TestMethod]
         public void MulTest() {
             UInt128 v1 = new(0u, 1u, 0u, 1u), v2 = new(0u, 0u, ~0u, ~0u);
-            
+
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 * v2);
 
             BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
@@ -279,7 +279,7 @@ namespace BigUIntTest {
             }
             vs.Add(0);
 
-            for (int i = 0; i < vs.Count; i++) { 
+            for (int i = 0; i < vs.Count; i++) {
                 for (int j = 0; j < vs.Count; j++) {
                     UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
 
@@ -300,7 +300,7 @@ namespace BigUIntTest {
         [TestMethod]
         public void DivTest() {
             UInt128 v1 = new(~0u, ~0u, ~0u, ~0u), v2 = new(0u, 0u, 0u, 1u);
-            
+
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 / v2);
 
             List<BigInteger> vs = new();
@@ -333,7 +333,7 @@ namespace BigUIntTest {
             }
             vs.Add(0);
 
-            for (int i = 0; i < vs.Count; i++) { 
+            for (int i = 0; i < vs.Count; i++) {
                 for (int j = 0; j < vs.Count; j++) {
                     UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
 
@@ -354,7 +354,7 @@ namespace BigUIntTest {
         [TestMethod]
         public void RemTest() {
             UInt128 v1 = new(~0u, ~0u, ~0u, ~0u), v2 = new(0u, 0u, 0u, 1u);
-            
+
             Assert.AreEqual(UInt128.Zero, v1 % v2);
 
             List<BigInteger> vs = new();
@@ -387,7 +387,7 @@ namespace BigUIntTest {
             }
             vs.Add(0);
 
-            for (int i = 0; i < vs.Count; i++) { 
+            for (int i = 0; i < vs.Count; i++) {
                 for (int j = 0; j < vs.Count; j++) {
                     UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
 

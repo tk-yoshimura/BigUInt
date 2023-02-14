@@ -125,11 +125,11 @@ namespace BigUInt {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int LeadingZeroCount(UInt128 v) {
-            uint cnt = 
-                (v.e3 > 0u) ? Lzcnt.LeadingZeroCount(v.e3) : 
-                (v.e2 > 0u) ? Lzcnt.LeadingZeroCount(v.e2) + UIntUtil.UInt32Bits:
-                (v.e1 > 0u) ? Lzcnt.LeadingZeroCount(v.e1) + UIntUtil.UInt32Bits * 2:
-                (v.e0 > 0u) ? Lzcnt.LeadingZeroCount(v.e0) + UIntUtil.UInt32Bits * 3:
+            uint cnt =
+                (v.e3 > 0u) ? Lzcnt.LeadingZeroCount(v.e3) :
+                (v.e2 > 0u) ? Lzcnt.LeadingZeroCount(v.e2) + UIntUtil.UInt32Bits :
+                (v.e1 > 0u) ? Lzcnt.LeadingZeroCount(v.e1) + UIntUtil.UInt32Bits * 2 :
+                (v.e0 > 0u) ? Lzcnt.LeadingZeroCount(v.e0) + UIntUtil.UInt32Bits * 3 :
                 UIntUtil.UInt32Bits * 4;
 
             return unchecked((int)cnt);

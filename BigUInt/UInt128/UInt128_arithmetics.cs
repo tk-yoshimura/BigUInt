@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics;
-using System.Runtime.Intrinsics.X86;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace BigUInt {
     public readonly partial struct UInt128 {
@@ -96,7 +93,7 @@ namespace BigUInt {
             int b_offset = LeadingZeroCount(b);
             UInt128 b_sft = b << b_offset;
 
-            UInt64 div = b_sft.e3 + (((b_sft.e0 | b_sft.e1 | b_sft.e2) > 0u) ? 1uL : 0uL);
+            UInt64 div = b_sft.e3 + (((b_sft.e2 | b_sft.e1 | b_sft.e0) > 0u) ? 1uL : 0uL);
 
             for (; ; ) {
                 int r_offset = LeadingZeroCount(r);
