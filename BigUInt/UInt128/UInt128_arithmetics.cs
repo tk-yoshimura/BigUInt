@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace BigUInt {
     public readonly partial struct UInt128 {
@@ -90,8 +91,64 @@ namespace BigUInt {
 
             int b_lzc = LeadingZeroCount(b);
             UInt128 q = Zero, r = a;
+                        
+            if (b.Hi == 0uL) {
+                if (r.Hi > 0uL) {
+                    UInt64 n = r.Hi / b.Lo;
+
+                    q += (UInt128)n << UIntUtil.UInt64Bits;
+                    r -= (b * n) << UIntUtil.UInt64Bits;
+                }
+                if (r.e3 == 0u) {
+                    UInt64 n = UIntUtil.Pack(r.e2, r.e1) / b.Lo;
+
+                    q += (UInt128)n << UIntUtil.UInt32Bits;
+                    r -= (b * n) << UIntUtil.UInt32Bits;
+                }
+                if (r.Hi == 0uL) {
+                    UInt64 n = r.Hi / (b.Hi + 1uL);
+
+                    q += n;
+                    r -= b * n;
+                }
+            }
+            else if(b.e3 == 0u && (b.e2 < ~0u || b.e1 < ~0u)){
+                if (r.e3 > 0u) {
+                    UInt64 n = r.Hi / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
+
+                    q += (UInt128)n << UIntUtil.UInt32Bits;
+                    r -= (b * n) << UIntUtil.UInt32Bits;
+                }
+                if (r.e3 == 0u) {
+                    UInt64 n = UIntUtil.Pack(r.e2, r.e1) / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
+
+                    q += n;
+                    r -= b * n;
+                }
+            }
+            else if(b.Hi < ~0u){
+                UInt64 n = r.Hi / (b.Hi + 1uL);
+
+                q += n;
+                r -= b * n;
+            }
+
+            if (r >= b) { 
+                q += 1u;
+                r -= b;
+            }
+
+            int loops = 0;
 
             for (;;) {
+                if (r.Hi == 0uL) {
+                    if (b.Hi == 0uL) {
+                        q += r.Lo / b.Lo;
+                    }
+
+                    break;
+                }
+                                
                 int r_lzc = LeadingZeroCount(r), scale = b_lzc - r_lzc - 1;
 
                 if (scale <= 0) {
@@ -105,14 +162,10 @@ namespace BigUInt {
                 q += (UInt128)1u << scale;
                 r -= b << scale;
 
-                if (r.Hi == 0uL) {
-                    if (b.Hi == 0uL) {
-                        q += r.Lo / b.Lo;
-                    }
-
-                    break;
-                }
+                loops++;
             }
+
+            Console.WriteLine(loops);
 
             return q;
         }
