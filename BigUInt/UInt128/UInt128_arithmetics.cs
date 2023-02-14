@@ -76,85 +76,79 @@ namespace BigUInt {
             return new UInt128(e3, e2, e1, e0);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt128 operator /(UInt128 a, UInt128 b) {
+        public static (UInt128 q, UInt128 r) DivRem(UInt128 a, UInt128 b) {
             if (a < b) {
-                return Zero;
+                return (Zero, a);
             }
             if (b == Zero) {
                 throw new DivideByZeroException();
             }
-
             if (a.Hi == 0uL) {
-                return a.e1 > 0u ? (a.Lo / b.Lo) : (a.e0 / b.e0);
+                return a.e1 > 0u ? (a.Lo / b.Lo, a.Lo % b.Lo) : (a.e0 / b.e0, a.e0 % b.e0);
+            }
+            if (b.e3 >= 0x80000000u) {
+                return (a < b) ? (0u, a) : (1u, a - b);
             }
 
             int b_lzc = LeadingZeroCount(b);
             UInt128 q = Zero, r = a;
                         
-            if (b.Hi == 0uL) {
-                if (r.Hi > 0uL) {
-                    UInt64 n = r.Hi / b.Lo;
-
-                    q += (UInt128)n << UIntUtil.UInt64Bits;
-                    r -= (b * n) << UIntUtil.UInt64Bits;
-                }
-                if (r.e3 == 0u) {
-                    UInt64 n = UIntUtil.Pack(r.e2, r.e1) / b.Lo;
-
-                    q += (UInt128)n << UIntUtil.UInt32Bits;
-                    r -= (b * n) << UIntUtil.UInt32Bits;
-                }
-                if (r.Hi == 0uL) {
-                    UInt64 n = r.Hi / (b.Hi + 1uL);
-
-                    q += n;
-                    r -= b * n;
-                }
-            }
-            else if(b.e3 == 0u && (b.e2 < ~0u || b.e1 < ~0u)){
-                if (r.e3 > 0u) {
-                    UInt64 n = r.Hi / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
-
-                    q += (UInt128)n << UIntUtil.UInt32Bits;
-                    r -= (b * n) << UIntUtil.UInt32Bits;
-                }
-                if (r.e3 == 0u) {
-                    UInt64 n = UIntUtil.Pack(r.e2, r.e1) / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
-
-                    q += n;
-                    r -= b * n;
-                }
-            }
-            else if(b.Hi < ~0u){
-                UInt64 n = r.Hi / (b.Hi + 1uL);
-
-                q += n;
-                r -= b * n;
-            }
-
-            if (r >= b) { 
-                q += 1u;
-                r -= b;
-            }
-
             int loops = 0;
 
             for (;;) {
+                if (r.e3 > 0u) {
+                    if (b.Hi == 0uL) {
+                        UInt64 n = r.Hi / b.Lo;
+
+                        q += (UInt128)n << UIntUtil.UInt64Bits;
+                        r -= (b * n) << UIntUtil.UInt64Bits;
+                    }
+                    else if (b.e3 == 0u && (b.e2 < ~0u || b.e1 < ~0u)) {
+                        UInt64 n = r.Hi / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
+
+                        q += (UInt128)n << UIntUtil.UInt32Bits;
+                        r -= (b * n) << UIntUtil.UInt32Bits;
+                    }
+                    else if(b.Hi > 0uL){
+                        UInt64 n = r.Hi / (b.Hi + 1uL);
+
+                        q += n;
+                        r -= b * n;
+                    }
+                }
+                if (r.e3 == 0u) {
+                    if (b.Hi == 0uL) {
+                        UInt64 n = UIntUtil.Pack(r.e2, r.e1) / b.Lo;
+
+                        q += (UInt128)n << UIntUtil.UInt32Bits;
+                        r -= (b * n) << UIntUtil.UInt32Bits;
+                    }
+                    else if (b.e3 == 0u && (b.e2 < ~0u || b.e1 < ~0u)) {
+                        UInt64 n = UIntUtil.Pack(r.e2, r.e1) / (UIntUtil.Pack(b.e2, b.e1) + 1uL);
+
+                        q += n;
+                        r -= b * n;
+                    }
+                }
                 if (r.Hi == 0uL) {
                     if (b.Hi == 0uL) {
-                        q += r.Lo / b.Lo;
-                    }
+                        UInt64 n = r.Lo / b.Lo;
 
-                    break;
+                        q += n;
+                        r -= b * n;
+
+                        break;
+                    }
                 }
                                 
                 int r_lzc = LeadingZeroCount(r), scale = b_lzc - r_lzc - 1;
 
                 if (scale <= 0) {
                     while (r >= b) {
-                        r -= b;
                         q += 1u;
+                        r -= b;
+
+                        loops++;
                     }
                     break;
                 }
@@ -167,7 +161,9 @@ namespace BigUInt {
 
             Console.WriteLine(loops);
 
-            return q;
+            return (q, r);
         }
+
+        public static UInt128 operator /(UInt128 a, UInt128 b) => DivRem(a, b).q;
     }
 }

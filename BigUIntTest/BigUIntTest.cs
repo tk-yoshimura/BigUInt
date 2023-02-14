@@ -303,12 +303,17 @@ namespace BigUIntTest {
             
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 / v2);
 
+            List<BigInteger> vs = new();
             BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
             BigInteger v = maxvalue;
-            List<BigInteger> vs = new();
             while (v > 0) {
                 vs.Add(v);
                 v /= 3;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 2;
             }
             vs.Add(0);
 
