@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 
@@ -72,6 +73,48 @@ namespace BigUInt {
             }
 
             return new UInt128(e3, e2, e1, e0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator /(UInt128 a, UInt128 b) {
+            if (a < b) {
+                return Zero;
+            }
+            if (b == Zero) {
+                throw new DivideByZeroException();
+            }
+
+            if (a.Hi == 0uL) {
+                return a.e1 > 0u ? (a.Lo / b.Lo) : (a.e0 / b.e0);
+            }
+
+            int b_lzc = LeadingZeroCount(b);
+            UInt128 q = Zero, r = a;
+
+            for (;;) {
+                int r_lzc = LeadingZeroCount(r), scale = b_lzc - r_lzc - 1;
+
+                if (scale <= 0) {
+                    while (r >= b) {
+                        r -= b;
+                        q += 1u;
+                    }
+                    break;
+                }
+
+                q += (UInt128)1u << scale;
+                r -= b << scale;
+
+                if (r.Hi == 0uL) {
+                    if (b.Hi == 0uL) {
+                        q += r.Lo / b.Lo;
+                    }
+
+                    break;
+                }
+            }
+
+            return q;
         }
     }
 }
