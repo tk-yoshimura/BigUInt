@@ -308,11 +308,27 @@ namespace BigUIntTest {
             BigInteger v = maxvalue;
             while (v > 0) {
                 vs.Add(v);
+                v /= 2;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
                 v /= 3;
             }
             v = maxvalue;
             while (v > 0) {
                 vs.Add(v);
+                v /= 5;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 7;
+            }
+            v = maxvalue / 2;
+            while (v > 0) {
+                vs.Add(v + 1);
+                vs.Add(v + 2);
                 v /= 2;
             }
             vs.Add(0);
@@ -330,6 +346,60 @@ namespace BigUIntTest {
                     }
                     else {
                         Assert.AreEqual((vs[i] / vs[j]).ToString(), (i0 / i1).ToString(), $"{i0} / {i1}");
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void RemTest() {
+            UInt128 v1 = new(~0u, ~0u, ~0u, ~0u), v2 = new(0u, 0u, 0u, 1u);
+            
+            Assert.AreEqual(UInt128.Zero, v1 % v2);
+
+            List<BigInteger> vs = new();
+            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
+            BigInteger v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 11;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 17;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 19;
+            }
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 23;
+            }
+            v = maxvalue / 2;
+            while (v > 0) {
+                vs.Add(v + 3);
+                vs.Add(v + 5);
+                v /= 2;
+            }
+            vs.Add(0);
+
+            for (int i = 0; i < vs.Count; i++) { 
+                for (int j = 0; j < vs.Count; j++) {
+                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+
+                    Console.WriteLine($"{i0} % {i1}");
+
+                    if (vs[j] <= 0) {
+                        Assert.ThrowsException<DivideByZeroException>(() => {
+                            UInt128 _ = i0 % i1;
+                        }, $"{i0} % {i1}");
+                    }
+                    else {
+                        Assert.AreEqual((vs[i] % vs[j]).ToString(), (i0 % i1).ToString(), $"{i0} % {i1}");
                     }
                 }
             }

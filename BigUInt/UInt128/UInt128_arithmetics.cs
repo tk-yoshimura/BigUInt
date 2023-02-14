@@ -118,6 +118,10 @@ namespace BigUInt {
                 r -= b;
             }
 
+#if DEBUG
+            Trace.Assert(r < b && a == r + q * b, "Detected divide bug.");
+#endif
+
             return (q, r);
         }
 
