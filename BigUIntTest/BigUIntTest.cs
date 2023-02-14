@@ -199,7 +199,7 @@ namespace BigUIntTest {
         public void AddTest() {
             UInt128 v1 = new(~0u, 0u, 0u, 1u), v2 = new(0u, ~0u, ~0u, ~0u - 1u);
 
-            Assert.AreEqual(new UInt128(1u, ~0u, ~0u, ~0u), v1 + v2);
+            Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 + v2);
 
             BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
             BigInteger v = maxvalue;
