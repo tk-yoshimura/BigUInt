@@ -51,6 +51,9 @@ namespace BigUInt {
         public static UInt128 MaxValue { get; } = new(UInt64.MaxValue, UInt64.MaxValue);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public static UInt128 MaxDigit { get; } = new(0x4B3B4CA8u, 0x5A86C47Au, 0x098A2240u, 0x00000000u);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static int MaxValueDigits { get; } = MaxValue.ToString().Length;
 
         public static bool operator ==(UInt128 a, UInt128 b) {

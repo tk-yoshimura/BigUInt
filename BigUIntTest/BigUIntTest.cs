@@ -10,6 +10,7 @@ namespace BigUIntTest {
         public void CreateTest() {
             UInt128 v1 = new(1u, 2u, 3u, 4u);
             UInt128 v2 = new(0x0000000500000006uL, 0x0000000700000008uL);
+            UInt128 v3 = UInt128.MaxValue;
 
             Assert.AreEqual(1u, v1.E3);
             Assert.AreEqual(2u, v1.E2);
@@ -24,6 +25,8 @@ namespace BigUIntTest {
             Assert.AreEqual(0x0000000300000004uL, v1.Lo);
             Assert.AreEqual(0x0000000500000006uL, v2.Hi);
             Assert.AreEqual(0x0000000700000008uL, v2.Lo);
+            Assert.AreEqual(0xFFFFFFFFFFFFFFFFuL, v3.Hi);
+            Assert.AreEqual(0xFFFFFFFFFFFFFFFFuL, v3.Lo);
         }
 
         [TestMethod]
@@ -295,6 +298,10 @@ namespace BigUIntTest {
                     }
                 }
             }
+
+            Assert.ThrowsException<OverflowException>(() => {
+                UInt128 _ = UInt128.MaxDigit * 10;
+            }, $"maxdigit * 10");
         }
 
         [TestMethod]
