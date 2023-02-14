@@ -3,7 +3,7 @@
 namespace BigUInt {
     [DebuggerDisplay("{ToString(),nq}")]
     public readonly partial struct UInt128 {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly UInt32 e3, e2, e1, e0;
 
         public UInt128(UInt64 hi, UInt64 lo) {
@@ -20,6 +20,14 @@ namespace BigUInt {
 
         public static implicit operator UInt128(string s) {
             return new UInt128(s);
+        }
+
+        public static implicit operator UInt128(UInt32 n) {
+            return new UInt128(0u, 0u, 0u, n);
+        }
+
+        public static implicit operator UInt128(UInt64 n) {
+            return new UInt128(0uL, n);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

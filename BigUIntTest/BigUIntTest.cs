@@ -194,5 +194,74 @@ namespace BigUIntTest {
                 UInt128 c = b << -1;
             });
         }
+
+        [TestMethod]
+        public void AddTest() {
+            UInt128 v1 = new(1u, 0u, 0u, 0u), v2 = new(0u, ~0u, ~0u, ~0u);
+
+            Assert.AreEqual(new UInt128(1u, ~0u, ~0u, ~0u), v1 + v2);
+
+            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
+            BigInteger v = maxvalue;
+            List<BigInteger> vs = new();
+            while (v > 0) {
+                vs.Add(v);
+                v /= 7;
+            }
+            vs.Add(0);
+
+            for (int i = 0; i < vs.Count; i++) { 
+                for (int j = 0; j < vs.Count; j++) {
+                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+
+                    Console.WriteLine($"{i0} + {i1}");
+
+                    if (vs[i] + vs[j] > maxvalue) {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            UInt128 _ = i0 + i1;
+                        }, $"{i0} + {i1}");
+                    }
+                    else {
+                        Assert.AreEqual((vs[i] + vs[j]).ToString(), (i0 + i1).ToString(), $"{i0} + {i1}");
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void SubTest() {
+            UInt128 v1 = new(1u, 0u, 0u, 0u), v2 = new(0u, ~0u, ~0u, ~0u), v3 = new(1u, 0u, 0u, 1u);
+
+            Assert.AreEqual((UInt128)1, v1 - v2);
+
+            Assert.ThrowsException<OverflowException>(() => {
+                UInt128 _ = v1 - v3;
+            });
+
+            BigInteger v = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
+            List<BigInteger> vs = new();
+            while (v > 0) {
+                vs.Add(v);
+                v /= 7;
+            }
+            vs.Add(0);
+
+            for (int i = 0; i < vs.Count; i++) { 
+                for (int j = 0; j < vs.Count; j++) {
+                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+
+                    Console.WriteLine($"{i0} - {i1}");
+
+                    if (i0 < i1) {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            UInt128 _ = i0 - i1;
+                        }, $"{i0} - {i1}");
+                    }
+                    else {
+                        Assert.AreEqual((vs[i] - vs[j]).ToString(), (i0 - i1).ToString(), $"{i0} - {i1}");
+                    }
+                }
+            }
+        }
     }
 }
