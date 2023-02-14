@@ -3,7 +3,7 @@
 namespace BigUInt {
     [DebuggerDisplay("{ToString(),nq}")]
     public readonly partial struct UInt128 {
-        //[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly UInt32 e3, e2, e1, e0;
 
         public UInt128(UInt64 hi, UInt64 lo) {
