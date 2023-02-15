@@ -256,7 +256,7 @@ namespace BigUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt128 ShiftMul(UInt128 a, UInt128 b, int right_sfts) {
+        public static UInt128 MulShift(UInt128 a, UInt128 b, int right_sfts) {
             if (right_sfts < 0) {
                 throw new ArgumentOutOfRangeException(nameof(right_sfts));
             }

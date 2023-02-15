@@ -584,7 +584,7 @@ namespace BigUIntTest {
         }
 
         [TestMethod]
-        public void ShiftMulTest() {
+        public void MulShiftTest() {
             foreach (int sft in new int[] { 0, 3, 9, 16, 32, 33, 63, 64, 65, 95, 96, 110, 127, 128 }) {
                 for (int i = 0; i < testcases.Count; i += 4) {
                     for (int j = 0; j < testcases.Count; j += 4) {
@@ -595,11 +595,11 @@ namespace BigUIntTest {
 
                         if (n > maxvalue) {
                             Assert.ThrowsException<OverflowException>(() => {
-                                UInt128 _ = UInt128.ShiftMul(i0, i1, sft);
+                                UInt128 _ = UInt128.MulShift(i0, i1, sft);
                             }, $"({i0} * {i1}) >> sft");
                         }
                         else {
-                            UInt128 v = UInt128.ShiftMul(i0, i1, sft);
+                            UInt128 v = UInt128.MulShift(i0, i1, sft);
 
                             Assert.AreEqual(n.ToString(), v.ToString(), $"({i0} * {i1}) >> sft");
                         }
