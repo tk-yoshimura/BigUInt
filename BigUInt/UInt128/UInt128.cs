@@ -1,22 +1,40 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace BigUInt {
     [DebuggerDisplay("{ToString(),nq}")]
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [StructLayout(LayoutKind.Explicit)]
     public readonly partial struct UInt128 : IEquatable<UInt128>, IComparable<UInt128> {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly UInt32 e3, e2, e1, e0;
+        [FieldOffset(0)]
+        private readonly UInt32 e0 = 0u;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [FieldOffset(4)]
+        private readonly UInt32 e1 = 0u;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [FieldOffset(8)]
+        private readonly UInt32 e2 = 0u;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [FieldOffset(12)]
+        private readonly UInt32 e3 = 0u;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [FieldOffset(0)]
+        private readonly UInt64 lo = 0uL;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [FieldOffset(8)]
+        private readonly UInt64 hi = 0uL;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public const int Bits = UIntUtil.UInt64Bits * 2;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UInt128(UInt64 hi, UInt64 lo) {
-            (this.e3, this.e2) = UIntUtil.Unpack(hi);
-            (this.e1, this.e0) = UIntUtil.Unpack(lo);
+            this.hi = hi;
+            this.lo = lo;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -42,22 +60,22 @@ namespace BigUInt {
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt64 Hi => UIntUtil.Pack(e3, e2);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt64 Lo => UIntUtil.Pack(e1, e0);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt32 E3 => e3;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt32 E2 => e2;
+        public UInt32 E0 => e0;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 E1 => e1;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public UInt32 E0 => e0;
+        public UInt32 E2 => e2;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public UInt32 E3 => e3;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public UInt64 Lo => lo;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public UInt64 Hi => hi;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static UInt128 Zero { get; } = new(0u, 0u, 0u, 0u);
@@ -72,10 +90,10 @@ namespace BigUInt {
         public static int MaxValueDigits { get; } = MaxValue.ToString().Length;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool IsZero => (e3 | e2 | e1 | e0) == 0u;
+        public bool IsZero => (lo | hi) == 0u;
 
         public static bool operator ==(UInt128 a, UInt128 b) {
-            return a.E3 == b.E3 && a.E2 == b.E2 && a.E1 == b.E1 && a.E0 == b.E0;
+            return a.lo == b.lo && a.hi == b.hi;
         }
 
         public static bool operator !=(UInt128 a, UInt128 b) {
@@ -83,54 +101,38 @@ namespace BigUInt {
         }
 
         public static bool operator <(UInt128 a, UInt128 b) {
-            return
-                a.E3 < b.E3 ? true : a.E3 > b.E3 ? false :
-                a.E2 < b.E2 ? true : a.E2 > b.E2 ? false :
-                a.E1 < b.E1 ? true : a.E1 > b.E1 ? false :
-                a.E0 < b.E0;
+            return a.hi < b.hi ? true : a.hi > b.hi ? false : a.lo < b.lo;
         }
 
         public static bool operator <=(UInt128 a, UInt128 b) {
-            return
-                a.E3 < b.E3 ? true : a.E3 > b.E3 ? false :
-                a.E2 < b.E2 ? true : a.E2 > b.E2 ? false :
-                a.E1 < b.E1 ? true : a.E1 > b.E1 ? false :
-                a.E0 <= b.E0;
+            return a.hi < b.hi ? true : a.hi > b.hi ? false : a.lo <= b.lo;
         }
 
         public static bool operator >(UInt128 a, UInt128 b) {
-            return
-                a.E3 > b.E3 ? true : a.E3 < b.E3 ? false :
-                a.E2 > b.E2 ? true : a.E2 < b.E2 ? false :
-                a.E1 > b.E1 ? true : a.E1 < b.E1 ? false :
-                a.E0 > b.E0;
+            return a.hi > b.hi ? true : a.hi < b.hi ? false : a.lo > b.lo;
         }
 
         public static bool operator >=(UInt128 a, UInt128 b) {
-            return
-                a.E3 > b.E3 ? true : a.E3 < b.E3 ? false :
-                a.E2 > b.E2 ? true : a.E2 < b.E2 ? false :
-                a.E1 > b.E1 ? true : a.E1 < b.E1 ? false :
-                a.E0 >= b.E0;
+            return a.hi > b.hi ? true : a.hi < b.hi ? false : a.lo >= b.lo;
         }
 
         public static UInt128 operator &(UInt128 a, UInt128 b) {
-            return new(a.Hi & b.Hi, a.Lo & b.Lo);
+            return new(a.hi & b.hi, a.lo & b.lo);
         }
 
         public static UInt128 operator |(UInt128 a, UInt128 b) {
-            return new(a.Hi | b.Hi, a.Lo | b.Lo);
+            return new(a.hi | b.hi, a.lo | b.lo);
         }
 
         public static UInt128 operator ^(UInt128 a, UInt128 b) {
-            return new(a.Hi ^ b.Hi, a.Lo ^ b.Lo);
+            return new(a.hi ^ b.hi, a.lo ^ b.lo);
         }
 
         public static UInt128 operator ~(UInt128 a) {
-            return new(~a.Hi, ~a.Lo);
+            return new(~a.hi, ~a.lo);
         }
 
-        public override bool Equals(object? obj) {
+        public override bool Equals([AllowNull] object obj) {
             return obj is not null && obj is UInt128 v && this == v;
         }
 
@@ -143,7 +145,7 @@ namespace BigUInt {
         }
 
         public override int GetHashCode() {
-            return (int)unchecked(E3 ^ E2 ^ E1 ^ E0);
+            return (int)unchecked(e0 ^ e1 ^ e2 ^ e3);
         }
     }
 }
