@@ -62,12 +62,8 @@ namespace BigUInt {
         }
 
         public static UInt128 operator <<(UInt128 v, int sft) {
-            if (sft > LeadingZeroCount(v) && v != Zero) {
-                throw new OverflowException();
-            }
-
             unchecked {
-                if (sft > UIntUtil.UInt32Bits * 4) {
+                if (sft >= UIntUtil.UInt32Bits * 4) {
                     return Zero;
                 }
                 else if (sft > UIntUtil.UInt32Bits * 3) {

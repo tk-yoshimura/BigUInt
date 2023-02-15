@@ -283,19 +283,21 @@ namespace BigUIntTest {
 
         [TestMethod]
         public void LeftShiftTest() {
-            BigInteger v = BigInteger.Parse("234567891234567891234567891234567891234");
+            BigInteger v1 = BigInteger.Parse("234567891234567891234567891234567891234");
+            BigInteger v2 = BigInteger.Parse("2345678912345");
 
             for (int sft = 0; sft <= 130; sft++) {
-                BigInteger u = (v >> sft) << sft;
-                UInt128 w = (UInt128)(v >> sft).ToString() << sft;
+                BigInteger u = (v1 >> sft) << sft;
+                UInt128 w = (UInt128)(v1 >> sft).ToString() << sft;
 
                 Assert.AreEqual(u.ToString(), w.ToString(), $"{sft}");
             }
 
-            for (int sft = 1; sft <= 127; sft++) {
-                Assert.ThrowsException<OverflowException>(() => {
-                    UInt128 w = (UInt128)(v >> (sft - 1)).ToString() << sft;
-                });
+            for (int sft = 0; sft <= 130; sft++) {
+                BigInteger u = (v2 << sft) & maxvalue;
+                UInt128 w = (UInt128)(v2).ToString() << sft;
+
+                Assert.AreEqual(u.ToString(), w.ToString(), $"{sft}");
             }
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
@@ -559,6 +561,47 @@ namespace BigUIntTest {
                         }
                         if (i1 <= UInt32.MaxValue) {
                             Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0 % i1.E0).ToString(), $"{i0} % {i1}");
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ExpandMulTest() {
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
+                    (UInt128 hi, UInt128 lo) = UInt128.ExpandMul(i0, i1);
+
+                    Console.WriteLine($"{i0} * {i1}");
+
+                    BigInteger m = ((BigInteger)hi << 128) | lo;
+
+                    Assert.AreEqual(testcases[i] * testcases[j], m, $"{i0} * {i1}");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ShiftMulTest() {
+            foreach (int sft in new int[] { 0, 3, 9, 16, 32, 33, 63, 64, 65, 95, 96, 110, 127, 128 }) {
+                for (int i = 0; i < testcases.Count; i += 4) {
+                    for (int j = 0; j < testcases.Count; j += 4) {
+                        UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
+                        BigInteger n = (testcases[i] * testcases[j]) >> sft;
+
+                        Console.WriteLine($"{i0} * {i1}");
+
+                        if (n > maxvalue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = UInt128.ShiftMul(i0, i1, sft);
+                            }, $"({i0} * {i1}) >> sft");
+                        }
+                        else {
+                            UInt128 v = UInt128.ShiftMul(i0, i1, sft);
+
+                            Assert.AreEqual(n.ToString(), v.ToString(), $"({i0} * {i1}) >> sft");
                         }
                     }
                 }

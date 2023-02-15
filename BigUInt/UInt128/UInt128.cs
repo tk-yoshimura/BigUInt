@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,6 +9,9 @@ namespace BigUInt {
     public readonly partial struct UInt128 : IEquatable<UInt128>, IComparable<UInt128> {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly UInt32 e3, e2, e1, e0;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public const int Bits = UIntUtil.UInt64Bits * 2;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public UInt128(UInt64 hi, UInt64 lo) {
@@ -31,6 +35,10 @@ namespace BigUInt {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator UInt128(UInt64 n) {
             return new UInt128(0uL, n);
+        }
+
+        public static implicit operator BigInteger(UInt128 n) {
+            return ((BigInteger)n.Hi << UIntUtil.UInt64Bits) | n.Lo;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,6 +70,9 @@ namespace BigUInt {
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static int MaxValueDigits { get; } = MaxValue.ToString().Length;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool IsZero => (e3 | e2 | e1 | e0) == 0u;
 
         public static bool operator ==(UInt128 a, UInt128 b) {
             return a.E3 == b.E3 && a.E2 == b.E2 && a.E1 == b.E1 && a.E0 == b.E0;

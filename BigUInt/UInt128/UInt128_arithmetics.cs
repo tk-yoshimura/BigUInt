@@ -45,7 +45,7 @@ namespace BigUInt {
             (carry, e2) = UIntUtil.Unpack(unchecked((UInt64)a.e2 + (UInt64)b_comp.e2 + carry));
             (carry, e3) = UIntUtil.Unpack(unchecked((UInt64)a.e3 + (UInt64)b_comp.e3 + carry));
 
-            if (carry < 1u && b != Zero) {
+            if (carry < 1u && !b.IsZero) {
                 throw new OverflowException();
             }
 
@@ -95,7 +95,6 @@ namespace BigUInt {
 
             return new UInt128(e3, e2, e1, e0);
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator *(UInt128 a, UInt64 b) {
@@ -160,7 +159,7 @@ namespace BigUInt {
             if (a < b) {
                 return (Zero, a);
             }
-            if (b == Zero) {
+            if (b.IsZero) {
                 throw new DivideByZeroException();
             }
             if (a.Hi == 0uL) {
@@ -207,5 +206,77 @@ namespace BigUInt {
         public static UInt128 operator /(UInt128 a, UInt128 b) => DivRem(a, b).q;
 
         public static UInt128 operator %(UInt128 a, UInt128 b) => DivRem(a, b).r;
+
+        public static UInt128 RoundDiv(UInt128 x, UInt128 y) {
+            (UInt128 n, UInt128 r) = DivRem(x, y);
+
+            if (r >= (y >> 1)) {
+                n += 1;
+            }
+
+            return n;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (UInt128 hi, UInt128 lo) ExpandMul(UInt128 a, UInt128 b) {
+            (UInt64 v00_hi, UInt32 e0) = UIntUtil.Unpack((UInt64)a.e0 * b.e0);
+
+            (UInt64 v01_hi, UInt64 v01_lo) = UIntUtil.Unpack((UInt64)a.e0 * b.e1);
+            (UInt64 v10_hi, UInt64 v10_lo) = UIntUtil.Unpack((UInt64)a.e1 * b.e0);
+
+            (UInt64 v02_hi, UInt64 v02_lo) = UIntUtil.Unpack((UInt64)a.e0 * b.e2);
+            (UInt64 v11_hi, UInt64 v11_lo) = UIntUtil.Unpack((UInt64)a.e1 * b.e1);
+            (UInt64 v20_hi, UInt64 v20_lo) = UIntUtil.Unpack((UInt64)a.e2 * b.e0);
+
+            (UInt64 v03_hi, UInt64 v03_lo) = UIntUtil.Unpack((UInt64)a.e0 * b.e3);
+            (UInt64 v12_hi, UInt64 v12_lo) = UIntUtil.Unpack((UInt64)a.e1 * b.e2);
+            (UInt64 v21_hi, UInt64 v21_lo) = UIntUtil.Unpack((UInt64)a.e2 * b.e1);
+            (UInt64 v30_hi, UInt64 v30_lo) = UIntUtil.Unpack((UInt64)a.e3 * b.e0);
+
+            (UInt64 v13_hi, UInt64 v13_lo) = UIntUtil.Unpack((UInt64)a.e1 * b.e3);
+            (UInt64 v22_hi, UInt64 v22_lo) = UIntUtil.Unpack((UInt64)a.e2 * b.e2);
+            (UInt64 v31_hi, UInt64 v31_lo) = UIntUtil.Unpack((UInt64)a.e3 * b.e1);
+
+            (UInt64 v23_hi, UInt64 v23_lo) = UIntUtil.Unpack((UInt64)a.e2 * b.e3);
+            (UInt64 v32_hi, UInt64 v32_lo) = UIntUtil.Unpack((UInt64)a.e3 * b.e2);
+
+            (UInt64 v33_hi, UInt64 v33_lo) = UIntUtil.Unpack((UInt64)a.e3 * b.e3);
+
+            (UInt32 carry1, UInt32 e1) = UIntUtil.Unpack(v00_hi + v01_lo + v10_lo);
+            (UInt32 carry2, UInt32 e2) = UIntUtil.Unpack(v01_hi + v10_hi + v02_lo + v11_lo + v20_lo + carry1);
+            (UInt32 carry3, UInt32 e3) = UIntUtil.Unpack(v02_hi + v11_hi + v20_hi + v03_lo + v12_lo + v21_lo + v30_lo + carry2);
+            (UInt32 carry4, UInt32 e4) = UIntUtil.Unpack(v03_hi + v12_hi + v21_hi + v30_hi + v13_lo + v22_lo + v31_lo + carry3);
+            (UInt32 carry5, UInt32 e5) = UIntUtil.Unpack(v13_hi + v22_hi + v31_hi + v23_lo + v32_lo + carry4);
+            (UInt32 carry6, UInt32 e6) = UIntUtil.Unpack(v23_hi + v32_hi + v33_lo + carry5);
+            (UInt32 _, UInt32 e7) = UIntUtil.Unpack(v33_hi + carry6);
+
+            UInt128 hi = new(e7, e6, e5, e4), lo = new(e3, e2, e1, e0);
+
+            return (hi, lo);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 ShiftMul(UInt128 a, UInt128 b, int right_sfts) {
+            if (right_sfts < 0) {
+                throw new ArgumentOutOfRangeException(nameof(right_sfts));
+            }
+
+            (UInt128 hi, UInt128 lo) = ExpandMul(a, b);
+
+            if (right_sfts < Bits) {
+                int lzc = LeadingZeroCount(hi);
+
+                if (lzc + right_sfts < Bits) {
+                    throw new OverflowException();
+                }
+
+                UInt128 c = (hi << (Bits - right_sfts)) | (lo >> right_sfts);
+
+                return c;
+            }
+            else {
+                return hi >> (right_sfts - Bits);
+            }
+        }
     }
 }
