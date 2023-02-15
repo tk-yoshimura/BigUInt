@@ -180,7 +180,9 @@ namespace BigUIntTest {
             });
 
             Assert.ThrowsException<FormatException>(() => {
+#pragma warning disable CS8604
                 UInt128 v7 = null;
+#pragma warning restore CS8604
             });
 
             Assert.ThrowsException<FormatException>(() => {
