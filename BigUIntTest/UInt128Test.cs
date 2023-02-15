@@ -18,6 +18,7 @@ namespace BigUIntTest {
                 vs.Add(v);
                 v /= 2;
                 vs.Add(v + 1);
+                vs.Add(v + 2);
             }
             v = maxvalue - 1;
             while (v > 0) {
