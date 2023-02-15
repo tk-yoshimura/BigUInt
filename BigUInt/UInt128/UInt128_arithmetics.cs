@@ -21,6 +21,17 @@ namespace BigUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator +(UInt128 a, UInt64 b) {
+            return (b <= unchecked(a.Lo + b)) ? new(a.Hi, a.Lo + b) : (a.Hi < ~0uL) ? new(a.Hi + 1uL, unchecked(a.Lo + b))
+                : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator +(UInt64 a, UInt128 b) {
+            return b + a;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt128 operator -(UInt128 a, UInt128 b) {
             UInt64 hi = ~b.Hi, lo = ~b.Lo;
             (hi, lo) = (lo < ~0uL) ? (hi, lo + 1uL) : (hi < ~0uL) ? (hi + 1uL, 0uL) : (0uL, 0uL);
@@ -39,6 +50,18 @@ namespace BigUInt {
             }
 
             return new(e3, e2, e1, e0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator -(UInt128 a, UInt64 b) {
+            return (a.Lo >= b) ? new(a.Hi, a.Lo - b) : (a.Hi > 0uL) ? new(a.Hi - 1uL, unchecked(a.Lo - b))
+                : throw new OverflowException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator -(UInt64 a, UInt128 b) {
+            return (b.Hi == 0uL && a >= b.Lo) ? (a - b.Lo)
+                : throw new OverflowException();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -71,6 +94,65 @@ namespace BigUInt {
             }
 
             return new UInt128(e3, e2, e1, e0);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator *(UInt128 a, UInt64 b) {
+            (UInt32 b_hi, UInt32 b_lo) = UIntUtil.Unpack(b);
+
+            if (a.e3 > 0u && b_hi > 0u) {
+                throw new OverflowException();
+            }
+
+            (UInt64 v00_hi, UInt32 e0) = UIntUtil.Unpack((UInt64)a.e0 * b_lo);
+
+            (UInt64 v01_hi, UInt64 v01_lo) = UIntUtil.Unpack((UInt64)a.e0 * b_hi);
+            (UInt64 v10_hi, UInt64 v10_lo) = UIntUtil.Unpack((UInt64)a.e1 * b_lo);
+
+            (UInt64 v11_hi, UInt64 v11_lo) = UIntUtil.Unpack((UInt64)a.e1 * b_hi);
+            (UInt64 v20_hi, UInt64 v20_lo) = UIntUtil.Unpack((UInt64)a.e2 * b_lo);
+
+            (UInt32 v21_hi, UInt64 v21_lo) = UIntUtil.Unpack((UInt64)a.e2 * b_hi);
+            (UInt32 v30_hi, UInt64 v30_lo) = UIntUtil.Unpack((UInt64)a.e3 * b_lo);
+
+            (UInt32 carry1, UInt32 e1) = UIntUtil.Unpack(v00_hi + v01_lo + v10_lo);
+            (UInt32 carry2, UInt32 e2) = UIntUtil.Unpack(v01_hi + v10_hi + v11_lo + v20_lo + carry1);
+            (UInt32 carry3, UInt32 e3) = UIntUtil.Unpack(v11_hi + v20_hi + v21_lo + v30_lo + carry2);
+
+            if (carry3 > 0u || v21_hi > 0u || v30_hi > 0u) {
+                throw new OverflowException();
+            }
+
+            return new UInt128(e3, e2, e1, e0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator *(UInt128 a, UInt32 b) {
+            (UInt64 v00_hi, UInt32 e0) = UIntUtil.Unpack((UInt64)a.e0 * b);
+            (UInt64 v10_hi, UInt64 v10_lo) = UIntUtil.Unpack((UInt64)a.e1 * b);
+            (UInt64 v20_hi, UInt64 v20_lo) = UIntUtil.Unpack((UInt64)a.e2 * b);
+            (UInt32 v30_hi, UInt64 v30_lo) = UIntUtil.Unpack((UInt64)a.e3 * b);
+
+            (UInt32 carry1, UInt32 e1) = UIntUtil.Unpack(v00_hi + v10_lo);
+            (UInt32 carry2, UInt32 e2) = UIntUtil.Unpack(v10_hi + v20_lo + carry1);
+            (UInt32 carry3, UInt32 e3) = UIntUtil.Unpack(v20_hi + v30_lo + carry2);
+
+            if (carry3 > 0u || v30_hi > 0u) {
+                throw new OverflowException();
+            }
+
+            return new UInt128(e3, e2, e1, e0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator *(UInt64 a, UInt128 b) {
+            return b * a;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt128 operator *(UInt32 a, UInt128 b) {
+            return b * a;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,10 +1,70 @@
 using BigUInt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.ObjectModel;
 using System.Numerics;
 
 namespace BigUIntTest {
     [TestClass]
     public class UInt128Test {
+        static readonly BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
+        static readonly ReadOnlyCollection<BigInteger> testcases;
+
+        static UInt128Test() {
+            List<BigInteger> vs = new();
+            BigInteger v;
+
+            v = maxvalue;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 2;
+                vs.Add(v + 1);
+            }
+            v = maxvalue - 1;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 3;
+            }
+            v = maxvalue - 2;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 5;
+            }
+            v = maxvalue - 3;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 7;
+            }
+            v = maxvalue - 4;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 11;
+            }
+            v = maxvalue - 5;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 17;
+            }
+            v = maxvalue - 6;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 19;
+            }
+            v = maxvalue - 7;
+            while (v > 0) {
+                vs.Add(v);
+                v /= 23;
+            }
+            v = maxvalue / 8;
+            while (v > 0) {
+                vs.Add(v + 2);
+                vs.Add(v + 3);
+                vs.Add(v + 5);
+                v /= 2;
+            }
+            vs.Add(0);
+
+            testcases = Array.AsReadOnly(vs.ToArray());
+        }
 
         [TestMethod]
         public void CreateTest() {
@@ -30,13 +90,22 @@ namespace BigUIntTest {
         }
 
         [TestMethod]
+        public void MaxDigitTest() {
+            Assert.ThrowsException<OverflowException>(() => {
+                UInt128 _ = UInt128.MaxDigit * 10;
+            }, $"maxdigit * 10");
+
+            Assert.AreEqual(UInt128.MaxDigit.ToString().Length, UInt128.MaxValueDigits);
+        }
+
+        [TestMethod]
         public void BigIntegarTest() {
             BigInteger v = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
             BigInteger mask = UInt64.MaxValue;
 
             while (v > 0) {
                 UInt128 u = new((UInt64)((v >> 64) & mask), (UInt64)(v & mask));
-                UInt128 w = new UInt128(u.ToString());
+                UInt128 w = u.ToString();
 
                 Console.WriteLine(v);
 
@@ -66,6 +135,20 @@ namespace BigUIntTest {
             Assert.AreEqual("1000000000000000000000000000", v5.ToString());
             Assert.AreEqual("10000000000000000000000000000000000", v6.ToString());
             Assert.AreEqual("340282366920938463463374607431768211455", v7.ToString());
+
+            Assert.AreEqual("0", v0.ToString("D"));
+            Assert.AreEqual("00", v0.ToString("D2"));
+            Assert.AreEqual("1", v1.ToString("D"));
+            Assert.AreEqual("0001", v1.ToString("D4"));
+            Assert.AreEqual("100", v3.ToString("d"));
+            Assert.AreEqual("100", v3.ToString("d2"));
+            Assert.AreEqual("100", v3.ToString("D3"));
+            Assert.AreEqual("0100", v3.ToString("D4"));
+            Assert.AreEqual("33b2e3c9fd0803ce8000000", v5.ToString("x"));
+            Assert.AreEqual("33B2E3C9FD0803CE8000000", v5.ToString("X"));
+            Assert.AreEqual("0033b2e3c9fd0803ce8000000", v5.ToString("x25"));
+            Assert.AreEqual("00033B2E3C9FD0803CE8000000", v5.ToString("X26"));
+            Assert.AreEqual("33b2e3c9fd0803ce8000000", v5.ToString("x22"));
         }
 
         [TestMethod]
@@ -95,6 +178,18 @@ namespace BigUIntTest {
             Assert.ThrowsException<OverflowException>(() => {
                 UInt128 v7 = "3402823669209384634633746074317682114560";
             });
+
+            Assert.ThrowsException<FormatException>(() => {
+                UInt128 v7 = null;
+            });
+
+            Assert.ThrowsException<FormatException>(() => {
+                UInt128 v7 = "abc";
+            });
+
+            Assert.ThrowsException<FormatException>(() => {
+                UInt128 v7 = "";
+            });
         }
 
         [TestMethod]
@@ -105,6 +200,7 @@ namespace BigUIntTest {
             UInt128 v4 = new(1u, 2u, 4u, 4u);
             UInt128 v5 = new(1u, 2u, 3u, 5u);
             UInt128 v6 = new(1u, 2u, 3u, 4u);
+            object? obj = null;
 
             Assert.IsTrue(v1 < v2);
             Assert.IsTrue(v1 < v3);
@@ -154,6 +250,15 @@ namespace BigUIntTest {
             Assert.IsFalse(v1 != v6);
             Assert.IsTrue(v1 <= v6);
             Assert.IsTrue(v1 >= v6);
+
+            Assert.IsTrue(v1.Equals(v1));
+            Assert.IsFalse(v1.Equals(v2));
+            Assert.IsTrue(v1.Equals(v6));
+            Assert.IsFalse(v1.Equals(obj));
+
+            Assert.AreEqual(-1, v1.CompareTo(v5));
+            Assert.AreEqual(0, v1.CompareTo(v6));
+            Assert.AreEqual(+1, v2.CompareTo(v3));
         }
 
         [TestMethod]
@@ -204,28 +309,55 @@ namespace BigUIntTest {
 
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 + v2);
 
-            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            BigInteger v = maxvalue;
-            List<BigInteger> vs = new();
-            while (v > 0) {
-                vs.Add(v);
-                v /= 7;
-            }
-            vs.Add(0);
-
-            for (int i = 0; i < vs.Count; i++) {
-                for (int j = 0; j < vs.Count; j++) {
-                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
 
                     Console.WriteLine($"{i0} + {i1}");
 
-                    if (vs[i] + vs[j] > maxvalue) {
+                    if (testcases[i] + testcases[j] > maxvalue) {
                         Assert.ThrowsException<OverflowException>(() => {
                             UInt128 _ = i0 + i1;
                         }, $"{i0} + {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.Lo + i1;
+                            }, $"{i0} + {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.E0 + i1;
+                            }, $"{i0} + {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 + i1.Lo;
+                            }, $"{i0} + {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 + i1.E0;
+                            }, $"{i0} + {i1}");
+                        }
                     }
                     else {
-                        Assert.AreEqual((vs[i] + vs[j]).ToString(), (i0 + i1).ToString(), $"{i0} + {i1}");
+                        Assert.AreEqual((testcases[i] + testcases[j]).ToString(), (i0 + i1).ToString(), $"{i0} + {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] + testcases[j]).ToString(), (i0.Lo + i1).ToString(), $"{i0} + {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] + testcases[j]).ToString(), (i0.E0 + i1).ToString(), $"{i0} + {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] + testcases[j]).ToString(), (i0 + i1.Lo).ToString(), $"{i0} + {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] + testcases[j]).ToString(), (i0 + i1.E0).ToString(), $"{i0} + {i1}");
+                        }
                     }
                 }
             }
@@ -241,17 +373,9 @@ namespace BigUIntTest {
                 UInt128 _ = v1 - v3;
             });
 
-            BigInteger v = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            List<BigInteger> vs = new();
-            while (v > 0) {
-                vs.Add(v);
-                v /= 7;
-            }
-            vs.Add(0);
-
-            for (int i = 0; i < vs.Count; i++) {
-                for (int j = 0; j < vs.Count; j++) {
-                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
 
                     Console.WriteLine($"{i0} - {i1}");
 
@@ -259,9 +383,45 @@ namespace BigUIntTest {
                         Assert.ThrowsException<OverflowException>(() => {
                             UInt128 _ = i0 - i1;
                         }, $"{i0} - {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.Lo - i1;
+                            }, $"{i0} - {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.E0 - i1;
+                            }, $"{i0} - {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 - i1.Lo;
+                            }, $"{i0} - {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 - i1.E0;
+                            }, $"{i0} - {i1}");
+                        }
                     }
                     else {
-                        Assert.AreEqual((vs[i] - vs[j]).ToString(), (i0 - i1).ToString(), $"{i0} - {i1}");
+                        Assert.AreEqual((testcases[i] - testcases[j]).ToString(), (i0 - i1).ToString(), $"{i0} - {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] - testcases[j]).ToString(), (i0.Lo - i1).ToString(), $"{i0} - {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] - testcases[j]).ToString(), (i0.E0 - i1).ToString(), $"{i0} - {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] - testcases[j]).ToString(), (i0 - i1.Lo).ToString(), $"{i0} - {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] - testcases[j]).ToString(), (i0 - i1.E0).ToString(), $"{i0} - {i1}");
+                        }
                     }
                 }
             }
@@ -273,35 +433,58 @@ namespace BigUIntTest {
 
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 * v2);
 
-            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            BigInteger v = maxvalue;
-            List<BigInteger> vs = new();
-            while (v > 0) {
-                vs.Add(v);
-                v /= 3;
-            }
-            vs.Add(0);
-
-            for (int i = 0; i < vs.Count; i++) {
-                for (int j = 0; j < vs.Count; j++) {
-                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
 
                     Console.WriteLine($"{i0} * {i1}");
 
-                    if (vs[i] * vs[j] > maxvalue) {
+                    if (testcases[i] * testcases[j] > maxvalue) {
                         Assert.ThrowsException<OverflowException>(() => {
                             UInt128 _ = i0 * i1;
                         }, $"{i0} * {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.Lo * i1;
+                            }, $"{i0} * {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0.E0 * i1;
+                            }, $"{i0} * {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 * i1.Lo;
+                            }, $"{i0} * {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.ThrowsException<OverflowException>(() => {
+                                UInt128 _ = i0 * i1.E0;
+                            }, $"{i0} * {i1}");
+                        }
                     }
                     else {
-                        Assert.AreEqual((vs[i] * vs[j]).ToString(), (i0 * i1).ToString(), $"{i0} * {i1}");
+                        Assert.AreEqual((testcases[i] * testcases[j]).ToString(), (i0 * i1).ToString(), $"{i0} * {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] * testcases[j]).ToString(), (i0.Lo * i1).ToString(), $"{i0} * {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] * testcases[j]).ToString(), (i0.E0 * i1).ToString(), $"{i0} * {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] * testcases[j]).ToString(), (i0 * i1.Lo).ToString(), $"{i0} * {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] * testcases[j]).ToString(), (i0 * i1.E0).ToString(), $"{i0} * {i1}");
+                        }
                     }
                 }
             }
-
-            Assert.ThrowsException<OverflowException>(() => {
-                UInt128 _ = UInt128.MaxDigit * 10;
-            }, $"maxdigit * 10");
         }
 
         [TestMethod]
@@ -310,49 +493,33 @@ namespace BigUIntTest {
 
             Assert.AreEqual(new UInt128(~0u, ~0u, ~0u, ~0u), v1 / v2);
 
-            List<BigInteger> vs = new();
-            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            BigInteger v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 2;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 3;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 5;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 7;
-            }
-            v = maxvalue / 2;
-            while (v > 0) {
-                vs.Add(v + 1);
-                vs.Add(v + 2);
-                v /= 2;
-            }
-            vs.Add(0);
-
-            for (int i = 0; i < vs.Count; i++) {
-                for (int j = 0; j < vs.Count; j++) {
-                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
 
                     Console.WriteLine($"{i0} / {i1}");
 
-                    if (vs[j] <= 0) {
+                    if (testcases[j] <= 0) {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             UInt128 _ = i0 / i1;
                         }, $"{i0} / {i1}");
                     }
                     else {
-                        Assert.AreEqual((vs[i] / vs[j]).ToString(), (i0 / i1).ToString(), $"{i0} / {i1}");
+                        Assert.AreEqual((testcases[i] / testcases[j]).ToString(), (i0 / i1).ToString(), $"{i0} / {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] / testcases[j]).ToString(), (i0.Lo / i1).ToString(), $"{i0} / {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] / testcases[j]).ToString(), (i0.E0 / i1).ToString(), $"{i0} / {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] / testcases[j]).ToString(), (i0 / i1.Lo).ToString(), $"{i0} / {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] / testcases[j]).ToString(), (i0 / i1.E0).ToString(), $"{i0} / {i1}");
+                        }
                     }
                 }
             }
@@ -364,52 +531,56 @@ namespace BigUIntTest {
 
             Assert.AreEqual(UInt128.Zero, v1 % v2);
 
-            List<BigInteger> vs = new();
-            BigInteger maxvalue = (((BigInteger)UInt64.MaxValue) << 64) + UInt64.MaxValue;
-            BigInteger v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 11;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 17;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 19;
-            }
-            v = maxvalue;
-            while (v > 0) {
-                vs.Add(v);
-                v /= 23;
-            }
-            v = maxvalue / 2;
-            while (v > 0) {
-                vs.Add(v + 3);
-                vs.Add(v + 5);
-                v /= 2;
-            }
-            vs.Add(0);
-
-            for (int i = 0; i < vs.Count; i++) {
-                for (int j = 0; j < vs.Count; j++) {
-                    UInt128 i0 = vs[i].ToString(), i1 = vs[j].ToString();
+            for (int i = 0; i < testcases.Count; i++) {
+                for (int j = 0; j < testcases.Count; j++) {
+                    UInt128 i0 = testcases[i].ToString(), i1 = testcases[j].ToString();
 
                     Console.WriteLine($"{i0} % {i1}");
 
-                    if (vs[j] <= 0) {
+                    if (testcases[j] <= 0) {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             UInt128 _ = i0 % i1;
                         }, $"{i0} % {i1}");
                     }
                     else {
-                        Assert.AreEqual((vs[i] % vs[j]).ToString(), (i0 % i1).ToString(), $"{i0} % {i1}");
+                        Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0 % i1).ToString(), $"{i0} % {i1}");
+
+                        if (i0 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0.Lo % i1).ToString(), $"{i0} % {i1}");
+                        }
+                        if (i0 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0.E0 % i1).ToString(), $"{i0} % {i1}");
+                        }
+
+                        if (i1 <= UInt64.MaxValue) {
+                            Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0 % i1.Lo).ToString(), $"{i0} % {i1}");
+                        }
+                        if (i1 <= UInt32.MaxValue) {
+                            Assert.AreEqual((testcases[i] % testcases[j]).ToString(), (i0 % i1.E0).ToString(), $"{i0} % {i1}");
+                        }
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        public void BitwiseOpTest() {
+            UInt128 v1 = new(0x0000001000000020uL, 0x0000003000000040uL);
+            UInt128 v2 = new(0x0000000500000006uL, 0x0000000700000008uL);
+
+            Assert.AreEqual(UInt128.Zero, v1 & v2);
+            Assert.AreEqual(v1, v1 & v1);
+            Assert.AreEqual(v2, v2 & v2);
+
+            Assert.AreEqual(new UInt128(0x0000001500000026uL, 0x0000003700000048uL), v1 | v2);
+            Assert.AreEqual(v1, v1 | v1);
+            Assert.AreEqual(v2, v2 | v2);
+
+            Assert.AreEqual(new UInt128(~0x0000001000000020uL, ~0x0000003000000040uL), ~v1);
+
+            Assert.AreEqual(UInt128.Zero, v1 ^ v1);
+            Assert.AreEqual(UInt128.MaxValue, v1 ^ ~v1);
+            Assert.AreEqual(new UInt128(0x0000001500000026uL, 0x0000003700000048uL), v1 ^ v2);
         }
     }
 }

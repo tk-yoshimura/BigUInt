@@ -7,15 +7,19 @@ namespace BigUInt {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Regex parse_regex = new(@"^\d+$");
 
-        public UInt128(string s) : this() {
-            if (!parse_regex.IsMatch(s)) {
+        public static implicit operator UInt128(string s) {
+            return Parse(s);
+        }
+
+        public static UInt128 Parse(string s) {
+            if (string.IsNullOrEmpty(s) || !parse_regex.IsMatch(s)) {
                 throw new FormatException();
             }
 
             s = s.TrimStart('0');
 
             if (s == string.Empty) {
-                return;
+                return Zero;
             }
 
             if (s.Length > MaxValueDigits) {
@@ -52,14 +56,7 @@ namespace BigUInt {
                 throw new OverflowException();
             }
 
-            this.e3 = bin3;
-            this.e2 = bin2;
-            this.e1 = bin1;
-            this.e0 = bin0;
-        }
-
-        public static UInt128 Parse(string s) {
-            return new UInt128(s);
+            return new UInt128(bin3, bin2, bin1, bin0);
         }
 
         public static bool TryParse(string s, out UInt128 result) {
