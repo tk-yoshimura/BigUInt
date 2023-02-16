@@ -178,8 +178,78 @@ namespace BigUInt {
             if (b.e3 >= 0x80000000u) {
                 return (a < b) ? (0u, a) : (1u, a - b);
             }
-            if (b.hi == 0uL && b.e1 == 0u) {
-                return DivRem(a, b.e0);
+            if (b.hi == 0uL) {
+                return DivRem(a, b.lo);
+            }
+
+            UInt128 q = Zero, r = a;
+
+            int r_offset, b_offset = LeadingZeroCount(b), sft;
+            UInt128 b_sft = b << b_offset, n_sft;
+
+            UInt64 n, div = b_sft.e3 + (((b_sft.e2 | b_sft.e1 | b_sft.e0) > 0u) ? 1uL : 0uL);
+
+            r_offset = LeadingZeroCount(r);
+            if (r_offset < b_offset) {
+                sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                n = (r << r_offset).hi / div;
+                n_sft = LeftShift(n, sft);
+
+                q += n_sft;
+                r -= n_sft * b;
+
+                r_offset = LeadingZeroCount(r);
+                if (r_offset < b_offset) {
+                    sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                    n = (r << r_offset).hi / div;
+                    n_sft = LeftShift(n, sft);
+
+                    q += n_sft;
+                    r -= n_sft * b;
+
+                    r_offset = LeadingZeroCount(r);
+                    if (r_offset < b_offset) {
+                        sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                        n = (r << r_offset).hi / div;
+                        n_sft = LeftShift(n, sft);
+
+                        q += n_sft;
+                        r -= n_sft * b;
+                    }
+                }
+            }
+
+            if (r >= b) {
+                q += 1u;
+                r -= b;
+            }
+
+#if DEBUG
+            Trace.Assert(r < b && a == r + q * b, "Detected divide bug.");
+#endif
+
+            return (q, r);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (UInt128 q, UInt128 r) DivRem(UInt128 a, UInt64 b) {
+            if (a < b) {
+                return (Zero, a);
+            }
+            if (b == 0uL) {
+                throw new DivideByZeroException();
+            }
+            if (a.hi == 0uL) {
+                return a.e1 > 0u ? (a.lo / b, a.lo % b) : (a.e0 / b, a.e0 % b);
+            }
+
+            (UInt32 b_hi, UInt32 b_lo) = UIntUtil.Unpack(b);
+
+            if (b_hi == 0u) {
+                return DivRem(a, b_lo);
             }
 
             UInt128 q = Zero, r = a;
@@ -187,7 +257,7 @@ namespace BigUInt {
             int r_offset, b_offset = LeadingZeroCount(b), sft;
             UInt128 b_sft = (UInt128)b << b_offset, n_sft;
 
-            UInt64 n, div = b_sft.e3 + (((b_sft.e2 | b_sft.e1 | b_sft.e0) > 0u) ? 1uL : 0uL);
+            UInt64 n, div = b_sft.e3 + ((b_sft.e2 > 0u) ? 1uL : 0uL);
 
             r_offset = LeadingZeroCount(r);
             if (r_offset < b_offset) {
@@ -284,9 +354,11 @@ namespace BigUInt {
         }
 
         public static UInt128 operator /(UInt128 a, UInt128 b) => DivRem(a, b).q;
+        public static UInt128 operator /(UInt128 a, UInt64 b) => DivRem(a, b).q;
         public static UInt128 operator /(UInt128 a, UInt32 b) => DivRem(a, b).q;
 
         public static UInt128 operator %(UInt128 a, UInt128 b) => DivRem(a, b).r;
+        public static UInt128 operator %(UInt128 a, UInt64 b) => DivRem(a, b).r;
         public static UInt128 operator %(UInt128 a, UInt32 b) => DivRem(a, b).r;
 
         public static UInt128 RoundDiv(UInt128 x, UInt128 y) {
