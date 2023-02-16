@@ -62,6 +62,11 @@ namespace BigUIntTest {
                 vs.Add(v + 5);
                 v /= 2;
             }
+            v = BigInteger.Parse("12345678901234567890123456789012345678");
+            while (v > 0) {
+                vs.Add(v);
+                v /= 10;
+            }
             vs.Add(0);
 
             testcases = Array.AsReadOnly(vs.ToArray());
