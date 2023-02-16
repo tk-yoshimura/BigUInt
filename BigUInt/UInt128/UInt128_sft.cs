@@ -119,6 +119,26 @@ namespace BigUInt {
             throw new ArgumentOutOfRangeException(nameof(sft));
         }
 
+        public static UInt128 RightShift(UInt128 n, int sfts) {
+            if (sfts > 0) {
+                return n >> sfts;
+            }
+            if (sfts < 0) {
+                return n << -sfts;
+            }
+            return n;
+        }
+
+        public static UInt128 LeftShift(UInt128 n, int sfts) {
+            if (sfts > 0) {
+                return n << sfts;
+            }
+            if (sfts < 0) {
+                return n >> -sfts;
+            }
+            return n;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int LeadingZeroCount(UInt128 v) {
             uint cnt =

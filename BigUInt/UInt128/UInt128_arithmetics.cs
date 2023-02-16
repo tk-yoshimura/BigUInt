@@ -194,7 +194,7 @@ namespace BigUInt {
                 sft = b_offset - r_offset - UIntUtil.UInt32Bits;
 
                 n = (r << r_offset).hi / div;
-                n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+                n_sft = LeftShift(n, sft);
 
                 q += n_sft;
                 r -= n_sft * b;
@@ -204,7 +204,7 @@ namespace BigUInt {
                     sft = b_offset - r_offset - UIntUtil.UInt32Bits;
 
                     n = (r << r_offset).hi / div;
-                    n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+                    n_sft = LeftShift(n, sft);
 
                     q += n_sft;
                     r -= n_sft * b;
@@ -214,7 +214,7 @@ namespace BigUInt {
                         sft = b_offset - r_offset - UIntUtil.UInt32Bits;
 
                         n = (r << r_offset).hi / div;
-                        n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+                        n_sft = LeftShift(n, sft);
 
                         q += n_sft;
                         r -= n_sft * b;
@@ -224,7 +224,7 @@ namespace BigUInt {
                             sft = b_offset - r_offset - UIntUtil.UInt32Bits;
 
                             n = (r << r_offset).hi / div;
-                            n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+                            n_sft = LeftShift(n, sft);
 
                             q += n_sft;
                             r -= n_sft * b;
