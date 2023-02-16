@@ -179,27 +179,59 @@ namespace BigUInt {
             if (b.e3 >= 0x80000000u) {
                 return (a < b) ? (0u, a) : (1u, a - b);
             }
+            if (b.hi == 0uL && b.e1 == 0u) {
+                return DivRem(a, b.e0);
+            }
 
             UInt128 q = Zero, r = a;
 
-            int b_offset = LeadingZeroCount(b);
-            UInt128 b_sft = b << b_offset;
+            int r_offset, b_offset = LeadingZeroCount(b), sft;
+            UInt128 b_sft = (UInt128)b << b_offset, n_sft;
 
-            UInt64 div = b_sft.e3 + (((b_sft.e2 | b_sft.e1 | b_sft.e0) > 0u) ? 1uL : 0uL);
+            UInt64 n, div = b_sft.e3 + (((b_sft.e2 | b_sft.e1 | b_sft.e0) > 0u) ? 1uL : 0uL);
 
-            while (true) {
-                int r_offset = LeadingZeroCount(r);
-                if (r_offset >= b_offset) {
-                    break;
-                }
+            r_offset = LeadingZeroCount(r);
+            if (r_offset < b_offset) {
+                sft = b_offset - r_offset - UIntUtil.UInt32Bits;
 
-                int sft = b_offset - r_offset - UIntUtil.UInt32Bits;
-
-                UInt64 n = (r << r_offset).hi / div;
-                UInt128 n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+                n = (r << r_offset).hi / div;
+                n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
 
                 q += n_sft;
                 r -= n_sft * b;
+
+                r_offset = LeadingZeroCount(r);
+                if (r_offset < b_offset) {
+                    sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                    n = (r << r_offset).hi / div;
+                    n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+
+                    q += n_sft;
+                    r -= n_sft * b;
+
+                    r_offset = LeadingZeroCount(r);
+                    if (r_offset < b_offset) {
+                        sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                        n = (r << r_offset).hi / div;
+                        n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+
+                        q += n_sft;
+                        r -= n_sft * b;
+
+                        r_offset = LeadingZeroCount(r);
+                        if (r_offset < b_offset) {
+                            sft = b_offset - r_offset - UIntUtil.UInt32Bits;
+
+                            n = (r << r_offset).hi / div;
+                            n_sft = sft > 0 ? ((UInt128)n << sft) : ((UInt128)n >> (-sft));
+
+                            q += n_sft;
+                            r -= n_sft * b;
+                        }
+                    }
+                }
             }
 
             if (r >= b) {
@@ -235,8 +267,8 @@ namespace BigUInt {
 #endif
 
             UInt64 n1 = UIntUtil.Pack(r0.e2, r0.e1) / b;
-            UInt128 q1 = q0 + (((UInt128)n1) << UIntUtil.UInt32Bits);
-            UInt128 r1 = r0 - (((UInt128)n1 * b) << UIntUtil.UInt32Bits);
+            UInt128 q1 = q0 + ((UInt128)n1 << UIntUtil.UInt32Bits);
+            UInt128 r1 = r0 - ((UInt128)(n1 * b) << UIntUtil.UInt32Bits);
 
 #if DEBUG
             Trace.Assert(r1.Hi == 0uL && a == r1 + q1 * b, "Detected divide bug. phase 1");
