@@ -357,9 +357,14 @@ namespace BigUInt {
         public static UInt128 operator /(UInt128 a, UInt64 b) => DivRem(a, b).q;
         public static UInt128 operator /(UInt128 a, UInt32 b) => DivRem(a, b).q;
 
+        public static UInt128 operator /(UInt64 a, UInt128 b) => (b.hi > 0uL || a < b) ? Zero : (a / b.lo);
+        public static UInt128 operator /(UInt32 a, UInt128 b) => (b.hi > 0uL || b.e1 > 0u || a < b) ? Zero : (a / b.e0);
+
         public static UInt128 operator %(UInt128 a, UInt128 b) => DivRem(a, b).r;
         public static UInt128 operator %(UInt128 a, UInt64 b) => DivRem(a, b).r;
         public static UInt128 operator %(UInt128 a, UInt32 b) => DivRem(a, b).r;
+        public static UInt128 operator %(UInt64 a, UInt128 b) => (b.hi > 0uL || a < b) ? a : (a % b.lo);
+        public static UInt128 operator %(UInt32 a, UInt128 b) => (b.hi > 0uL || b.e1 > 0u || a < b) ? a : (a % b.e0);
 
         public static UInt128 RoundDiv(UInt128 x, UInt128 y) {
             (UInt128 n, UInt128 r) = DivRem(x, y);
