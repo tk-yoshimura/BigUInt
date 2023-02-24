@@ -1,0 +1,27 @@
+using AvxUInt;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Numerics;
+
+namespace AvxUIntTest {
+    [TestClass]
+    public partial class BigIntegerTests {
+        [TestMethod]
+        public void ToBigIntegerTest() {
+            BigUInt<Pow2.N4> n1 = new BigUInt<Pow2.N4>();
+            BigUInt<Pow2.N4> n2 = new BigUInt<Pow2.N4>(2u);
+            BigUInt<Pow2.N4> n3 = new BigUInt<Pow2.N4>(0x12345678ABCDEFul);
+            BigUInt<Pow2.N4> n4 = new BigUInt<Pow2.N4>(new UInt32[] { 0x1234u, 0x5678u, 0x9ABCu, 0xDEF0u }, enable_clone: false);
+
+            Assert.AreEqual(new BigInteger(0), (BigInteger)n1);
+            Assert.AreEqual(new BigInteger(2u), (BigInteger)n2);
+            Assert.AreEqual(new BigInteger(0x12345678ABCDEFul), (BigInteger)n3);
+            Assert.AreEqual(
+                new BigInteger(0x1234u)
+                + (new BigInteger(0x5678u) << UIntUtil.UInt32Bits)
+                + (new BigInteger(0x9ABCu) << (UIntUtil.UInt32Bits * 2))
+                + (new BigInteger(0xDEF0u) << (UIntUtil.UInt32Bits * 3)),
+                (BigInteger)n4
+            );
+        }
+    }
+}
