@@ -322,10 +322,11 @@ namespace AvxUInt {
                         return false;
                     }
 
+                    v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    x0 = MaskLoad(v0, Mask256.LSV(r));
+                    x0 = MaskLoad(v, Mask256.LSV(r));
 
                     uint flag =
                         ((uint)MoveMask(CompareEqual(x0, Vector256<UInt32>.Zero).AsSingle()));
@@ -389,10 +390,11 @@ namespace AvxUInt {
                         return false;
                     }
 
+                    v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    x0 = MaskLoad(v0, Mask256.LSV(r));
+                    x0 = MaskLoad(v, Mask256.LSV(r));
 
                     uint flag =
                         ((uint)MoveMask(CompareEqual(x0, fulls).AsSingle()));

@@ -26,6 +26,23 @@ namespace AvxUIntTest {
             }
 
             Random random = new(1234);
+            for (int i = 0; i < length; i++) { 
+                for (int j = i; j < length; j++) {
+                    UInt32[] bits = new UInt32[length];
+
+                    for (int k = i; k <= j; k++) {
+                        bits[k] = ~0u;
+                    }
+
+                    UInt32[] bits_swapbit = (UInt32[])bits.Clone();
+                    bits_swapbit[random.Next(length)] ^= 1u << random.Next(UIntUtil.UInt32Bits);
+
+                    BigUInt<N> b = new(bits), b_swapbit = new(bits_swapbit);
+                    vs.Add((b, (BigInteger)b));
+                    vs.Add((b_swapbit, (BigInteger)b_swapbit));
+                }
+            }
+
             for (int i = 0; i < 40; i++) {
                 UInt32[] bits = UIntUtil.Random(random, length, random.Next(length * UIntUtil.UInt32Bits + 1));
                 UInt32[] bits_swapbit = (UInt32[])bits.Clone();
@@ -35,6 +52,8 @@ namespace AvxUIntTest {
                 vs.Add((b, (BigInteger)b));
                 vs.Add((b_swapbit, (BigInteger)b_swapbit));
             }
+
+            vs.Add((BigUInt<N>.Zero, (BigInteger)BigUInt<N>.Zero));
 
             Console.WriteLine($"{nameof(length)}={length}: {vs.Count} testcases");
 
@@ -86,6 +105,24 @@ namespace AvxUIntTest {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 > b2, n1 > n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
+            }
+        }
+
+        public static void IsZeroTest() {
+            BigInteger zero = 0;
+            Assert.IsTrue(zero == BigUInt<N>.Zero);
+
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
+                Assert.AreEqual(b1 == zero, n1.IsZero);
+            }
+        }
+
+        public static void IsFullTest() {
+            BigInteger full = (BigInteger.One << (length * UIntUtil.UInt32Bits)) - 1;
+            Assert.IsTrue(full == BigUInt<N>.Full);
+
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
+                Assert.AreEqual(b1 == full, n1.IsFull);
             }
         }
     }
@@ -321,6 +358,70 @@ namespace AvxUIntTest {
             CmpTests<N31>.GreaterThanTest();
             CmpTests<N32>.GreaterThanTest();
             CmpTests<N33>.GreaterThanTest();
+        }
+  
+        [TestMethod]
+        public void IsZeroN8Test() {
+            CmpTests<N4>.IsZeroTest();
+            CmpTests<N5>.IsZeroTest();
+            CmpTests<N6>.IsZeroTest();
+            CmpTests<N7>.IsZeroTest();
+            CmpTests<N8>.IsZeroTest();
+        }
+        
+        [TestMethod]
+        public void IsZeroN16Test() {
+            CmpTests<N9>.IsZeroTest();
+            CmpTests<N10>.IsZeroTest();
+            CmpTests<N11>.IsZeroTest();
+            CmpTests<N12>.IsZeroTest();
+            CmpTests<N13>.IsZeroTest();
+            CmpTests<N14>.IsZeroTest();
+            CmpTests<N15>.IsZeroTest();
+            CmpTests<N16>.IsZeroTest();
+        }
+
+        [TestMethod]
+        public void IsZeroN32Test() {
+            CmpTests<N17>.IsZeroTest();
+            CmpTests<N23>.IsZeroTest();
+            CmpTests<N24>.IsZeroTest();
+            CmpTests<N25>.IsZeroTest();
+            CmpTests<N31>.IsZeroTest();
+            CmpTests<N32>.IsZeroTest();
+            CmpTests<N33>.IsZeroTest();
+        }
+                
+        [TestMethod]
+        public void IsFullN8Test() {
+            CmpTests<N4>.IsFullTest();
+            CmpTests<N5>.IsFullTest();
+            CmpTests<N6>.IsFullTest();
+            CmpTests<N7>.IsFullTest();
+            CmpTests<N8>.IsFullTest();
+        }
+        
+        [TestMethod]
+        public void IsFullN16Test() {
+            CmpTests<N9>.IsFullTest();
+            CmpTests<N10>.IsFullTest();
+            CmpTests<N11>.IsFullTest();
+            CmpTests<N12>.IsFullTest();
+            CmpTests<N13>.IsFullTest();
+            CmpTests<N14>.IsFullTest();
+            CmpTests<N15>.IsFullTest();
+            CmpTests<N16>.IsFullTest();
+        }
+
+        [TestMethod]
+        public void IsFullN32Test() {
+            CmpTests<N17>.IsFullTest();
+            CmpTests<N23>.IsFullTest();
+            CmpTests<N24>.IsFullTest();
+            CmpTests<N25>.IsFullTest();
+            CmpTests<N31>.IsFullTest();
+            CmpTests<N32>.IsFullTest();
+            CmpTests<N33>.IsFullTest();
         }
     }
 }
