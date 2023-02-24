@@ -61,6 +61,30 @@ namespace AvxUIntTest {
                 }
             }
         }
+
+        public static void NotEqualTest() { 
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+                foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
+                    Assert.AreEqual(b1 != b2, n1 != n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
+                }
+            }
+        }
+
+        public static void LessThanTest() { 
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+                foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
+                    Assert.AreEqual(b1 < b2, n1 < n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
+                }
+            }
+        }
+
+        public static void GreaterThanTest() { 
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+                foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
+                    Assert.AreEqual(b1 > b2, n1 > n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
+                }
+            }
+        }
     }
 
     [TestClass]
@@ -154,8 +178,7 @@ namespace AvxUIntTest {
             CmpTests<N64>.LessThanOrEqualTest();
             CmpTests<N65>.LessThanOrEqualTest();
         }
-
-        
+                
         [TestMethod]
         public void GreaterThanOrEqualN8Test() {
             CmpTests<N4>.GreaterThanOrEqualTest();
@@ -199,6 +222,102 @@ namespace AvxUIntTest {
             CmpTests<N63>.GreaterThanOrEqualTest();
             CmpTests<N64>.GreaterThanOrEqualTest();
             CmpTests<N65>.GreaterThanOrEqualTest();
+        }
+
+        [TestMethod]
+        public void NotEqualN8Test() {
+            CmpTests<N4>.NotEqualTest();
+            CmpTests<N5>.NotEqualTest();
+            CmpTests<N6>.NotEqualTest();
+            CmpTests<N7>.NotEqualTest();
+            CmpTests<N8>.NotEqualTest();
+        }
+        
+        [TestMethod]
+        public void NotEqualN16Test() {
+            CmpTests<N9>.NotEqualTest();
+            CmpTests<N10>.NotEqualTest();
+            CmpTests<N11>.NotEqualTest();
+            CmpTests<N12>.NotEqualTest();
+            CmpTests<N13>.NotEqualTest();
+            CmpTests<N14>.NotEqualTest();
+            CmpTests<N15>.NotEqualTest();
+            CmpTests<N16>.NotEqualTest();
+        }
+
+        [TestMethod]
+        public void NotEqualN32Test() {
+            CmpTests<N17>.NotEqualTest();
+            CmpTests<N23>.NotEqualTest();
+            CmpTests<N24>.NotEqualTest();
+            CmpTests<N25>.NotEqualTest();
+            CmpTests<N31>.NotEqualTest();
+            CmpTests<N32>.NotEqualTest();
+            CmpTests<N33>.NotEqualTest();
+        }
+
+        [TestMethod]
+        public void LessThanN8Test() {
+            CmpTests<N4>.LessThanTest();
+            CmpTests<N5>.LessThanTest();
+            CmpTests<N6>.LessThanTest();
+            CmpTests<N7>.LessThanTest();
+            CmpTests<N8>.LessThanTest();
+        }
+        
+        [TestMethod]
+        public void LessThanN16Test() {
+            CmpTests<N9>.LessThanTest();
+            CmpTests<N10>.LessThanTest();
+            CmpTests<N11>.LessThanTest();
+            CmpTests<N12>.LessThanTest();
+            CmpTests<N13>.LessThanTest();
+            CmpTests<N14>.LessThanTest();
+            CmpTests<N15>.LessThanTest();
+            CmpTests<N16>.LessThanTest();
+        }
+
+        [TestMethod]
+        public void LessThanN32Test() {
+            CmpTests<N17>.LessThanTest();
+            CmpTests<N23>.LessThanTest();
+            CmpTests<N24>.LessThanTest();
+            CmpTests<N25>.LessThanTest();
+            CmpTests<N31>.LessThanTest();
+            CmpTests<N32>.LessThanTest();
+            CmpTests<N33>.LessThanTest();
+        }
+                
+        [TestMethod]
+        public void GreaterThanN8Test() {
+            CmpTests<N4>.GreaterThanTest();
+            CmpTests<N5>.GreaterThanTest();
+            CmpTests<N6>.GreaterThanTest();
+            CmpTests<N7>.GreaterThanTest();
+            CmpTests<N8>.GreaterThanTest();
+        }
+        
+        [TestMethod]
+        public void GreaterThanN16Test() {
+            CmpTests<N9>.GreaterThanTest();
+            CmpTests<N10>.GreaterThanTest();
+            CmpTests<N11>.GreaterThanTest();
+            CmpTests<N12>.GreaterThanTest();
+            CmpTests<N13>.GreaterThanTest();
+            CmpTests<N14>.GreaterThanTest();
+            CmpTests<N15>.GreaterThanTest();
+            CmpTests<N16>.GreaterThanTest();
+        }
+
+        [TestMethod]
+        public void GreaterThanN32Test() {
+            CmpTests<N17>.GreaterThanTest();
+            CmpTests<N23>.GreaterThanTest();
+            CmpTests<N24>.GreaterThanTest();
+            CmpTests<N25>.GreaterThanTest();
+            CmpTests<N31>.GreaterThanTest();
+            CmpTests<N32>.GreaterThanTest();
+            CmpTests<N33>.GreaterThanTest();
         }
     }
 }
