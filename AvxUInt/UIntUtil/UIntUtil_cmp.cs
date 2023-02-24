@@ -65,13 +65,15 @@ namespace AvxUInt {
                         return false;
                     }
 
+                    va += MM256UInt32s;
+                    vb += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
                     Vector256<UInt32> mask = Mask256.LSV(r);
 
-                    a0 = MaskLoad(va0, mask);
-                    b0 = MaskLoad(vb0, mask);
+                    a0 = MaskLoad(va, mask);
+                    b0 = MaskLoad(vb, mask);
 
                     uint flag =
                         ((uint)MoveMask(CompareEqual(a0, b0).AsSingle()));
