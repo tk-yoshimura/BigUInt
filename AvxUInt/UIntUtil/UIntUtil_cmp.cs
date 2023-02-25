@@ -307,13 +307,7 @@ namespace AvxUInt {
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadVector256X4(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, Vector256<UInt32>.Zero).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(x1, Vector256<UInt32>.Zero).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareEqual(x2, Vector256<UInt32>.Zero).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareEqual(x3, Vector256<UInt32>.Zero).AsSingle()) << 24);
-
-                    if (flag != ~0u) {
+                    if (!(TestZ(x0, x0) & TestZ(x1, x1) & TestZ(x2, x2) & TestZ(x3, x3))) {
                         return false;
                     }
 
@@ -323,11 +317,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s * 2) {
                     (x0, x1) = LoadVector256X2(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, Vector256<UInt32>.Zero).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(x1, Vector256<UInt32>.Zero).AsSingle()) << 8);
-
-                    if (flag != 65535u) {
+                    if (!(TestZ(x0, x0) & TestZ(x1, x1))) {
                         return false;
                     }
 
@@ -337,10 +327,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s) {
                     x0 = LoadVector256(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, Vector256<UInt32>.Zero).AsSingle()));
-
-                    if (flag != 255u) {
+                    if (!TestZ(x0, x0)) {
                         return false;
                     }
 
@@ -350,10 +337,7 @@ namespace AvxUInt {
                 if (r > 0) {
                     x0 = MaskLoad(v, Mask256.Lower(r));
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, Vector256<UInt32>.Zero).AsSingle()));
-
-                    if (flag != 255u) {
+                    if (!TestZ(x0, x0)) {
                         return false;
                     }
                 }
@@ -379,13 +363,7 @@ namespace AvxUInt {
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadVector256X4(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, fulls).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(x1, fulls).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareEqual(x2, fulls).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareEqual(x3, fulls).AsSingle()) << 24);
-
-                    if (flag != ~0u) {
+                    if (!(TestC(x0, fulls) & TestC(x1, fulls) & TestC(x2, fulls) & TestC(x3, fulls))) {
                         return false;
                     }
 
@@ -395,11 +373,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s * 2) {
                     (x0, x1) = LoadVector256X2(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, fulls).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(x1, fulls).AsSingle()) << 8);
-
-                    if (flag != 65535u) {
+                    if (!(TestC(x0, fulls) & TestC(x1, fulls))) {
                         return false;
                     }
 
@@ -409,10 +383,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s) {
                     x0 = LoadVector256(v);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, fulls).AsSingle()));
-
-                    if (flag != 255u) {
+                    if (!TestC(x0, fulls)) {
                         return false;
                     }
 
