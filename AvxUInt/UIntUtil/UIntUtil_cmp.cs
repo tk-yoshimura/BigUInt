@@ -14,6 +14,10 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length == arr_b.Length);
 #endif
 
+            if (arr_a[0] != arr_b[0] || arr_a[^1] != arr_b[^1]) {
+                return false;
+            }
+
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
                 UInt32* va = va0, vb = vb0;
 
@@ -94,6 +98,13 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length == arr_a.Length);
             Debug<ArgumentException>.Assert(length == arr_b.Length);
 #endif
+
+            if (arr_a[length - 1] < arr_b[length - 1]) {
+                return true;
+            }
+            if (arr_a[length - 1] > arr_b[length - 1]) {
+                return false;
+            }
 
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
                 UInt32* va = va0 + length, vb = vb0 + length;
@@ -188,6 +199,13 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length == arr_b.Length);
 #endif
 
+            if (arr_a[length - 1] > arr_b[length - 1]) {
+                return true;
+            }
+            if (arr_a[length - 1] < arr_b[length - 1]) {
+                return false;
+            }
+
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
                 UInt32* va = va0 + length, vb = vb0 + length;
 
@@ -276,6 +294,10 @@ namespace AvxUInt {
         /// <summary>Judge uint32 array is zero</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsZero(UInt32[] arr) {
+            if (arr[0] != 0u || arr[^1] != 0u) {
+                return false;
+            }
+
             fixed (UInt32* v0 = arr) {
                 UInt32* v = v0;
 
@@ -343,6 +365,10 @@ namespace AvxUInt {
         /// <summary>Judge uint32 array is full</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsFull(UInt32[] arr) {
+            if (arr[0] != ~0u || arr[^1] != ~0u) {
+                return false;
+            }
+
             fixed (UInt32* v0 = arr) {
                 UInt32* v = v0;
                 Vector256<UInt32> fulls = Vector256.Create(~0u);

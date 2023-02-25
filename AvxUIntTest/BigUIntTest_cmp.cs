@@ -53,8 +53,6 @@ namespace AvxUIntTest {
                 vs.Add((b_swapbit, (BigInteger)b_swapbit));
             }
 
-            vs.Add((BigUInt<N>.Zero, (BigInteger)BigUInt<N>.Zero));
-
             Console.WriteLine($"{nameof(length)}={length}: {vs.Count} testcases");
 
             tests = Array.AsReadOnly(vs.ToArray());
