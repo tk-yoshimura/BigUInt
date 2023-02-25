@@ -41,13 +41,6 @@ namespace AvxUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector256<UInt32> Reverse(Vector256<UInt32> x) {
-            Vector256<UInt32> y = PermuteVar8x32(x, Vector256.Create(7u, 6u, 5u, 4u, 3u, 2u, 1u, 0u));
-
-            return y;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (Vector256<UInt32> v0, Vector256<UInt32> v1) LoadVector256X2(UInt32* ptr) {
             Vector256<UInt32> v0 = LoadVector256(ptr);
             Vector256<UInt32> v1 = LoadVector256(ptr + MM256UInt32s);
@@ -66,28 +59,17 @@ namespace AvxUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Vector256<UInt32> ReverseLoadVector256(UInt32* ptr) {
-            Vector256<UInt32> v0 = Reverse(LoadVector256(ptr));
-
-            return v0;
+        public static unsafe void StoreX2(UInt32* ptr, Vector256<UInt32> v0, Vector256<UInt32> v1) {
+            Store(ptr, v0);
+            Store(ptr + MM256UInt32s, v1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (Vector256<UInt32> v0, Vector256<UInt32> v1) ReverseLoadVector256X2(UInt32* ptr) {
-            Vector256<UInt32> v0 = Reverse(LoadVector256(ptr + MM256UInt32s));
-            Vector256<UInt32> v1 = Reverse(LoadVector256(ptr));
-
-            return (v0, v1);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (Vector256<UInt32> v0, Vector256<UInt32> v1, Vector256<UInt32> v2, Vector256<UInt32> v3) ReverseLoadVector256X4(UInt32* ptr) {
-            Vector256<UInt32> v0 = Reverse(LoadVector256(ptr + MM256UInt32s * 3));
-            Vector256<UInt32> v1 = Reverse(LoadVector256(ptr + MM256UInt32s * 2));
-            Vector256<UInt32> v2 = Reverse(LoadVector256(ptr + MM256UInt32s));
-            Vector256<UInt32> v3 = Reverse(LoadVector256(ptr));
-
-            return (v0, v1, v2, v3);
+        public static unsafe void StoreX4(UInt32* ptr, Vector256<UInt32> v0, Vector256<UInt32> v1, Vector256<UInt32> v2, Vector256<UInt32> v3) {
+            Store(ptr, v0);
+            Store(ptr + MM256UInt32s, v1);
+            Store(ptr + MM256UInt32s * 2, v2);
+            Store(ptr + MM256UInt32s * 3, v3);
         }
     }
 }

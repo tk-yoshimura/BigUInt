@@ -39,7 +39,7 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    Avx2.MaskStore(v, Mask256.LSV(r), Vector256<UInt32>.Zero);
+                    Avx2.MaskStore(v, Mask256.Lower(r), Vector256<UInt32>.Zero);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    Avx2.MaskStore(v, Mask256.LSV(r), Vector256<UInt32>.Zero);
+                    Avx2.MaskStore(v, Mask256.Lower(r), Vector256<UInt32>.Zero);
                 }
             }
         }
