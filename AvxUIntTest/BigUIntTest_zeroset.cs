@@ -37,7 +37,7 @@ namespace AvxUIntTest {
     [TestClass]
     public class ZerosetTests {
         [TestMethod]
-        public void ZerosetTest() {
+        public void ZerosetN8Test() {
             ZerosetTests<N4>.ZerosetTest();
             ZerosetTests<N5>.ZerosetTest();
             ZerosetTests<N6>.ZerosetTest();
