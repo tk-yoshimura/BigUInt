@@ -1,11 +1,10 @@
 using AvxUInt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.ObjectModel;
 using System.Numerics;
 
 namespace AvxUIntTest {
-    public static class CmpTests<N> where N: struct, IConstant {
+    public static class CmpTests<N> where N : struct, IConstant {
         private static readonly int length = default(N).Value;
 
         private static readonly ReadOnlyCollection<(BigUInt<N> bits, BigInteger bint)> tests;
@@ -26,7 +25,7 @@ namespace AvxUIntTest {
             }
 
             Random random = new(1234);
-            for (int i = 0; i < length; i++) { 
+            for (int i = 0; i < length; i++) {
                 for (int j = i; j < length; j++) {
                     UInt32[] bits = new UInt32[length];
 
@@ -58,48 +57,48 @@ namespace AvxUIntTest {
             tests = Array.AsReadOnly(vs.ToArray());
         }
 
-        public static void EqualTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void EqualTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 == b2, n1 == n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
             }
         }
 
-        public static void LessThanOrEqualTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void LessThanOrEqualTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 <= b2, n1 <= n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
             }
         }
 
-        public static void GreaterThanOrEqualTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void GreaterThanOrEqualTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 >= b2, n1 >= n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
             }
         }
 
-        public static void NotEqualTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void NotEqualTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 != b2, n1 != n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
             }
         }
 
-        public static void LessThanTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void LessThanTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 < b2, n1 < n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
             }
         }
 
-        public static void GreaterThanTest() { 
-            foreach ((BigUInt<N> n1, BigInteger b1) in tests) { 
+        public static void GreaterThanTest() {
+            foreach ((BigUInt<N> n1, BigInteger b1) in tests) {
                 foreach ((BigUInt<N> n2, BigInteger b2) in tests) {
                     Assert.AreEqual(b1 > b2, n1 > n2, $"\n{length}\n{n1.ToHexcode()}\n{n2.ToHexcode()}");
                 }
@@ -135,7 +134,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.EqualTest();
             CmpTests<N8>.EqualTest();
         }
-        
+
         [TestMethod]
         public void EqualN16Test() {
             CmpTests<N9>.EqualTest();
@@ -180,7 +179,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.LessThanOrEqualTest();
             CmpTests<N8>.LessThanOrEqualTest();
         }
-        
+
         [TestMethod]
         public void LessThanOrEqualN16Test() {
             CmpTests<N9>.LessThanOrEqualTest();
@@ -216,7 +215,7 @@ namespace AvxUIntTest {
             CmpTests<N64>.LessThanOrEqualTest();
             CmpTests<N65>.LessThanOrEqualTest();
         }
-                
+
         [TestMethod]
         public void GreaterThanOrEqualN8Test() {
             CmpTests<N4>.GreaterThanOrEqualTest();
@@ -225,7 +224,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.GreaterThanOrEqualTest();
             CmpTests<N8>.GreaterThanOrEqualTest();
         }
-        
+
         [TestMethod]
         public void GreaterThanOrEqualN16Test() {
             CmpTests<N9>.GreaterThanOrEqualTest();
@@ -270,7 +269,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.NotEqualTest();
             CmpTests<N8>.NotEqualTest();
         }
-        
+
         [TestMethod]
         public void NotEqualN16Test() {
             CmpTests<N9>.NotEqualTest();
@@ -302,7 +301,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.LessThanTest();
             CmpTests<N8>.LessThanTest();
         }
-        
+
         [TestMethod]
         public void LessThanN16Test() {
             CmpTests<N9>.LessThanTest();
@@ -325,7 +324,7 @@ namespace AvxUIntTest {
             CmpTests<N32>.LessThanTest();
             CmpTests<N33>.LessThanTest();
         }
-                
+
         [TestMethod]
         public void GreaterThanN8Test() {
             CmpTests<N4>.GreaterThanTest();
@@ -334,7 +333,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.GreaterThanTest();
             CmpTests<N8>.GreaterThanTest();
         }
-        
+
         [TestMethod]
         public void GreaterThanN16Test() {
             CmpTests<N9>.GreaterThanTest();
@@ -357,7 +356,7 @@ namespace AvxUIntTest {
             CmpTests<N32>.GreaterThanTest();
             CmpTests<N33>.GreaterThanTest();
         }
-  
+
         [TestMethod]
         public void IsZeroN8Test() {
             CmpTests<N4>.IsZeroTest();
@@ -366,7 +365,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.IsZeroTest();
             CmpTests<N8>.IsZeroTest();
         }
-        
+
         [TestMethod]
         public void IsZeroN16Test() {
             CmpTests<N9>.IsZeroTest();
@@ -389,7 +388,7 @@ namespace AvxUIntTest {
             CmpTests<N32>.IsZeroTest();
             CmpTests<N33>.IsZeroTest();
         }
-                
+
         [TestMethod]
         public void IsFullN8Test() {
             CmpTests<N4>.IsFullTest();
@@ -398,7 +397,7 @@ namespace AvxUIntTest {
             CmpTests<N7>.IsFullTest();
             CmpTests<N8>.IsFullTest();
         }
-        
+
         [TestMethod]
         public void IsFullN16Test() {
             CmpTests<N9>.IsFullTest();

@@ -1,12 +1,11 @@
 using AvxUInt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
 
 namespace AvxUIntTest {
-    public static class ZerosetTests<N> where N: struct, IConstant {
+    public static class ZerosetTests<N> where N : struct, IConstant {
         public static void ZerosetTest() {
             uint length = (uint)default(N).Value;
-            
+
             UInt32[] n1 = BigUInt<N>.Full.Value.ToArray();
             UIntUtil.Zeroset(n1);
 

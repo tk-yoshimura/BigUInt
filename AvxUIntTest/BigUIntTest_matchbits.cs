@@ -1,7 +1,5 @@
 using AvxUInt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Numerics;
 
 namespace AvxUIntTest {
     [TestClass]
@@ -10,7 +8,7 @@ namespace AvxUIntTest {
         public void MatchBitsTest() {
             Random random = new(1234);
 
-            for (int length = 1; length < 32; length++) {
+            for (int length = 1; length <= 36; length++) {
                 for (int i = 0; i < 40; i++) {
                     UInt32[] bits = UIntUtil.Random(random, length, random.Next(length * UIntUtil.UInt32Bits + 1));
                     UInt32[] bits_swapbit = (UInt32[])bits.Clone();
