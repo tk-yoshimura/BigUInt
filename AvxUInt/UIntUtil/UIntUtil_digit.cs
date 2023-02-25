@@ -22,6 +22,9 @@ namespace AvxUInt {
                         r -= MM256UInt32s;
                     }
                     else {
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << 24;
+                        cnt += (uint)LeadingZeroCount(flag);
+                        r = 0;
                         break;
                     }
                 }
