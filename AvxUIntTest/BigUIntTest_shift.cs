@@ -8,9 +8,9 @@ namespace AvxUIntTest {
             Random random = new(1234);
 
             for (int sft = 0; sft < BigUInt<N>.Bits; sft++) {
-                UInt32[] mantissa = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits - sft);
+                UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits - sft);
 
-                BigUInt<N> v = new(mantissa, enable_clone: false);
+                BigUInt<N> v = new(bits, enable_clone: false);
                 BigInteger bi = v;
 
                 BigUInt<N> v_sft = v << sft;
@@ -34,9 +34,9 @@ namespace AvxUIntTest {
         public static void RightShiftTest() {
             Random random = new(1234);
 
-            UInt32[] mantissa = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits);
+            UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits);
 
-            BigUInt<N> v = new(mantissa, enable_clone: false);
+            BigUInt<N> v = new(bits, enable_clone: false);
             BigInteger bi = v;
 
             for (int sft = 0; sft <= BigUInt<N>.Bits + 4; sft++) {
@@ -56,9 +56,9 @@ namespace AvxUIntTest {
             Random random = new(1234);
 
             for (int sft = 0; sft < BigUInt<N>.Length; sft++) {
-                UInt32[] mantissa = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits - sft * UIntUtil.UInt32Bits);
+                UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits - sft * UIntUtil.UInt32Bits);
 
-                BigUInt<N> v = new(mantissa, enable_clone: false);
+                BigUInt<N> v = new(bits, enable_clone: false);
                 BigInteger bi = v;
 
                 BigUInt<N> v_sft = BigUInt<N>.LeftBlockShift(v, sft);
@@ -82,9 +82,9 @@ namespace AvxUIntTest {
         public static void RightBlockShiftTest() {
             Random random = new(1234);
 
-            UInt32[] mantissa = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits);
+            UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, BigUInt<N>.Bits);
 
-            BigUInt<N> v = new(mantissa, enable_clone: false);
+            BigUInt<N> v = new(bits, enable_clone: false);
             BigInteger bi = v;
 
             for (int sft = 0; sft <= BigUInt<N>.Length + 4; sft++) {

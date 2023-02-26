@@ -7,9 +7,9 @@ namespace AvxUIntTest {
             Random random = new(1234);
 
             for (int i = 0; i <= 2500; i++) {
-                UInt32[] mantissa = UIntUtil.Random(random, BigUInt<N>.Length, random.Next(BigUInt<N>.Bits + 1));
+                UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, random.Next(BigUInt<N>.Bits + 1));
 
-                BigUInt<N> v = new(mantissa, enable_clone: false);
+                BigUInt<N> v = new(bits, enable_clone: false);
                 BigUInt<N> v2 = new(v.ToString());
 
                 Assert.AreEqual(v, v2);
