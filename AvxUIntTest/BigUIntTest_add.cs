@@ -22,38 +22,87 @@ namespace AvxUIntTest {
                 }
             }
 
+            vs.Add((1, 1));
+
             BigInteger maxn = BigUInt<N>.Full;
 
             Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
 
             foreach((BigUInt<N> v1, BigInteger n1) in vs) {
                 foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
                     BigInteger n = n1 + n2;
 
-                    Console.WriteLine($"{n1} + {n2}");
-
                     if (n <= maxn) {
                         Assert.AreEqual(n, (BigInteger)(v1 + v2));
+
+                        normal_passes++;
                     }
                     else {
                         Assert.ThrowsException<OverflowException>(() => {
                             _ = v1 + v2;
                         });
+
+                        overflow_passes++;
                     }
                 }
             }
 
-            Assert.AreEqual(BigUInt<N>.Zero, new BigUInt<N>("0"));
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
         }
 
         public static void AddFullTest() {
-            BigUInt<N> v = BigUInt<N>.Full;
-            BigUInt<N> v2 = new(v.ToString());
+            List<(BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2)> vs = new();
+            BigInteger maxn = BigUInt<N>.Full, v = maxn / 2;
 
-            Assert.AreEqual(v, v2);
+            while (v > 0) {
+                BigInteger u = maxn - v;
+
+                BigInteger v0 = v - 1, v1 = v, v2 = v + 1;
+                BigInteger u0 = u - 1, u1 = u, u2 = u + 1;
+
+                vs.Add((BigUInt<N>.Parse(v0.ToString()), BigUInt<N>.Parse(u0.ToString()), v0, u0));
+                vs.Add((BigUInt<N>.Parse(v0.ToString()), BigUInt<N>.Parse(u1.ToString()), v0, u1));
+                vs.Add((BigUInt<N>.Parse(v0.ToString()), BigUInt<N>.Parse(u2.ToString()), v0, u2));
+
+                vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u0.ToString()), v1, u0));
+                vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u1.ToString()), v1, u1));
+                vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u2.ToString()), v1, u2));
+                
+                vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u0.ToString()), v2, u0));
+                vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u1.ToString()), v2, u1));
+                vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u2.ToString()), v2, u2));
+                
+                v >>= 1;
+            }
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
+
+            foreach((BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) in vs) {
+                BigInteger n = n1 + n2;
+
+                if (n <= maxn) {
+                    Assert.AreEqual(n, (BigInteger)(v1 + v2));
+
+                    normal_passes++;
+                }
+                else {
+                    Assert.ThrowsException<OverflowException>(() => {
+                        _ = v1 + v2;
+                    });
+
+                    overflow_passes++;
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
         }
     }
-
 
     [TestClass]
     public class AddTests {
@@ -88,6 +137,39 @@ namespace AvxUIntTest {
             AddTests<N63>.AddTest();
             AddTests<N64>.AddTest();
             AddTests<N65>.AddTest();
+        }
+
+        [TestMethod]
+        public void AddFullTest() {
+            AddTests<N4>.AddFullTest();
+            AddTests<N5>.AddFullTest();
+            AddTests<N6>.AddFullTest();
+            AddTests<N7>.AddFullTest();
+            AddTests<N8>.AddFullTest();
+            AddTests<N9>.AddFullTest();
+            AddTests<N10>.AddFullTest();
+            AddTests<N11>.AddFullTest();
+            AddTests<N12>.AddFullTest();
+            AddTests<N13>.AddFullTest();
+            AddTests<N14>.AddFullTest();
+            AddTests<N15>.AddFullTest();
+            AddTests<N16>.AddFullTest();
+            AddTests<N17>.AddFullTest();
+            AddTests<N23>.AddFullTest();
+            AddTests<N24>.AddFullTest();
+            AddTests<N25>.AddFullTest();
+            AddTests<N31>.AddFullTest();
+            AddTests<N32>.AddFullTest();
+            AddTests<N33>.AddFullTest();
+            AddTests<N47>.AddFullTest();
+            AddTests<N48>.AddFullTest();
+            AddTests<N50>.AddFullTest();
+            AddTests<N53>.AddFullTest();
+            AddTests<N56>.AddFullTest();
+            AddTests<N59>.AddFullTest();
+            AddTests<N63>.AddFullTest();
+            AddTests<N64>.AddFullTest();
+            AddTests<N65>.AddFullTest();
         }
     }
 }
