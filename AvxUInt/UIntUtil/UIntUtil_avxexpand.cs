@@ -20,20 +20,6 @@ namespace AvxUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector256<UInt32> CompareGreaterThanOrEqual(Vector256<UInt32> x, Vector256<UInt32> y) {
-            Vector256<UInt32> geq = CompareEqual(Max(x, y), x);
-
-            return geq;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector256<UInt32> CompareLessThanOrEqual(Vector256<UInt32> x, Vector256<UInt32> y) {
-            Vector256<UInt32> leq = CompareEqual(Max(y, x), y);
-
-            return leq;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector256<UInt32> CompareNotEqual(Vector256<UInt32> x, Vector256<UInt32> y) {
             Vector256<UInt32> neq = Xor(CompareEqual(x, y), Vector256.Create(~0u));
 

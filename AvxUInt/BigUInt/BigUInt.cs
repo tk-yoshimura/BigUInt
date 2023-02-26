@@ -15,7 +15,7 @@ namespace AvxUInt {
         public ReadOnlyCollection<UInt32> Value => Array.AsReadOnly(value);
 
         static BigUInt() {
-            if (Length < 4) {
+            if (Length < 4 || Length > 0x2000000) {
                 throw new ArgumentOutOfRangeException(nameof(Length));
             }
         }

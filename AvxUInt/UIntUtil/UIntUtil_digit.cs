@@ -11,10 +11,10 @@ namespace AvxUInt {
             uint cnt = 0, r = (uint)value.Length;
 
             fixed (UInt32* v0 = value) {
-                UInt32* v = v0 + r;
+                UInt32* v = v0 + r - MM256UInt32s;
 
                 while (r >= MM256UInt32s) {
-                    Vector256<UInt32> x = LoadVector256(v - MM256UInt32s);
+                    Vector256<UInt32> x = LoadVector256(v);
                     if (TestZ(x, x)) {
                         cnt += MM256UInt32s;
                         v -= MM256UInt32s;
@@ -34,13 +34,13 @@ namespace AvxUInt {
                         cnt += r;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX3 + (MM256UInt32s - r));
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
                         cnt += (uint)LeadingZeroCount(flag);
                     }
                 }
             }
 
-            return value.Length - unchecked((int)cnt);
+            return checked(value.Length - (int)cnt);
         }
     }
 }

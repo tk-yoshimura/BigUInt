@@ -30,4 +30,5 @@ namespace AvxUIntTest {
     public struct N63 : IConstant { public int Value => 63; }
     public struct N64 : IConstant { public int Value => 64; }
     public struct N65 : IConstant { public int Value => 65; }
+    public struct MaxLength : IConstant { public int Value => 0x2000000; }
 }

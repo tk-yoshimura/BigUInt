@@ -111,5 +111,13 @@ namespace AvxUIntTest {
                 BigUInt<Pow2.N4> n = new(Array.AsReadOnly(value4), 1, carry: true);
             });
         }
+
+        [TestMethod]
+        public void MaxLengthTest() {
+            BigUInt<MaxLength> n = new();
+            Assert.AreEqual(default(MaxLength).Value, BigUInt<MaxLength>.Length);
+            Assert.AreEqual(default(MaxLength).Value * 32, BigUInt<MaxLength>.Bits);
+            Assert.AreEqual(default(MaxLength).Value * 32 * 30103L / 100000L - 4, BigUInt<MaxLength>.MaxDecimalDigits);
+        }
     }
 }

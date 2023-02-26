@@ -12,10 +12,10 @@ namespace AvxUInt {
             uint cnt = 0, lzc = 0, r = (uint)value.Length;
 
             fixed (UInt32* v0 = value) {
-                UInt32* v = v0 + r;
+                UInt32* v = v0 + r - MM256UInt32s;
 
                 while (r >= MM256UInt32s) {
-                    Vector256<UInt32> x = LoadVector256(v - MM256UInt32s);
+                    Vector256<UInt32> x = LoadVector256(v);
                     if (TestZ(x, x)) {
                         cnt += MM256UInt32s;
                         v -= MM256UInt32s;
@@ -25,7 +25,7 @@ namespace AvxUInt {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
                         uint idx = (uint)LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v0[value.Length - cnt - 1]);
+                        lzc = (uint)LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
                         r = 0;
                         break;
                     }
@@ -37,22 +37,22 @@ namespace AvxUInt {
                         cnt += r;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX3 + (MM256UInt32s - r));
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
                         uint idx = (uint)LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v0[value.Length - cnt - 1]);
+                        lzc = (uint)LeadingZeroCount(v0[r - 1 - idx]);
                     }
                 }
             }
 
-            return unchecked((int)(cnt * UInt32Bits + lzc));
+            return checked((int)(cnt * UInt32Bits + lzc));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int LeadingZeroCount(UInt32 value) {
             uint cnt = Lzcnt.LeadingZeroCount(value);
 
-            return unchecked((int)cnt);
+            return checked((int)cnt);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
