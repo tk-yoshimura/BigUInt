@@ -45,14 +45,21 @@ namespace AvxUInt {
                 }
             }
 
-            return checked((int)(cnt * UInt32Bits + lzc));
+#if DEBUG
+            checked
+#else
+            unchecked
+#endif
+            {
+                return (int)(cnt * UInt32Bits + lzc);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int LeadingZeroCount(UInt32 value) {
             uint cnt = Lzcnt.LeadingZeroCount(value);
 
-            return checked((int)cnt);
+            return (int)cnt;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

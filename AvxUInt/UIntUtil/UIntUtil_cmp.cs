@@ -307,7 +307,7 @@ namespace AvxUInt {
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadVector256X4(v);
 
-                    if (!(TestZ(x0, x0) & TestZ(x1, x1) & TestZ(x2, x2) & TestZ(x3, x3))) {
+                    if (!(IsAllZero(x0) & IsAllZero(x1) & IsAllZero(x2) & IsAllZero(x3))) {
                         return false;
                     }
 
@@ -317,7 +317,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s * 2) {
                     (x0, x1) = LoadVector256X2(v);
 
-                    if (!(TestZ(x0, x0) & TestZ(x1, x1))) {
+                    if (!(IsAllZero(x0) & IsAllZero(x1))) {
                         return false;
                     }
 
@@ -327,7 +327,7 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s) {
                     x0 = LoadVector256(v);
 
-                    if (!TestZ(x0, x0)) {
+                    if (!IsAllZero(x0)) {
                         return false;
                     }
 
@@ -337,7 +337,7 @@ namespace AvxUInt {
                 if (r > 0) {
                     x0 = MaskLoad(v, Mask256.Lower(r));
 
-                    if (!TestZ(x0, x0)) {
+                    if (!IsAllZero(x0)) {
                         return false;
                     }
                 }
@@ -393,9 +393,8 @@ namespace AvxUInt {
                 if (r > 0) {
                     Vector256<uint> mask = Mask256.Lower(r);
                     x0 = MaskLoad(v, mask);
-                    x0 = Xor(x0, mask);
 
-                    if (!TestZ(x0, x0)) {
+                    if (!IsAllZero(Xor(x0, mask))) {
                         return false;
                     }
                 }

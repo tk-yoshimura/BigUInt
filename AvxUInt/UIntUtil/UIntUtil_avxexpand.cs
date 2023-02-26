@@ -57,5 +57,8 @@ namespace AvxUInt {
             Store(ptr + MM256UInt32s * 2, v2);
             Store(ptr + MM256UInt32s * 3, v3);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAllZero(Vector256<UInt32> x) => TestZ(x, x);
     }
 }
