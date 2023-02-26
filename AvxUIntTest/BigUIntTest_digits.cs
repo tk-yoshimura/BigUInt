@@ -1,6 +1,5 @@
 using AvxUInt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace AvxUIntTest {
     [TestClass]
@@ -17,24 +16,24 @@ namespace AvxUIntTest {
             BigUInt<Pow2.N4> n8 = new(new UInt32[] { 0xFFFFFFFFu, 0xFFFFFFFFu, 0x7FFFFFFFu, 0u }, enable_clone: false);
             BigUInt<Pow2.N4> n9 = new(new UInt32[] { 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0u }, enable_clone: false);
 
-            BigUInt<N13> n10 = new(new UInt32[] { 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
-                0xFFFFFFFFu 
+            BigUInt<N13> n10 = new(new UInt32[] {
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu,
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu,
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu,
+                0xFFFFFFFFu
             }, enable_clone: false);
 
-            BigUInt<N13> n11 = new(new UInt32[] { 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0, 
-                0, 0, 0, 0, 
+            BigUInt<N13> n11 = new(new UInt32[] {
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu,
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0,
+                0, 0, 0, 0,
                 0
             }, enable_clone: false);
 
-            BigUInt<N13> n12 = new(new UInt32[] { 
-                0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0, 
-                0, 0, 0, 0, 
-                0, 0, 0, 0, 
+            BigUInt<N13> n12 = new(new UInt32[] {
+                0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
                 0
             }, enable_clone: false);
 
