@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.X86;
 using System.Runtime.Intrinsics;
 using static System.Runtime.Intrinsics.X86.Avx;
 using static System.Runtime.Intrinsics.X86.Avx2;
@@ -28,23 +27,20 @@ namespace AvxUInt {
                         break;
                     }
                 }
-                v--;
-
-                while (r > 0) {
-                    UInt32 n = v[0];
-
-                    if (n == 0u) {
-                        cnt += 1;
-                        v--;
-                        r--;
+                if (r > 0) {
+                    Vector256<UInt32> mask = Mask256.Lower(r);
+                    Vector256<UInt32> x = MaskLoad(v - r, mask);
+                    if (TestZ(x, x)) {
+                        cnt += r;
                     }
                     else {
-                        break;
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(24 + (MM256UInt32s - r));
+                        cnt += (uint)LeadingZeroCount(flag);
                     }
                 }
             }
 
-            return Math.Max(1, value.Length - checked((int)cnt));
+            return value.Length - unchecked((int)cnt);
         }
     }
 }

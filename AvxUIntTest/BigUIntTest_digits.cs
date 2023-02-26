@@ -15,22 +15,23 @@ namespace AvxUIntTest {
             BigUInt<Pow2.N4> n6 = new();
             BigUInt<Pow2.N4> n7 = new(1u);
             BigUInt<Pow2.N4> n8 = new(new UInt32[] { 0xFFFFFFFFu, 0xFFFFFFFFu, 0x7FFFFFFFu, 0u }, enable_clone: false);
+            BigUInt<Pow2.N4> n9 = new(new UInt32[] { 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0u }, enable_clone: false);
 
-            BigUInt<N13> n9 = new(new UInt32[] { 
+            BigUInt<N13> n10 = new(new UInt32[] { 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
                 0xFFFFFFFFu 
             }, enable_clone: false);
 
-            BigUInt<N13> n10 = new(new UInt32[] { 
+            BigUInt<N13> n11 = new(new UInt32[] { 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0, 
                 0, 0, 0, 0, 
                 0
             }, enable_clone: false);
 
-            BigUInt<N13> n11 = new(new UInt32[] { 
+            BigUInt<N13> n12 = new(new UInt32[] { 
                 0xFFFFFFFFu, 0xFFFFFFFFu, 0, 0, 
                 0, 0, 0, 0, 
                 0, 0, 0, 0, 
@@ -42,12 +43,13 @@ namespace AvxUIntTest {
             Assert.AreEqual(4, n3.Digits);
             Assert.AreEqual(4, n4.Digits);
             Assert.AreEqual(4, n5.Digits);
-            Assert.AreEqual(1, n6.Digits);
+            Assert.AreEqual(0, n6.Digits);
             Assert.AreEqual(1, n7.Digits);
             Assert.AreEqual(3, n8.Digits);
-            Assert.AreEqual(13, n9.Digits);
-            Assert.AreEqual(6, n10.Digits);
-            Assert.AreEqual(2, n11.Digits);
+            Assert.AreEqual(3, n9.Digits);
+            Assert.AreEqual(13, n10.Digits);
+            Assert.AreEqual(6, n11.Digits);
+            Assert.AreEqual(2, n12.Digits);
         }
     }
 }

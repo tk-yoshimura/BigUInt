@@ -391,12 +391,11 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    x0 = MaskLoad(v, Mask256.Lower(r));
+                    Vector256<uint> mask = Mask256.Lower(r);
+                    x0 = MaskLoad(v, mask);
+                    x0 = Xor(x0, mask);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(x0, fulls).AsSingle()));
-
-                    if (flag != (255u >> (int)(MM256UInt32s - r))) {
+                    if (!TestZ(x0, x0)) {
                         return false;
                     }
                 }
