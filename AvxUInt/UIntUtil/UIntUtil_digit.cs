@@ -21,7 +21,7 @@ namespace AvxUInt {
                         r -= MM256UInt32s;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << 24;
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
                         cnt += (uint)LeadingZeroCount(flag);
                         r = 0;
                         break;
@@ -34,7 +34,7 @@ namespace AvxUInt {
                         cnt += r;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(24 + (MM256UInt32s - r));
+                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX3 + (MM256UInt32s - r));
                         cnt += (uint)LeadingZeroCount(flag);
                     }
                 }

@@ -15,7 +15,7 @@
 
             random.NextBytes(vs);
 
-            return (UInt32)vs[0] | ((UInt32)vs[1] << 8) | ((UInt32)vs[2] << 16) | ((UInt32)vs[3] << 24);
+            return (UInt32)vs[0] | ((UInt32)vs[1] << ShiftIDX1) | ((UInt32)vs[2] << ShiftIDX2) | ((UInt32)vs[3] << ShiftIDX3);
         }
     }
 }

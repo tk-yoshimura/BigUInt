@@ -30,9 +30,9 @@ namespace AvxUInt {
 
                     uint flag =
                         ((uint)MoveMask(CompareEqual(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareEqual(a2, b2).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareEqual(a3, b3).AsSingle()) << 24);
+                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << ShiftIDX1) |
+                        ((uint)MoveMask(CompareEqual(a2, b2).AsSingle()) << ShiftIDX2) |
+                        ((uint)MoveMask(CompareEqual(a3, b3).AsSingle()) << ShiftIDX3);
 
                     if (flag != ~0u) {
                         return false;
@@ -48,7 +48,7 @@ namespace AvxUInt {
 
                     uint flag =
                         ((uint)MoveMask(CompareEqual(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << 8);
+                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << ShiftIDX1);
 
                     if (flag != 65535u) {
                         return false;
@@ -118,15 +118,15 @@ namespace AvxUInt {
 
                     uint gt_flag =
                         ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << 24);
+                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1) |
+                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << ShiftIDX2) |
+                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << ShiftIDX3);
 
                     uint lt_flag =
                         ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << 24);
+                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1) |
+                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << ShiftIDX2) |
+                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << ShiftIDX3);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag < lt_flag;
@@ -142,11 +142,11 @@ namespace AvxUInt {
 
                     uint gt_flag =
                         ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << 8);
+                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1);
 
                     uint lt_flag =
                         ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << 8);
+                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag < lt_flag;
@@ -218,15 +218,15 @@ namespace AvxUInt {
 
                     uint gt_flag =
                         ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << 24);
+                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1) |
+                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << ShiftIDX2) |
+                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << ShiftIDX3);
 
                     uint lt_flag =
                         ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << 8) |
-                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << 16) |
-                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << 24);
+                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1) |
+                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << ShiftIDX2) |
+                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << ShiftIDX3);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag > lt_flag;
@@ -242,11 +242,11 @@ namespace AvxUInt {
 
                     uint gt_flag =
                         ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << 8);
+                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1);
 
                     uint lt_flag =
                         ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << 8);
+                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag > lt_flag;

@@ -8,9 +8,9 @@ namespace AvxUInt {
 
             for (int i = 0, j = 0; i < Length; i++, j += 4) {
                 b[j + 0] = unchecked((byte)n.value[i]);
-                b[j + 1] = unchecked((byte)(n.value[i] >> 8));
-                b[j + 2] = unchecked((byte)(n.value[i] >> 16));
-                b[j + 3] = unchecked((byte)(n.value[i] >> 24));
+                b[j + 1] = unchecked((byte)(n.value[i] >> UIntUtil.ShiftIDX1));
+                b[j + 2] = unchecked((byte)(n.value[i] >> UIntUtil.ShiftIDX2));
+                b[j + 3] = unchecked((byte)(n.value[i] >> UIntUtil.ShiftIDX3));
             }
 
             return new BigInteger(b);
