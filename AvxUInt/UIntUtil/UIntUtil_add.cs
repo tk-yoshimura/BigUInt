@@ -14,9 +14,8 @@ namespace AvxUInt {
                 Add(arr_a, arr_b[0]);
                 return;
             }
-
-            if (arr_a.Length < digits_b) {
-                throw new ArgumentException($"{nameof(arr_a)}.Length >= {nameof(arr_b)}.Length", nameof(arr_a));
+            if (digits_b > arr_a.Length) {
+                throw new OverflowException();
             }
 
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
