@@ -51,10 +51,7 @@
         private static BigUInt<N> Add(BigUInt<N> v1, UInt64 v2) {
             BigUInt<N> ret = v1.Copy();
 
-            UInt32[] v2_arr = new UInt32[2];
-            (v2_arr[1], v2_arr[0]) = UIntUtil.Unpack(v2);
-
-            UIntUtil.Add(ret.value, v2_arr);
+            UIntUtil.Add(ret.value, v2);
 
             return ret;
         }
