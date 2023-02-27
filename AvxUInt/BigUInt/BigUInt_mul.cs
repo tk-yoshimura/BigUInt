@@ -24,7 +24,7 @@
         private static BigUInt<N> Mul(BigUInt<N> v1, BigUInt<N> v2) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Mul(ret.value, v1.value, v2.value);
+            UIntUtil.Fma(ret.value, v1.value, v2.value);
 
             return ret;
         }
@@ -32,7 +32,7 @@
         private static BigUInt<N> Mul(BigUInt<N> v1, UInt32 v2) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Mul(ret.value, v1.value, v2);
+            UIntUtil.Fma(ret.value, v1.value, v2);
 
             return ret;
         }
@@ -40,7 +40,7 @@
         private static BigUInt<N> Mul(BigUInt<N> v1, UInt64 v2) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Mul(ret.value, v1.value, v2);
+            UIntUtil.Fma(ret.value, v1.value, v2);
 
             return ret;
         }
@@ -48,7 +48,7 @@
         public static BigUInt<Double<N>> ExpandMul(BigUInt<N> v1, BigUInt<N> v2) {
             BigUInt<Double<N>> ret = BigUInt<Double<N>>.Zero;
 
-            UIntUtil.Mul(ret.value, v1.value, v2.value);
+            UIntUtil.Fma(ret.value, v1.value, v2.value);
 
             return ret;
         }

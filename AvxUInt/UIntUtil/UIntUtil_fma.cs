@@ -6,37 +6,37 @@ using static System.Runtime.Intrinsics.X86.Avx2;
 namespace AvxUInt {
     internal static partial class UIntUtil {
         /// <summary>Operate uint32 array arr_dst += a * b</summary>
-        public static void Mul(UInt32[] arr_dst, UInt32[] arr_a, UInt32[] arr_b) {
+        public static void Fma(UInt32[] arr_dst, UInt32[] arr_a, UInt32[] arr_b) {
             uint digits_a = (uint)Digits(arr_a), digits_b = (uint)Digits(arr_b);
 
             if (digits_a >= digits_b) {
                 for (uint i = 0; i < digits_b; i++) {
-                    Mul(i, digits_a, arr_dst, arr_a, arr_b[i]);
+                    Fma(i, digits_a, arr_dst, arr_a, arr_b[i]);
                 }
             }
             else {
                 for (uint i = 0; i < digits_a; i++) {
-                    Mul(i, digits_b, arr_dst, arr_b, arr_a[i]);
+                    Fma(i, digits_b, arr_dst, arr_b, arr_a[i]);
                 }
             }
         }
 
         /// <summary>Operate uint32 array arr_dst += a * b</summary>
-        public static void Mul(UInt32[] arr_dst, UInt32[] arr_a, UInt32 b) {
-            Mul(0u, (uint)Digits(arr_a), arr_dst, arr_a, b);
+        public static void Fma(UInt32[] arr_dst, UInt32[] arr_a, UInt32 b) {
+            Fma(0u, (uint)Digits(arr_a), arr_dst, arr_a, b);
         }
 
         /// <summary>Operate uint32 array arr_dst += a * b</summary>
-        public static void Mul(UInt32[] arr_dst, UInt32[] arr_a, UInt64 b) {
+        public static void Fma(UInt32[] arr_dst, UInt32[] arr_a, UInt64 b) {
             uint digits_a = (uint)Digits(arr_a);
             (UInt32 b_hi, UInt32 b_lo) = Unpack(b);
 
-            Mul(0u, digits_a, arr_dst, arr_a, b_lo);
-            Mul(1u, digits_a, arr_dst, arr_a, b_hi);
+            Fma(0u, digits_a, arr_dst, arr_a, b_lo);
+            Fma(1u, digits_a, arr_dst, arr_a, b_hi);
         }
 
         /// <summary>Operate uint32 array arr_dst += a * b &lt;&lt; offset</summary>
-        private static unsafe void Mul(uint offset, uint digits_a, UInt32[] arr_dst, UInt32[] arr_a, UInt32 b) {
+        private static unsafe void Fma(uint offset, uint digits_a, UInt32[] arr_dst, UInt32[] arr_a, UInt32 b) {
             if (b == 0u) {
                 return;
             }
