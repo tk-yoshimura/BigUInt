@@ -147,7 +147,7 @@ namespace AvxUInt {
                 }
                 if (digit + MM256UInt32s <= digits_b) {
                     a0 = Load(va, va0, arr_a.Length);
-                    b0 = Load(vb, vb0, arr_a.Length);
+                    b0 = Load(vb, vb0, arr_b.Length);
 
                     UInt32 carry = 0;
 
@@ -175,7 +175,7 @@ namespace AvxUInt {
                     Vector256<UInt32> mask_b = Mask256.Lower(rem_b);
 
                     a0 = MaskLoad(va, mask_a, va0, arr_a.Length);
-                    b0 = MaskLoad(vb, mask_b, vb0, arr_a.Length);
+                    b0 = MaskLoad(vb, mask_b, vb0, arr_b.Length);
 
                     UInt32 carry = 0;
 
