@@ -74,6 +74,14 @@ namespace AvxUInt {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Sub(Vector256<UInt32> a, Vector256<UInt32> b) {
+            Vector256<UInt32> ret = Avx2.Subtract(a, b);
+            Vector256<UInt32> carry = ShiftRightLogical(CompareLessThan(a, ret), UInt32Bits - 1);
+
+            return (ret, carry);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> r0, UInt32 carry)
             CarryShift(Vector256<UInt32> v0, UInt32 carry) {
 
