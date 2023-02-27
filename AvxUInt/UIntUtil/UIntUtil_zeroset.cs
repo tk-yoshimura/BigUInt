@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
-using System.Runtime.Intrinsics.X86;
 
 namespace AvxUInt {
     internal static partial class UIntUtil {
@@ -19,7 +18,7 @@ namespace AvxUInt {
                 UInt32* v = v0 + index;
 
                 Vector256<uint> zero = Vector256<UInt32>.Zero;
-                
+
                 uint r = length;
                 while (r >= MM256UInt32s * 4) {
                     StoreX4(v, zero, zero, zero, zero, v0, arr.Length);

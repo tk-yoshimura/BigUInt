@@ -193,10 +193,10 @@ namespace AvxUInt {
             Vector256<UInt32> al = UnpackLow(a, zero), ah = UnpackHigh(a, zero);
 
             Vector256<UInt32> a0 = Permute2x128(al, ah, 0b00100000), a1 = Permute2x128(al, ah, 0b00110001);
-            
+
             Vector256<UInt32> x0 = Avx2.Multiply(a0, b).AsUInt32();
             Vector256<UInt32> x1 = Avx2.Multiply(a1, b).AsUInt32();
-            
+
             Vector256<UInt32> r = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b10001000).AsDouble(), 0b11011000).AsUInt32();
             Vector256<UInt32> c = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b11011101).AsDouble(), 0b11011000).AsUInt32();
 

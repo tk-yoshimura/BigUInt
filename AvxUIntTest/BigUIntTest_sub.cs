@@ -9,7 +9,7 @@ namespace AvxUIntTest {
 
             List<(BigUInt<N> b, BigInteger n)> vs = new();
 
-            for (int i = 1; i <= BigUInt<N>.Bits; i += 15) { 
+            for (int i = 1; i <= BigUInt<N>.Bits; i += 15) {
                 UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, i);
                 BigUInt<N> v = new(bits, enable_clone: false);
                 vs.Add((v, v));
@@ -28,7 +28,7 @@ namespace AvxUIntTest {
 
             int normal_passes = 0, overflow_passes = 0;
 
-            foreach((BigUInt<N> v1, BigInteger n1) in vs) {
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
                 foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
                     BigInteger n = n1 - n2;
 
@@ -68,11 +68,11 @@ namespace AvxUIntTest {
                 vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u0.ToString()), v1, u0));
                 vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u1.ToString()), v1, u1));
                 vs.Add((BigUInt<N>.Parse(v1.ToString()), BigUInt<N>.Parse(u2.ToString()), v1, u2));
-                
+
                 vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u0.ToString()), v2, u0));
                 vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u1.ToString()), v2, u1));
                 vs.Add((BigUInt<N>.Parse(v2.ToString()), BigUInt<N>.Parse(u2.ToString()), v2, u2));
-                
+
                 v >>= 1;
             }
 
@@ -80,7 +80,7 @@ namespace AvxUIntTest {
 
             int normal_passes = 0, overflow_passes = 0;
 
-            foreach((BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) in vs) {
+            foreach ((BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) in vs) {
                 BigInteger n = n1 - n2;
 
                 if (n >= 0) {

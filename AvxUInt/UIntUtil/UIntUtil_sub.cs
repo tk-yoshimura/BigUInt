@@ -1,6 +1,4 @@
 ﻿using System.Runtime.Intrinsics;
-using static System.Runtime.Intrinsics.X86.Avx;
-using static System.Runtime.Intrinsics.X86.Avx2;
 
 namespace AvxUInt {
     internal static partial class UIntUtil {
@@ -40,7 +38,7 @@ namespace AvxUInt {
                 throw new OverflowException();
             }
         }
-        
+
         /// <summary>Operate uint32 array a -= b</summary>
         public static unsafe void Sub(UInt32[] arr_a, UInt64 b) {
             if (b == 0uL) {
