@@ -18,28 +18,26 @@ namespace AvxUInt {
             fixed (UInt32* v0 = arr) {
                 UInt32* v = v0 + index;
 
+                Vector256<uint> zero = Vector256<UInt32>.Zero;
+                
                 uint r = length;
                 while (r >= MM256UInt32s * 4) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s * 2, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s * 3, Vector256<UInt32>.Zero);
+                    StoreX4(v, zero, zero, zero, zero, v0, arr.Length);
                     v += MM256UInt32s * 4;
                     r -= MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s, Vector256<UInt32>.Zero);
+                    StoreX2(v, zero, zero, v0, arr.Length);
                     v += MM256UInt32s * 2;
                     r -= MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
+                    Store(v, zero, v0, arr.Length);
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    Avx2.MaskStore(v, Mask256.Lower(r), Vector256<UInt32>.Zero);
+                    MaskStore(v, zero, Mask256.Lower(r), v0, arr.Length);
                 }
             }
         }
@@ -51,28 +49,26 @@ namespace AvxUInt {
             fixed (UInt32* v0 = arr) {
                 UInt32* v = v0;
 
+                Vector256<uint> zero = Vector256<UInt32>.Zero;
+
                 uint r = length;
                 while (r >= MM256UInt32s * 4) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s * 2, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s * 3, Vector256<UInt32>.Zero);
+                    StoreX4(v, zero, zero, zero, zero, v0, arr.Length);
                     v += MM256UInt32s * 4;
                     r -= MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
-                    Avx.Store(v + MM256UInt32s, Vector256<UInt32>.Zero);
+                    StoreX2(v, zero, zero, v0, arr.Length);
                     v += MM256UInt32s * 2;
                     r -= MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    Avx.Store(v, Vector256<UInt32>.Zero);
+                    Store(v, zero, v0, arr.Length);
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
                 if (r > 0) {
-                    Avx2.MaskStore(v, Mask256.Lower(r), Vector256<UInt32>.Zero);
+                    MaskStore(v, zero, Mask256.Lower(r), v0, arr.Length);
                 }
             }
         }

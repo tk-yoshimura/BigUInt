@@ -34,46 +34,46 @@ namespace AvxUInt {
 
                 if (rem > 0) {
                     Vector256<UInt32> mask = Mask256.Lower(rem);
-                    x0 = MaskLoad(v - rem, mask);
-                    y0 = MaskLoad(v - rem + 1, mask);
+                    x0 = MaskLoad(v - rem, mask, v0, value.Length);
+                    y0 = MaskLoad(v - rem + 1, mask, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    MaskStore(v - rem + sft_block + 1, mask, z0);
+                    MaskStore(v - rem + sft_block + 1, mask, z0, v0, value.Length);
                     v -= rem;
                     r -= rem;
                 }
                 while (r >= MM256UInt32s * 4) {
-                    (x0, x1, x2, x3) = LoadVector256X4(v - MM256UInt32s * 4);
-                    (y0, y1, y2, y3) = LoadVector256X4(v - MM256UInt32s * 4 + 1);
+                    (x0, x1, x2, x3) = LoadX4(v - MM256UInt32s * 4, v0, value.Length);
+                    (y0, y1, y2, y3) = LoadX4(v - MM256UInt32s * 4 + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
                     z1 = Or(ShiftRightLogical(x1, rsft), ShiftLeftLogical(y1, lsft));
                     z2 = Or(ShiftRightLogical(x2, rsft), ShiftLeftLogical(y2, lsft));
                     z3 = Or(ShiftRightLogical(x3, rsft), ShiftLeftLogical(y3, lsft));
 
-                    StoreX4(v - MM256UInt32s * 4 + sft_block + 1, z0, z1, z2, z3);
+                    StoreX4(v - MM256UInt32s * 4 + sft_block + 1, z0, z1, z2, z3, v0, value.Length);
                     v -= MM256UInt32s * 4;
                     r -= MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    (x0, x1) = LoadVector256X2(v - MM256UInt32s * 2);
-                    (y0, y1) = LoadVector256X2(v - MM256UInt32s * 2 + 1);
+                    (x0, x1) = LoadX2(v - MM256UInt32s * 2, v0, value.Length);
+                    (y0, y1) = LoadX2(v - MM256UInt32s * 2 + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
                     z1 = Or(ShiftRightLogical(x1, rsft), ShiftLeftLogical(y1, lsft));
 
-                    StoreX2(v - MM256UInt32s * 2 + sft_block + 1, z0, z1);
+                    StoreX2(v - MM256UInt32s * 2 + sft_block + 1, z0, z1, v0, value.Length);
                     v -= MM256UInt32s * 2;
                     r -= MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    x0 = LoadVector256(v - MM256UInt32s);
-                    y0 = LoadVector256(v - MM256UInt32s + 1);
+                    x0 = Load(v - MM256UInt32s, v0, value.Length);
+                    y0 = Load(v - MM256UInt32s + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    Store(v - MM256UInt32s + sft_block + 1, z0);
+                    Store(v - MM256UInt32s + sft_block + 1, z0, v0, value.Length);
 
                     v -= MM256UInt32s;
                 }
@@ -107,48 +107,48 @@ namespace AvxUInt {
                 Vector256<UInt32> x0, x1, x2, x3, y0, y1, y2, y3, z0, z1, z2, z3;
 
                 while (r >= MM256UInt32s * 4) {
-                    (x0, x1, x2, x3) = LoadVector256X4(v + sft_block);
-                    (y0, y1, y2, y3) = LoadVector256X4(v + sft_block + 1);
+                    (x0, x1, x2, x3) = LoadX4(v + sft_block, v0, value.Length);
+                    (y0, y1, y2, y3) = LoadX4(v + sft_block + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
                     z1 = Or(ShiftRightLogical(x1, rsft), ShiftLeftLogical(y1, lsft));
                     z2 = Or(ShiftRightLogical(x2, rsft), ShiftLeftLogical(y2, lsft));
                     z3 = Or(ShiftRightLogical(x3, rsft), ShiftLeftLogical(y3, lsft));
 
-                    StoreX4(v, z0, z1, z2, z3);
+                    StoreX4(v, z0, z1, z2, z3, v0, value.Length);
                     r -= MM256UInt32s * 4;
                     v += MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    (x0, x1) = LoadVector256X2(v + sft_block);
-                    (y0, y1) = LoadVector256X2(v + sft_block + 1);
+                    (x0, x1) = LoadX2(v + sft_block, v0, value.Length);
+                    (y0, y1) = LoadX2(v + sft_block + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
                     z1 = Or(ShiftRightLogical(x1, rsft), ShiftLeftLogical(y1, lsft));
 
-                    StoreX2(v, z0, z1);
+                    StoreX2(v, z0, z1, v0, value.Length);
                     r -= MM256UInt32s * 2;
                     v += MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    x0 = LoadVector256(v + sft_block);
-                    y0 = LoadVector256(v + sft_block + 1);
+                    x0 = Load(v + sft_block, v0, value.Length);
+                    y0 = Load(v + sft_block + 1, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    Store(v, z0);
+                    Store(v, z0, v0, value.Length);
                     r -= MM256UInt32s;
                     v += MM256UInt32s;
                 }
                 if (r > 0) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
-                    x0 = MaskLoad(v + sft_block, mask);
-                    y0 = MaskLoad(v + sft_block + 1, mask);
+                    x0 = MaskLoad(v + sft_block, mask, v0, value.Length);
+                    y0 = MaskLoad(v + sft_block + 1, mask, v0, value.Length);
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    MaskStore(v, mask, z0);
+                    MaskStore(v, mask, z0, v0, value.Length);
 
                     v += r;
                 }
@@ -179,25 +179,25 @@ namespace AvxUInt {
 
                 if (rem > 0) {
                     Vector256<UInt32> mask = Mask256.Lower(rem);
-                    MaskStore(v + sft - rem, mask, MaskLoad(v - rem, mask));
+                    MaskStore(v + sft - rem, MaskLoad(v - rem, mask, v0, value.Length), mask, v0, value.Length);
                     r -= rem;
                     v -= rem;
                 }
                 while (r >= MM256UInt32s * 4) {
-                    (x0, x1, x2, x3) = LoadVector256X4(v - MM256UInt32s * 4);
-                    StoreX4(v + sft - MM256UInt32s * 4, x0, x1, x2, x3);
+                    (x0, x1, x2, x3) = LoadX4(v - MM256UInt32s * 4, v0, value.Length);
+                    StoreX4(v + sft - MM256UInt32s * 4, x0, x1, x2, x3, v0, value.Length);
                     r -= MM256UInt32s * 4;
                     v -= MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    (x0, x1) = LoadVector256X2(v - MM256UInt32s * 2);
-                    StoreX2(v + sft - MM256UInt32s * 2, x0, x1);
+                    (x0, x1) = LoadX2(v - MM256UInt32s * 2, v0, value.Length);
+                    StoreX2(v + sft - MM256UInt32s * 2, x0, x1, v0, value.Length);
                     r -= MM256UInt32s * 2;
                     v -= MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    x0 = LoadVector256(v - MM256UInt32s);
-                    Store(v + sft - MM256UInt32s, x0);
+                    x0 = Load(v - MM256UInt32s, v0, value.Length);
+                    Store(v + sft - MM256UInt32s, x0, v0, value.Length);
                 }
             }
 
@@ -223,26 +223,26 @@ namespace AvxUInt {
                 Vector256<UInt32> x0, x1, x2, x3;
 
                 while (r >= MM256UInt32s * 4) {
-                    (x0, x1, x2, x3) = LoadVector256X4(v + sft);
-                    StoreX4(v, x0, x1, x2, x3);
+                    (x0, x1, x2, x3) = LoadX4(v + sft, v0, value.Length);
+                    StoreX4(v, x0, x1, x2, x3, v0, value.Length);
                     r -= MM256UInt32s * 4;
                     v += MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
-                    (x0, x1) = LoadVector256X2(v + sft);
-                    StoreX2(v, x0, x1);
+                    (x0, x1) = LoadX2(v + sft, v0, value.Length);
+                    StoreX2(v, x0, x1, v0, value.Length);
                     r -= MM256UInt32s * 2;
                     v += MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
-                    x0 = LoadVector256(v + sft);
-                    Store(v, x0);
+                    x0 = Load(v + sft, v0, value.Length);
+                    Store(v, x0, v0, value.Length);
                     r -= MM256UInt32s;
                     v += MM256UInt32s;
                 }
                 if (r > 0) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
-                    MaskStore(v, mask, MaskLoad(v + sft, mask));
+                    MaskStore(v, MaskLoad(v + sft, mask, v0, value.Length), mask, v0, value.Length);
                 }
             }
 

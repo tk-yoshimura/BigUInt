@@ -15,7 +15,7 @@ namespace AvxUInt {
                 UInt32* v = v0 + r - MM256UInt32s;
 
                 while (r >= MM256UInt32s) {
-                    Vector256<UInt32> x = LoadVector256(v);
+                    Vector256<UInt32> x = Load(v, v0, value.Length);
                     if (TestZ(x, x)) {
                         cnt += MM256UInt32s;
                         v -= MM256UInt32s;
@@ -32,7 +32,8 @@ namespace AvxUInt {
                 }
                 if (r > 0) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
-                    Vector256<UInt32> x = MaskLoad(v0, mask);
+
+                    Vector256<UInt32> x = MaskLoad(v0, mask, v0, value.Length);
                     if (TestZ(x, x)) {
                         cnt += r;
                     }
