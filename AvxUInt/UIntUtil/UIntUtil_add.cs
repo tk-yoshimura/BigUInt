@@ -114,13 +114,16 @@ namespace AvxUInt {
                         (b0, carry) = CarryShift(b0, carry);
                     }
 
-                    MaskStore(va, mask_a, a0);
-
                     if (rem_a < MM256UInt32s) {
+                        MaskStore(va, mask_a, a0);
                         if (a0.GetElement((int)rem_a) > 0u) {
                             throw new OverflowException();
                         }
                     }
+                    else {
+                        Store(va, a0);
+                    }
+
                     Add(offset + ShiftIDX1, arr_a, carry);
                 }
             }
@@ -171,7 +174,7 @@ namespace AvxUInt {
         }
 
         /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
-        public static unsafe void Add(uint offset, UInt32[] arr_a, UInt32 b) {
+        private static unsafe void Add(uint offset, UInt32[] arr_a, UInt32 b) {
             fixed (UInt32* va0 = arr_a) {
                 for (uint i = offset, length = (uint)arr_a.Length; i < length && b > 0u; i++) {
                     UInt32 a = va0[i];

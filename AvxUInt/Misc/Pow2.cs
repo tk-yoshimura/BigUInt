@@ -31,7 +31,7 @@
         public int Value => checked(default(N).Value + 64);
     }
 
-    internal struct Double<N> : IConstant where N : struct, IConstant {
+    public struct Double<N> : IConstant where N : struct, IConstant {
         public int Value => checked(default(N).Value * 2);
     }
 
