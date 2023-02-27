@@ -86,7 +86,7 @@ namespace AvxUInt {
 
             Debug<AccessViolationException>.Assert(ptr >= ptr0 && ptr - ptr0 + mask_length <= arr_length);
 #endif
-            Avx2.Store(ptr, v0);
+            Avx2.MaskStore(ptr, mask, v0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

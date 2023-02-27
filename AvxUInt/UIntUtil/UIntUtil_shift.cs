@@ -39,7 +39,7 @@ namespace AvxUInt {
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    MaskStore(v - rem + sft_block + 1, mask, z0, v0, value.Length);
+                    MaskStore(v - rem + sft_block + 1, z0, mask, v0, value.Length);
                     v -= rem;
                     r -= rem;
                 }
@@ -148,7 +148,7 @@ namespace AvxUInt {
 
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
-                    MaskStore(v, mask, z0, v0, value.Length);
+                    MaskStore(v, z0, mask, v0, value.Length);
 
                     v += r;
                 }
