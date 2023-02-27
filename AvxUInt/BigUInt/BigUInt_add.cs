@@ -22,11 +22,22 @@
         }
 
         private static BigUInt<N> Add(BigUInt<N> v1, BigUInt<N> v2) {
-            BigUInt<N> ret = v1.Copy();
+            int v1_digits = v1.Digits, v2_digits = v2.Digits;
 
-            UIntUtil.Add(ret.value, v2.value);
+            if (v1_digits >= v2_digits) {
+                BigUInt<N> ret = v1.Copy();
 
-            return ret;
+                UIntUtil.Add(ret.value, v2.value);
+
+                return ret;
+            }
+            else {
+                BigUInt<N> ret = v2.Copy();
+
+                UIntUtil.Add(ret.value, v1.value);
+
+                return ret;
+            }
         }
 
         private static BigUInt<N> Add(BigUInt<N> v1, UInt32 v2) {

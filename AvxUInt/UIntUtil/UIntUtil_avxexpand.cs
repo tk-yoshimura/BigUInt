@@ -130,5 +130,54 @@ namespace AvxUInt {
 
             return (r0, r1, r2, r3, carry);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Vector256<UInt32> hi, Vector256<UInt32> lo) ToUInt64X2(Vector256<UInt32> x) {
+            Vector256<UInt32> zero = Vector256<UInt32>.Zero;
+
+            Vector256<UInt32> h = UnpackHigh(x, zero);
+            Vector256<UInt32> l = UnpackLow(x, zero);
+
+            Vector256<UInt32> hi = Permute2x128(l, h, 0b00100000);
+            Vector256<UInt32> lo = Permute2x128(l, h, 0b00110001);
+
+            return (hi, lo);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Mul(Vector256<UInt32> a, Vector256<UInt32> b) {
+            Vector256<UInt32> zero = Vector256<UInt32>.Zero;
+
+            Vector256<UInt32> al = UnpackLow(a, zero), ah = UnpackHigh(a, zero);
+            Vector256<UInt32> bl = UnpackLow(a, zero), bh = UnpackHigh(b, zero);
+
+            Vector256<UInt32> a0 = Permute2x128(al, ah, 0b00110001), a1 = Permute2x128(al, ah, 0b00100000);
+            Vector256<UInt32> b0 = Permute2x128(bl, bh, 0b00110001), b1 = Permute2x128(bl, bh, 0b00100000);
+
+            Vector256<UInt32> x0 = Avx2.Multiply(a0, b0).AsUInt32();
+            Vector256<UInt32> x1 = Avx2.Multiply(a1, b1).AsUInt32();
+            
+            Vector256<UInt32> r = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b10001000).AsDouble(), 0b11011000).AsUInt32();
+            Vector256<UInt32> c = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b11011101).AsDouble(), 0b11011000).AsUInt32();
+
+            return (r, c);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Mul(Vector256<UInt32> a, Vector256<UInt64> b) {
+            Vector256<UInt32> zero = Vector256<UInt32>.Zero;
+
+            Vector256<UInt32> al = UnpackLow(a, zero), ah = UnpackHigh(a, zero);
+
+            Vector256<UInt32> a0 = Permute2x128(al, ah, 0b00110001), a1 = Permute2x128(al, ah, 0b00100000);
+            
+            Vector256<UInt32> x0 = Avx2.Multiply(a0, b.AsUInt32()).AsUInt32();
+            Vector256<UInt32> x1 = Avx2.Multiply(a1, b.AsUInt32()).AsUInt32();
+            
+            Vector256<UInt32> r = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b10001000).AsDouble(), 0b11011000).AsUInt32();
+            Vector256<UInt32> c = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b11011101).AsDouble(), 0b11011000).AsUInt32();
+
+            return (r, c);
+        }
     }
 }

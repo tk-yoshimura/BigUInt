@@ -170,7 +170,7 @@ namespace AvxUInt {
             }
         }
 
-        /// <summary>Operate uint32 array a += b</summary>
+        /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
         public static unsafe void Add(uint offset, UInt32[] arr_a, UInt32 b) {
             fixed (UInt32* va0 = arr_a) {
                 for (uint i = offset, length = (uint)arr_a.Length; i < length && b > 0u; i++) {
