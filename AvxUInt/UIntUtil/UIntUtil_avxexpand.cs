@@ -30,6 +30,7 @@ namespace AvxUInt {
             return neq;
         }
 
+        /// <summary>Mask Load uint32 vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Vector256<UInt32> MaskLoad(UInt32* ptr, Vector256<UInt32> mask, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -44,6 +45,7 @@ namespace AvxUInt {
             return v0;
         }
 
+        /// <summary>Load uint32 vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Vector256<UInt32> Load(UInt32* ptr, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -54,6 +56,7 @@ namespace AvxUInt {
             return v0;
         }
 
+        /// <summary>Load uint32 vector x2</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (Vector256<UInt32> v0, Vector256<UInt32> v1) LoadX2(UInt32* ptr, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -65,6 +68,7 @@ namespace AvxUInt {
             return (v0, v1);
         }
 
+        /// <summary>Load uint32 vector x4</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (Vector256<UInt32> v0, Vector256<UInt32> v1, Vector256<UInt32> v2, Vector256<UInt32> v3) LoadX4(UInt32* ptr, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -78,6 +82,7 @@ namespace AvxUInt {
             return (v0, v1, v2, v3);
         }
 
+        /// <summary>Mask Store uint32 vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void MaskStore(UInt32* ptr, Vector256<UInt32> v0, Vector256<UInt32> mask, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -89,6 +94,7 @@ namespace AvxUInt {
             Avx2.MaskStore(ptr, mask, v0);
         }
 
+        /// <summary>Store uint32 vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Store(UInt32* ptr, Vector256<UInt32> v0, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -97,6 +103,7 @@ namespace AvxUInt {
             Avx2.Store(ptr, v0);
         }
 
+        /// <summary>Store uint32 vector x2</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void StoreX2(UInt32* ptr, Vector256<UInt32> v0, Vector256<UInt32> v1, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -106,6 +113,7 @@ namespace AvxUInt {
             Avx2.Store(ptr + MM256UInt32s, v1);
         }
 
+        /// <summary>Store uint32 vector x4</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void StoreX4(UInt32* ptr, Vector256<UInt32> v0, Vector256<UInt32> v1, Vector256<UInt32> v2, Vector256<UInt32> v3, UInt32* ptr0, int arr_length) {
 #if DEBUG
@@ -117,9 +125,11 @@ namespace AvxUInt {
             Avx2.Store(ptr + MM256UInt32s * 3, v3);
         }
 
+        /// <summary>Judge all zero vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAllZero(Vector256<UInt32> x) => TestZ(x, x);
 
+        /// <summary>Vector add with carry</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Add(Vector256<UInt32> a, Vector256<UInt32> b) {
             Vector256<UInt32> ret = Avx2.Add(a, b);
@@ -128,6 +138,7 @@ namespace AvxUInt {
             return (ret, carry);
         }
 
+        /// <summary>Vector sub with carry</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Sub(Vector256<UInt32> a, Vector256<UInt32> b) {
             Vector256<UInt32> ret = Avx2.Subtract(a, b);
@@ -136,6 +147,25 @@ namespace AvxUInt {
             return (ret, carry);
         }
 
+        /// <summary>Vector mul with carry</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Mul(Vector256<UInt32> a, Vector256<UInt32> b) {
+            Vector256<UInt32> zero = Vector256<UInt32>.Zero;
+
+            Vector256<UInt32> al = UnpackLow(a, zero), ah = UnpackHigh(a, zero);
+
+            Vector256<UInt32> a0 = Permute2x128(al, ah, 0b00100000), a1 = Permute2x128(al, ah, 0b00110001);
+
+            Vector256<UInt32> x0 = Avx2.Multiply(a0, b).AsUInt32();
+            Vector256<UInt32> x1 = Avx2.Multiply(a1, b).AsUInt32();
+
+            Vector256<UInt32> r = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b10001000).AsDouble(), 0b11011000).AsUInt32();
+            Vector256<UInt32> c = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b11011101).AsDouble(), 0b11011000).AsUInt32();
+
+            return (r, c);
+        }
+
+        /// <summary>Left Shift carry vector</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> r0, UInt32 carry)
             CarryShift(Vector256<UInt32> v0, UInt32 carry) {
@@ -150,6 +180,7 @@ namespace AvxUInt {
             return (r0, carry);
         }
 
+        /// <summary>Left Shift carry vector x2</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> r0, Vector256<UInt32> r1, UInt32 carry)
             CarryShiftX2(Vector256<UInt32> v0, Vector256<UInt32> v1, UInt32 carry) {
@@ -166,6 +197,7 @@ namespace AvxUInt {
             return (r0, r1, carry);
         }
 
+        /// <summary>Left Shift carry vector x4</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> r0, Vector256<UInt32> r1, Vector256<UInt32> r2, Vector256<UInt32> r3, UInt32 carry)
             CarryShiftX4(Vector256<UInt32> v0, Vector256<UInt32> v1, Vector256<UInt32> v2, Vector256<UInt32> v3, UInt32 carry) {
@@ -184,23 +216,6 @@ namespace AvxUInt {
             carry += u3.GetElement(0);
 
             return (r0, r1, r2, r3, carry);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Mul(Vector256<UInt32> a, Vector256<UInt32> b) {
-            Vector256<UInt32> zero = Vector256<UInt32>.Zero;
-
-            Vector256<UInt32> al = UnpackLow(a, zero), ah = UnpackHigh(a, zero);
-
-            Vector256<UInt32> a0 = Permute2x128(al, ah, 0b00100000), a1 = Permute2x128(al, ah, 0b00110001);
-
-            Vector256<UInt32> x0 = Avx2.Multiply(a0, b).AsUInt32();
-            Vector256<UInt32> x1 = Avx2.Multiply(a1, b).AsUInt32();
-
-            Vector256<UInt32> r = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b10001000).AsDouble(), 0b11011000).AsUInt32();
-            Vector256<UInt32> c = Permute4x64(Shuffle(x0.AsSingle(), x1.AsSingle(), 0b11011101).AsDouble(), 0b11011000).AsUInt32();
-
-            return (r, c);
         }
     }
 }

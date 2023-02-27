@@ -4,6 +4,7 @@ using System.Runtime.Intrinsics;
 namespace AvxUInt {
     internal static partial class UIntUtil {
 
+        /// <summary>Zeroset with range</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Zeroset(UInt32[] arr, uint index, uint length) {
             if (length <= 0) {
@@ -41,6 +42,7 @@ namespace AvxUInt {
             }
         }
 
+        /// <summary>Zeroset all</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Zeroset(UInt32[] arr) {
             uint length = (uint)arr.Length;
