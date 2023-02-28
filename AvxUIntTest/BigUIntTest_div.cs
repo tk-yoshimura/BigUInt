@@ -9,7 +9,7 @@ namespace AvxUIntTest {
 
             List<(BigUInt<N> b, BigInteger n)> vs = new();
 
-            for (int i = 15; i <= BigUInt<N>.Bits; i += 15) {
+            for (int i = 1; i <= BigUInt<N>.Bits; i += 15) {
                 UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, i);
                 BigUInt<N> v = new(bits, enable_clone: false);
                 vs.Add((v, v));
@@ -118,10 +118,6 @@ namespace AvxUIntTest {
     public class DivTests {
         [TestMethod]
         public void DivTest() {
-            BigUInt<N9> v1 = "8516936223647602322473865698301194978485550553075320721198", v2 = "262143";
-
-            _ = v1 / v2;
-
             DivTests<N4>.DivTest();
             DivTests<N5>.DivTest();
             DivTests<N6>.DivTest();

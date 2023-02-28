@@ -76,7 +76,7 @@ namespace AvxUInt {
                 return 0u;
             }
 
-            UInt32 n0 = arr_b[digits_b - 1];
+            UInt32 n0 = arr_b[digits_b - 1u];
             int lzc = LeadingZeroCount(n0);
             
             if (digits_b == 1u) {
@@ -85,10 +85,10 @@ namespace AvxUInt {
                 return n0;
             }
             else {
-                UInt32 n1 = arr_b[digits_b - 2];
+                UInt32 n1 = arr_b[digits_b - 2u];
                 (UInt64 n_hi, UInt32 n_lo) = Unpack(Pack(n0, n1) << lzc);
 
-                if ((n_lo > 0u) || !IsZero(arr_b[..(int)(digits_b - 2)])){
+                if ((n_lo > 0u) || (digits_b > 2u && !IsZero(arr_b[..(int)(digits_b - 2)]))){
                     return n_hi + 1uL;
                 }
 
