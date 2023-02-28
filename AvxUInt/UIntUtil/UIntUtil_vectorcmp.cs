@@ -34,24 +34,24 @@ namespace AvxUInt {
         public static bool IsAllZero(Vector256<UInt32> x) => TestZ(x, x);
 
         /// <summary>Comparate vector a == b bits</summary>
-        private static unsafe uint MaskEqual(Vector256<uint> a0, Vector256<uint> b0) {
+        private static uint MaskEqual(Vector256<uint> a0, Vector256<uint> b0) {
             return (uint)MoveMask(CompareEqual(a0, b0).AsSingle());
         }
 
         /// <summary>Comparate vector a != b bits</summary>
-        private static unsafe uint MaskNotEqual(Vector256<uint> a0, Vector256<uint> b0) {
+        private static uint MaskNotEqual(Vector256<uint> a0, Vector256<uint> b0) {
             return (uint)MoveMask(CompareNotEqual(a0, b0).AsSingle());
         }
 
         /// <summary>Comparate vector a &lt;= b bits</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe uint MaskLessThan(Vector256<uint> a, Vector256<uint> b) {
+        private static uint MaskLessThan(Vector256<uint> a, Vector256<uint> b) {
             return (uint)MoveMask(CompareLessThan(a, b).AsSingle());
         }
 
         /// <summary>Comparate vector a &gt;= b bits</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe uint MaskGreaterThan(Vector256<uint> a, Vector256<uint> b) {
+        private static uint MaskGreaterThan(Vector256<uint> a, Vector256<uint> b) {
             return (uint)MoveMask(CompareGreaterThan(a, b).AsSingle());
         }
     }

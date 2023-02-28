@@ -3,7 +3,7 @@
 namespace AvxUInt {
     internal static partial class UIntUtil {
         /// <summary>Operate uint32 array a += b</summary>
-        public static unsafe void Add(UInt32[] arr_a, UInt32[] arr_b) {
+        public static void Add(UInt32[] arr_a, UInt32[] arr_b) {
             uint digits_b = Digits(arr_b);
             if (digits_b == 0u) {
                 return;
@@ -188,11 +188,10 @@ namespace AvxUInt {
                     }
 
                     if (rem_a < MM256UInt32s) {
-                        MaskStore(va, a0, mask_a, va0, arr_a.Length);
-
                         if (a0.GetElement((int)rem_a) > 0u) {
                             throw new OverflowException();
                         }
+                        MaskStore(va, a0, mask_a, va0, arr_a.Length);
                     }
                     else {
                         Store(va, a0, va0, arr_a.Length);

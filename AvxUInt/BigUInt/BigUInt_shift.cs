@@ -52,18 +52,18 @@ namespace AvxUInt {
         }
 
         /// <summary>Shift uint32 array v &lt;&lt;= sft</summary>
-        private unsafe void LeftShift(int sft) {
+        private void LeftShift(int sft) {
             UIntUtil.LeftShift(value, sft);
         }
 
         /// <summary>Shift uint32 array v &gt;&gt;= sft</summary>
-        private unsafe void RightShift(int sft) {
+        private void RightShift(int sft) {
             UIntUtil.RightShift(value, sft);
         }
 
         /// <summary>Shift uint32 array v &lt;&lt;= sft * UInt32Bits</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe void LeftBlockShift(int sft) {
+        private void LeftBlockShift(int sft) {
             UIntUtil.LeftBlockShift(value, sft);
         }
 
