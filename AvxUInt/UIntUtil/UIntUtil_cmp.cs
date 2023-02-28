@@ -92,11 +92,6 @@ namespace AvxUInt {
             return true;
         }
 
-        /// <summary>Comparate vector a == b bits</summary>
-        private static unsafe uint MaskEqual(Vector256<uint> a0, Vector256<uint> b0) {
-            return (uint)MoveMask(CompareEqual(a0, b0).AsSingle());
-        }
-
         /// <summary>Comparate uint32 array a &lt;= b</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool LessThanOrEqual(uint length, UInt32[] arr_a, UInt32[] arr_b) {
@@ -195,7 +190,7 @@ namespace AvxUInt {
 
             return true;
         }
-        
+
         /// <summary>Comparate uint32 array a &gt;= b</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool GreaterThanOrEqual(uint length, UInt32[] arr_a, UInt32[] arr_b) {
@@ -293,18 +288,6 @@ namespace AvxUInt {
             }
 
             return true;
-        }
-
-        /// <summary>Comparate vector a &lt;= b bits</summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe uint MaskLessThan(Vector256<uint> a, Vector256<uint> b) {
-            return (uint)MoveMask(CompareLessThan(a, b).AsSingle());
-        }
-
-        /// <summary>Comparate vector a &gt;= b bits</summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe uint MaskGreaterThan(Vector256<uint> a, Vector256<uint> b) {
-            return (uint)MoveMask(CompareGreaterThan(a, b).AsSingle());
         }
 
         /// <summary>Judge uint32 array is zero</summary>

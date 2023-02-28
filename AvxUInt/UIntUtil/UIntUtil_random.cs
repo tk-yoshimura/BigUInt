@@ -6,7 +6,7 @@
             if (block > length || (block == length && rem > 0)) {
                 throw new ArgumentOutOfRangeException(nameof(bits));
             }
-            
+
             UInt32[] value = (new UInt32[length]).Select((_, idx) => idx < block ? (UInt32)random.NextUInt32() : 0u).ToArray();
 
             if (rem > 0) {

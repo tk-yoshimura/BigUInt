@@ -2,7 +2,6 @@
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using static System.Runtime.Intrinsics.X86.Avx;
-using static System.Runtime.Intrinsics.X86.Avx2;
 
 namespace AvxUInt {
     internal static partial class UIntUtil {
@@ -22,7 +21,7 @@ namespace AvxUInt {
                         r -= MM256UInt32s;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
+                        uint flag = MaskNotEqual(x, Vector256<UInt32>.Zero) << ShiftIDX3;
                         uint idx = LeadingZeroCount(flag);
                         cnt += idx;
                         lzc = LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
@@ -38,7 +37,7 @@ namespace AvxUInt {
                         cnt += r;
                     }
                     else {
-                        uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
+                        uint flag = MaskNotEqual(x, Vector256<UInt32>.Zero) << (int)(ShiftIDX4 - r);
                         uint idx = LeadingZeroCount(flag);
                         cnt += idx;
                         lzc = LeadingZeroCount(v0[r - 1 - idx]);
