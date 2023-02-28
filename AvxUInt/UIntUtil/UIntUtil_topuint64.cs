@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
-using System.Runtime.Intrinsics.X86;
 using static System.Runtime.Intrinsics.X86.Avx;
 using static System.Runtime.Intrinsics.X86.Avx2;
 
@@ -8,7 +7,7 @@ namespace AvxUInt {
     internal static partial class UIntUtil {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (UInt64 n, int lzc) TopUInt64(UInt32[] value) {
+        public static unsafe (UInt64 n, uint lzc) TopUInt64(UInt32[] value) {
             uint cnt = 0, lzc = 0, length = (uint)value.Length, r = length;
 
             fixed (UInt32* v0 = value) {
@@ -23,9 +22,9 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
-                        uint idx = (uint)LeadingZeroCount(flag);
+                        uint idx = LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
+                        lzc = LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
                         r = 0;
                         break;
                     }
@@ -39,43 +38,36 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
-                        uint idx = (uint)LeadingZeroCount(flag);
+                        uint idx = LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v0[r - 1 - idx]);
+                        lzc = LeadingZeroCount(v0[r - 1 - idx]);
                     }
                 }
             }
 
-#if DEBUG
-            checked
-#else
-            unchecked
-#endif
-            {
-                int lzc_all = (int)(cnt * UInt32Bits + lzc);
-                uint idx = length - cnt;
+            uint lzc_all = cnt * UInt32Bits + lzc;
+            uint digits = length - cnt;
 
-                if (idx <= 0u) {
-                    return (0uL, lzc_all);
-                }
-                if (idx <= 1u) {
-                    return (Pack(value[0] << (int)lzc, 0u), lzc_all);
-                }
-                if (idx <= 2u) {
-                    return (Pack(value[1], value[0]) << (int)lzc, lzc_all);
-                }
+            if (digits <= 0u) {
+                return (0uL, lzc_all);
+            }
+            if (digits <= 1u) {
+                return (Pack(value[0] << (int)lzc, 0u), lzc_all);
+            }
+            if (digits <= 2u) {
+                return (Pack(value[1], value[0]) << (int)lzc, lzc_all);
+            }
 
-                if (lzc == 0) {
-                    UInt64 n = Pack(value[idx - 1u], value[idx - 2u]);
+            if (lzc == 0) {
+                UInt64 n = Pack(value[digits - 1u], value[digits - 2u]);
 
-                    return (n, lzc_all);
-                }
+                return (n, lzc_all);
+            }
 
-                unchecked {
-                    UInt64 n = (Pack(value[idx - 1u], value[idx - 2u]) << (int)lzc) | (value[idx - 3u] >> (int)(UInt32Bits - lzc));
+            unchecked {
+                UInt64 n = (Pack(value[digits - 1u], value[digits - 2u]) << (int)lzc) | (value[digits - 3u] >> (int)(UInt32Bits - lzc));
 
-                    return (n, lzc_all);
-                }
+                return (n, lzc_all);
             }
         }
     }

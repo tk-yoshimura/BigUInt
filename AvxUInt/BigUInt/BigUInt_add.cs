@@ -22,7 +22,7 @@
         }
 
         private static BigUInt<N> Add(BigUInt<N> v1, BigUInt<N> v2) {
-            int v1_digits = v1.Digits, v2_digits = v2.Digits;
+            uint v1_digits = v1.Digits, v2_digits = v2.Digits;
 
             if (v1_digits >= v2_digits) {
                 BigUInt<N> ret = v1.Copy();

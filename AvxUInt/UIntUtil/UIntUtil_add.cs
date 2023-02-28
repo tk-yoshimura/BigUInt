@@ -4,7 +4,7 @@ namespace AvxUInt {
     internal static partial class UIntUtil {
         /// <summary>Operate uint32 array a += b</summary>
         public static unsafe void Add(UInt32[] arr_a, UInt32[] arr_b) {
-            uint digits_b = (uint)Digits(arr_b);
+            uint digits_b = Digits(arr_b);
             if (digits_b == 0u) {
                 return;
             }

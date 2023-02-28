@@ -423,7 +423,7 @@ namespace AvxUInt {
 
         /// <summary>Count leading match bits</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int MatchBits(uint length, UInt32[] arr_a, UInt32[] arr_b) {
+        public static unsafe uint MatchBits(uint length, UInt32[] arr_a, UInt32[] arr_b) {
 #if DEBUG
             Debug<ArgumentException>.Assert(length <= arr_a.Length);
             Debug<ArgumentException>.Assert(length <= arr_b.Length);
@@ -433,7 +433,7 @@ namespace AvxUInt {
                 return 0;
             }
 
-            int matches = 0;
+            uint matches = 0;
 
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
                 for (int i = (int)length - 1; i >= 0; i--) {

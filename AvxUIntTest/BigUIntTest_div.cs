@@ -36,7 +36,7 @@ namespace AvxUIntTest {
 
                     if (n2 > 0) {
                         BigInteger q = n1 / n2, r = n1 % n2;
-    
+
                         Assert.AreEqual(q, (BigInteger)(v1 / v2));
                         Assert.AreEqual(r, (BigInteger)(v1 % v2));
 
@@ -91,7 +91,7 @@ namespace AvxUIntTest {
             foreach ((BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) in vs) {
                 if (n2 > 0) {
                     BigInteger q = n1 / n2, r = n1 % n2;
-    
+
                     Assert.AreEqual(q, (BigInteger)(v1 / v2));
                     Assert.AreEqual(r, (BigInteger)(v1 % v2));
 

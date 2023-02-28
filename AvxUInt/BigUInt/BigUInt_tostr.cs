@@ -6,7 +6,7 @@ namespace AvxUInt {
     public sealed partial class BigUInt<N> {
 
         public override string ToString() {
-            int bin_digits = Digits, dec_digits = 0;
+            int bin_digits = (int)Digits, dec_digits = 0;
 
             // dec_digits <= bin_digits * digits(2^32 - 1) / digits(10^9 - 1) + 2
             UInt32[] dec = new UInt32[checked(bin_digits * 10 / 9 + 2)];

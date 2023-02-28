@@ -7,7 +7,7 @@ namespace AvxUInt {
     internal static partial class UIntUtil {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int Digits(UInt32[] value) {
+        public static unsafe uint Digits(UInt32[] value) {
             uint cnt = 0, r = (uint)value.Length;
 
             fixed (UInt32* v0 = value) {
@@ -22,7 +22,7 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
-                        cnt += (uint)LeadingZeroCount(flag);
+                        cnt += LeadingZeroCount(flag);
                         r = 0;
                         break;
                     }
@@ -36,12 +36,12 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
-                        cnt += (uint)LeadingZeroCount(flag);
+                        cnt += LeadingZeroCount(flag);
                     }
                 }
             }
 
-            return checked(value.Length - (int)cnt);
+            return (uint)value.Length - cnt;
         }
     }
 }

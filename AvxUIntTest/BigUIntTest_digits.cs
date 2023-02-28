@@ -37,18 +37,18 @@ namespace AvxUIntTest {
                 0
             }, enable_clone: false);
 
-            Assert.AreEqual(4, n1.Digits);
-            Assert.AreEqual(4, n2.Digits);
-            Assert.AreEqual(4, n3.Digits);
-            Assert.AreEqual(4, n4.Digits);
-            Assert.AreEqual(4, n5.Digits);
-            Assert.AreEqual(0, n6.Digits);
-            Assert.AreEqual(1, n7.Digits);
-            Assert.AreEqual(3, n8.Digits);
-            Assert.AreEqual(3, n9.Digits);
-            Assert.AreEqual(13, n10.Digits);
-            Assert.AreEqual(6, n11.Digits);
-            Assert.AreEqual(2, n12.Digits);
+            Assert.AreEqual(4u, n1.Digits);
+            Assert.AreEqual(4u, n2.Digits);
+            Assert.AreEqual(4u, n3.Digits);
+            Assert.AreEqual(4u, n4.Digits);
+            Assert.AreEqual(4u, n5.Digits);
+            Assert.AreEqual(0u, n6.Digits);
+            Assert.AreEqual(1u, n7.Digits);
+            Assert.AreEqual(3u, n8.Digits);
+            Assert.AreEqual(3u, n9.Digits);
+            Assert.AreEqual(13u, n10.Digits);
+            Assert.AreEqual(6u, n11.Digits);
+            Assert.AreEqual(2u, n12.Digits);
         }
     }
 }

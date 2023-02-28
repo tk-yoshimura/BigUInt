@@ -8,7 +8,7 @@ namespace AvxUIntTest {
         public void LeadingZeroCountTest() {
             BigUInt<N65> n = BigUInt<N65>.Full;
 
-            int lzc = 0;
+            uint lzc = 0;
             while (n > 0) {
                 Assert.AreEqual(lzc, n.LeadingZeroCount);
                 n >>= 1;

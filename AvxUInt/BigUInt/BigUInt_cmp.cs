@@ -41,7 +41,7 @@
             return 1;
         }
 
-        public static int MatchBits(BigUInt<N> a, BigUInt<N> b) {
+        public static uint MatchBits(BigUInt<N> a, BigUInt<N> b) {
             return UIntUtil.MatchBits((uint)Length, a.value, b.value);
         }
     }

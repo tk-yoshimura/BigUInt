@@ -18,7 +18,7 @@ namespace AvxUIntTest {
 
                     bits_swapbit[idx1] ^= 1u << idx2;
 
-                    Assert.AreEqual(swapbit, UIntUtil.MatchBits((uint)length, bits, bits_swapbit));
+                    Assert.AreEqual((uint)swapbit, UIntUtil.MatchBits((uint)length, bits, bits_swapbit));
                 }
             }
         }

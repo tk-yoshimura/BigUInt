@@ -4,7 +4,7 @@ namespace AvxUInt {
     internal static partial class UIntUtil {
         /// <summary>Operate uint32 array arr_dst -= a * b</summary>
         public static void Fms(UInt32[] arr_dst, UInt32[] arr_a, UInt32[] arr_b) {
-            uint digits_a = (uint)Digits(arr_a), digits_b = (uint)Digits(arr_b);
+            uint digits_a = Digits(arr_a), digits_b = Digits(arr_b);
 
             if (digits_a >= digits_b) {
                 for (uint i = 0; i < digits_b; i++) {
@@ -20,12 +20,12 @@ namespace AvxUInt {
 
         /// <summary>Operate uint32 array arr_dst -= a * b</summary>
         public static void Fms(UInt32[] arr_dst, UInt32[] arr_a, UInt32 b) {
-            Fms(0u, (uint)Digits(arr_a), arr_dst, arr_a, b);
+            Fms(0u, Digits(arr_a), arr_dst, arr_a, b);
         }
 
         /// <summary>Operate uint32 array arr_dst -= a * b</summary>
         public static void Fms(UInt32[] arr_dst, UInt32[] arr_a, UInt64 b) {
-            uint digits_a = (uint)Digits(arr_a);
+            uint digits_a = Digits(arr_a);
             (UInt32 b_hi, UInt32 b_lo) = Unpack(b);
 
             Fms(0u, digits_a, arr_dst, arr_a, b_lo);

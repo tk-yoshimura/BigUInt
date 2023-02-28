@@ -92,13 +92,13 @@ namespace AvxUInt {
         public bool IsFull => UIntUtil.IsFull((uint)Length, value);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public int Digits => UIntUtil.Digits(value);
+        public uint Digits => UIntUtil.Digits(value);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 MostSignificantDigits => UIntUtil.Pack(value[Length - 1], value[Length - 2]);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public int LeadingZeroCount => UIntUtil.LeadingZeroCount(value);
+        public uint LeadingZeroCount => UIntUtil.LeadingZeroCount(value);
 
         public UInt32 this[int index] => value[index];
 

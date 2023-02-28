@@ -8,7 +8,7 @@ namespace AvxUInt {
     internal static partial class UIntUtil {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int LeadingZeroCount(UInt32[] value) {
+        public static unsafe uint LeadingZeroCount(UInt32[] value) {
             uint cnt = 0, lzc = 0, r = (uint)value.Length;
 
             fixed (UInt32* v0 = value) {
@@ -23,9 +23,9 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << ShiftIDX3;
-                        uint idx = (uint)LeadingZeroCount(flag);
+                        uint idx = LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
+                        lzc = LeadingZeroCount(v[MM256UInt32s - 1 - idx]);
                         r = 0;
                         break;
                     }
@@ -39,32 +39,25 @@ namespace AvxUInt {
                     }
                     else {
                         uint flag = ((uint)MoveMask(CompareNotEqual(x, Vector256<UInt32>.Zero).AsSingle())) << (int)(ShiftIDX4 - r);
-                        uint idx = (uint)LeadingZeroCount(flag);
+                        uint idx = LeadingZeroCount(flag);
                         cnt += idx;
-                        lzc = (uint)LeadingZeroCount(v0[r - 1 - idx]);
+                        lzc = LeadingZeroCount(v0[r - 1 - idx]);
                     }
                 }
             }
 
-#if DEBUG
-            checked
-#else
-            unchecked
-#endif
-            {
-                return (int)(cnt * UInt32Bits + lzc);
-            }
+            return cnt * UInt32Bits + lzc;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int LeadingZeroCount(UInt32 value) {
+        public static unsafe uint LeadingZeroCount(UInt32 value) {
             uint cnt = Lzcnt.LeadingZeroCount(value);
 
-            return (int)cnt;
+            return cnt;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe int LeadingZeroCount(UInt64 value) {
+        public static unsafe uint LeadingZeroCount(UInt64 value) {
             (UInt32 hi, UInt32 lo) = Unpack(value);
 
             if (hi == 0) {
