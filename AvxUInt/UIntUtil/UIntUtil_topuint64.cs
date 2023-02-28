@@ -29,7 +29,7 @@ namespace AvxUInt {
                         break;
                     }
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     Vector256<UInt32> x = MaskLoad(v0, mask, v0, value.Length);

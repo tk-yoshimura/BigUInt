@@ -76,7 +76,7 @@ namespace AvxUInt {
                     vb += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     a0 = MaskLoad(va, mask, va0, arr_a.Length);
@@ -178,7 +178,7 @@ namespace AvxUInt {
 
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     a0 = MaskLoad(va0, mask, va0, arr_a.Length);
@@ -281,7 +281,7 @@ namespace AvxUInt {
 
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     a0 = MaskLoad(va0, mask, va0, arr_a.Length);
@@ -347,7 +347,7 @@ namespace AvxUInt {
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     x0 = MaskLoad(v, Mask256.Lower(r), v0, arr.Length);
 
                     if (!IsAllZero(x0)) {
@@ -407,7 +407,7 @@ namespace AvxUInt {
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<uint> mask = Mask256.Lower(r);
 
                     x0 = MaskLoad(v, mask, v0, arr.Length);

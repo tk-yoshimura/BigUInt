@@ -140,7 +140,7 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                     v += MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     x0 = MaskLoad(v + sft_block, mask, v0, value.Length);
@@ -240,7 +240,7 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                     v += MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
                     MaskStore(v, MaskLoad(v + sft, mask, v0, value.Length), mask, v0, value.Length);
                 }

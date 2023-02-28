@@ -30,7 +30,7 @@ namespace AvxUInt {
                         break;
                     }
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     Vector256<UInt32> mask = Mask256.Lower(r);
 
                     Vector256<UInt32> x = MaskLoad(v0, mask, v0, value.Length);
@@ -60,7 +60,7 @@ namespace AvxUInt {
         public static unsafe uint LeadingZeroCount(UInt64 value) {
             (UInt32 hi, UInt32 lo) = Unpack(value);
 
-            if (hi == 0) {
+            if (hi == 0u) {
                 return LeadingZeroCount(lo) + UInt32Bits;
             }
 

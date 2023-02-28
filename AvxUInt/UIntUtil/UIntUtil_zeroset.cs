@@ -36,7 +36,7 @@ namespace AvxUInt {
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     MaskStore(v, zero, Mask256.Lower(r), v0, arr.Length);
                 }
             }
@@ -68,7 +68,7 @@ namespace AvxUInt {
                     v += MM256UInt32s;
                     r -= MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     MaskStore(v, zero, Mask256.Lower(r), v0, arr.Length);
                 }
             }

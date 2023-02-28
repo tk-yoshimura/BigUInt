@@ -168,7 +168,7 @@ namespace AvxUInt {
                     r -= MM256UInt32s;
                     offset += MM256UInt32s;
                 }
-                if (r > 0) {
+                if (r > 0u) {
                     uint rem_d = (uint)arr_dst.Length - offset;
                     Vector256<UInt32> mask_a = Mask256.Lower(r);
                     Vector256<UInt32> mask_d = Mask256.Lower(rem_d);
