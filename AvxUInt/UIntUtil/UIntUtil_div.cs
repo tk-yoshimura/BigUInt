@@ -1,25 +1,33 @@
-﻿namespace AvxUInt {
+﻿using System.Linq;
+
+namespace AvxUInt {
     internal static partial class UIntUtil {
         
         /// <summary>Operate uint32 array q += a / b, a = a % b</summary>
         public static void DivRem(UInt32[] arr_q, UInt32[] arr_a, UInt32[] arr_b) {
+            if (arr_a.Length < 1 || arr_b.Length < 1 || arr_a.Length < arr_b.Length) {
+                throw new ArgumentException("invalid length", $"{nameof(arr_a)},{nameof(arr_b)}");
+            }
+
             uint digits_b = (uint)Digits(arr_b);
-
-            UInt64 div = RoundDenom(digits_b, arr_b);
-
-            if (div == 0uL) {
+            UInt64 numer, denom = RoundDenom(digits_b, arr_b);
+            
+            if (denom == 0uL) {
                 throw new DivideByZeroException();
             }
 
-            int length = arr_a.Length;
-            int lzc = LeadingZeroCount(arr_a);
-            int r_offset = lzc, b_offset = LeadingZeroCount(arr_b) + (arr_a.Length - arr_b.Length) * UInt32Bits;
+            int offset_r, offset_b = LeadingZeroCount(arr_b) + (arr_a.Length - arr_b.Length) * UInt32Bits;
 
-            while (r_offset < b_offset) {
-                int sft = b_offset - r_offset - UInt32Bits;
-                LeftShift(arr_a, lzc);
+            while (true) {
+                (numer, offset_r) = TopUInt64(arr_a);
 
-                UInt64 n = Pack(arr_a[length - 1], arr_a[length - 2]) / div;
+                if (offset_r >= offset_b) {
+                    break;
+                }
+
+                UInt64 n = numer / denom;
+                int sft = offset_b - offset_r - UInt32Bits;
+                
                 if (sft < 0) {
                     n >>= -sft;
                     sft = 0;
@@ -27,29 +35,19 @@
 
                 uint sft_block = (uint)sft / UInt32Bits;
                 int sft_rem = sft % UInt32Bits;
-                
-                (UInt32 n_hi, UInt32 n_lo) = Unpack(n << sft_rem);
 
+                (UInt32 n_hi, UInt32 n_lo) = Unpack(n << sft_rem);
+                
                 Add(sft_block, arr_q, n_lo);
-                Add(sft_block + 1, arr_q, n_hi);
+                Add(sft_block + 1u, arr_q, n_hi);
 
                 Fms(sft_block, digits_b, arr_a, arr_b, n_lo);
-                Fms(sft_block + 1, digits_b, arr_a, arr_b, n_hi);
-
-                lzc = LeadingZeroCount(arr_a);
-
-                if (lzc >= arr_a.Length * UInt32Bits) {
-                    break;
-                }
-
-                r_offset += lzc;
+                Fms(sft_block + 1u, digits_b, arr_a, arr_b, n_hi);
             }
-
-            RightShift(arr_a, r_offset);
 
             uint digits_a = (uint)Digits(arr_a);
 
-            if (digits_a > digits_b || ((digits_a == digits_b) && GreaterThanOrEqual(digits_a, arr_a[..(int)digits_a], arr_b[..(int)digits_a]))) {
+            if (digits_a > digits_b || ((digits_a == digits_b) && GreaterThanOrEqual(digits_a, arr_a, arr_b))) {
                 Add(arr_q, 1u);
                 Sub(arr_a, arr_b);
             }

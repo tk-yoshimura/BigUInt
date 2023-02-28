@@ -10,11 +10,11 @@ namespace AvxUInt {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool Equal(uint length, UInt32[] arr_a, UInt32[] arr_b) {
 #if DEBUG
-            Debug<ArgumentException>.Assert(length == arr_a.Length);
-            Debug<ArgumentException>.Assert(length == arr_b.Length);
+            Debug<ArgumentException>.Assert(length <= arr_a.Length);
+            Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
 
-            if (arr_a[0] != arr_b[0] || arr_a[^1] != arr_b[^1]) {
+            if (arr_a[0] != arr_b[0] || arr_a[length - 1] != arr_b[length - 1]) {
                 return false;
             }
 
@@ -95,8 +95,8 @@ namespace AvxUInt {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool LessThanOrEqual(uint length, UInt32[] arr_a, UInt32[] arr_b) {
 #if DEBUG
-            Debug<ArgumentException>.Assert(length == arr_a.Length);
-            Debug<ArgumentException>.Assert(length == arr_b.Length);
+            Debug<ArgumentException>.Assert(length <= arr_a.Length);
+            Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
 
             if (arr_a[length - 1] < arr_b[length - 1]) {
@@ -195,8 +195,8 @@ namespace AvxUInt {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool GreaterThanOrEqual(uint length, UInt32[] arr_a, UInt32[] arr_b) {
 #if DEBUG
-            Debug<ArgumentException>.Assert(length == arr_a.Length);
-            Debug<ArgumentException>.Assert(length == arr_b.Length);
+            Debug<ArgumentException>.Assert(length <= arr_a.Length);
+            Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
 
             if (arr_a[length - 1] > arr_b[length - 1]) {
@@ -408,14 +408,14 @@ namespace AvxUInt {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe int MatchBits(uint length, UInt32[] arr_a, UInt32[] arr_b) {
 #if DEBUG
-            Debug<ArgumentException>.Assert(length == arr_a.Length);
-            Debug<ArgumentException>.Assert(length == arr_b.Length);
+            Debug<ArgumentException>.Assert(length <= arr_a.Length);
+            Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
 
             int matches = 0;
 
             fixed (UInt32* va0 = arr_a, vb0 = arr_b) {
-                for (int i = arr_a.Length - 1; i >= 0; i--) {
+                for (int i = (int)length - 1; i >= 0; i--) {
                     UInt32 xor = va0[i] ^ vb0[i];
 
                     if (xor == 0u) {

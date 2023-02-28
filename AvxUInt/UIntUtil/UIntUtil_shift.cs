@@ -40,8 +40,8 @@ namespace AvxUInt {
                     z0 = Or(ShiftRightLogical(x0, rsft), ShiftLeftLogical(y0, lsft));
 
                     MaskStore(v - rem + sft_block + 1, z0, mask, v0, value.Length);
-                    v -= rem;
                     r -= rem;
+                    v -= rem;
                 }
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadX4(v - MM256UInt32s * 4, v0, value.Length);
@@ -53,8 +53,8 @@ namespace AvxUInt {
                     z3 = Or(ShiftRightLogical(x3, rsft), ShiftLeftLogical(y3, lsft));
 
                     StoreX4(v - MM256UInt32s * 4 + sft_block + 1, z0, z1, z2, z3, v0, value.Length);
-                    v -= MM256UInt32s * 4;
                     r -= MM256UInt32s * 4;
+                    v -= MM256UInt32s * 4;
                 }
                 if (r >= MM256UInt32s * 2) {
                     (x0, x1) = LoadX2(v - MM256UInt32s * 2, v0, value.Length);
@@ -64,8 +64,8 @@ namespace AvxUInt {
                     z1 = Or(ShiftRightLogical(x1, rsft), ShiftLeftLogical(y1, lsft));
 
                     StoreX2(v - MM256UInt32s * 2 + sft_block + 1, z0, z1, v0, value.Length);
-                    v -= MM256UInt32s * 2;
                     r -= MM256UInt32s * 2;
+                    v -= MM256UInt32s * 2;
                 }
                 if (r >= MM256UInt32s) {
                     x0 = Load(v - MM256UInt32s, v0, value.Length);

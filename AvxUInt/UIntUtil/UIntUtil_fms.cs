@@ -68,10 +68,10 @@ namespace AvxUInt {
                     (c0, c1, c2, c3, UInt32 carry) = CarryShiftX4(c0, c1, c2, c3, 0u);
 
                     while (!(IsAllZero(c0) & IsAllZero(c1) & IsAllZero(c2) & IsAllZero(c3))) {
-                        (r0, c0) = Sub(r0, c0);
-                        (r1, c1) = Sub(r1, c1);
-                        (r2, c2) = Sub(r2, c2);
-                        (r3, c3) = Sub(r3, c3);
+                        (r0, c0) = Add(r0, c0);
+                        (r1, c1) = Add(r1, c1);
+                        (r2, c2) = Add(r2, c2);
+                        (r3, c3) = Add(r3, c3);
 
                         (c0, c1, c2, c3, carry) = CarryShiftX4(c0, c1, c2, c3, carry);
                     }
@@ -110,8 +110,8 @@ namespace AvxUInt {
                     (c0, c1, UInt32 carry) = CarryShiftX2(c0, c1, 0u);
 
                     while (!(IsAllZero(c0) & IsAllZero(c1))) {
-                        (r0, c0) = Sub(r0, c0);
-                        (r1, c1) = Sub(r1, c1);
+                        (r0, c0) = Add(r0, c0);
+                        (r1, c1) = Add(r1, c1);
 
                         (c0, c1, carry) = CarryShiftX2(c0, c1, carry);
                     }
@@ -145,7 +145,7 @@ namespace AvxUInt {
                     (c0, UInt32 carry) = CarryShift(c0, 0u);
 
                     while (!IsAllZero(c0)) {
-                        (r0, c0) = Sub(r0, c0);
+                        (r0, c0) = Add(r0, c0);
 
                         (c0, carry) = CarryShift(c0, carry);
                     }
@@ -181,7 +181,7 @@ namespace AvxUInt {
                     (c0, UInt32 carry) = CarryShift(c0, 0u);
 
                     while (!IsAllZero(c0)) {
-                        (r0, c0) = Sub(r0, c0);
+                        (r0, c0) = Add(r0, c0);
 
                         (c0, carry) = CarryShift(c0, carry);
                     }
