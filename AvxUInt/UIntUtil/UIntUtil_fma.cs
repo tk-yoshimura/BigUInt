@@ -76,10 +76,10 @@ namespace AvxUInt {
                         (c0, c1, c2, c3, carry) = CarryShiftX4(c0, c1, c2, c3, carry);
                     }
 
-                    (d0, c0) = Add(r0, d0);
-                    (d1, c1) = Add(r1, d1);
-                    (d2, c2) = Add(r2, d2);
-                    (d3, c3) = Add(r3, d3);
+                    (d0, c0) = Add(d0, r0);
+                    (d1, c1) = Add(d1, r1);
+                    (d2, c2) = Add(d2, r2);
+                    (d3, c3) = Add(d3, r3);
 
                     (c0, c1, c2, c3, carry) = CarryShiftX4(c0, c1, c2, c3, carry);
 
@@ -116,8 +116,8 @@ namespace AvxUInt {
                         (c0, c1, carry) = CarryShiftX2(c0, c1, carry);
                     }
 
-                    (d0, c0) = Add(r0, d0);
-                    (d1, c1) = Add(r1, d1);
+                    (d0, c0) = Add(d0, r0);
+                    (d1, c1) = Add(d1, r1);
 
                     (c0, c1, carry) = CarryShiftX2(c0, c1, carry);
 
@@ -150,7 +150,7 @@ namespace AvxUInt {
                         (c0, carry) = CarryShift(c0, carry);
                     }
 
-                    (d0, c0) = Add(r0, d0);
+                    (d0, c0) = Add(d0, r0);
 
                     (c0, carry) = CarryShift(c0, carry);
 
@@ -186,7 +186,7 @@ namespace AvxUInt {
                         (c0, carry) = CarryShift(c0, carry);
                     }
 
-                    (d0, c0) = Add(r0, d0);
+                    (d0, c0) = Add(d0, r0);
 
                     (c0, carry) = CarryShift(c0, carry);
 
