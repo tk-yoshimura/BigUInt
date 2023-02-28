@@ -9,10 +9,15 @@ namespace AvxUIntTest {
 
             List<(BigUInt<N> b, BigInteger n)> vs = new();
 
+            int length = default(N).Value;
             for (int i = 1; i <= BigUInt<N>.Bits; i += 15) {
                 UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, i);
-                BigUInt<N> v = new(bits, enable_clone: false);
-                vs.Add((v, v));
+                UInt32[] bits_swapbit = (UInt32[])bits.Clone();
+                bits_swapbit[random.Next(length)] ^= 1u << random.Next(UIntUtil.UInt32Bits);
+
+                BigUInt<N> b = new(bits, enable_clone: false), b_swapbit = new(bits_swapbit, enable_clone: false);
+                vs.Add((b, (BigInteger)b));
+                vs.Add((b_swapbit, (BigInteger)b_swapbit));
             }
             {
                 BigUInt<N> v = BigUInt<N>.Full;
