@@ -32,10 +32,10 @@ namespace AvxUInt {
                     (b0, b1, b2, b3) = LoadX4(vb, vb0, arr_b.Length);
 
                     uint flag =
-                        ((uint)MoveMask(CompareEqual(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << ShiftIDX1) |
-                        ((uint)MoveMask(CompareEqual(a2, b2).AsSingle()) << ShiftIDX2) |
-                        ((uint)MoveMask(CompareEqual(a3, b3).AsSingle()) << ShiftIDX3);
+                        (MaskEqual(a0, b0)) |
+                        (MaskEqual(a1, b1) << ShiftIDX1) |
+                        (MaskEqual(a2, b2) << ShiftIDX2) |
+                        (MaskEqual(a3, b3) << ShiftIDX3);
 
                     if (flag != ~0u) {
                         return false;
@@ -50,8 +50,8 @@ namespace AvxUInt {
                     (b0, b1) = LoadX2(vb, vb0, arr_b.Length);
 
                     uint flag =
-                        ((uint)MoveMask(CompareEqual(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareEqual(a1, b1).AsSingle()) << ShiftIDX1);
+                        (MaskEqual(a0, b0)) |
+                        (MaskEqual(a1, b1) << ShiftIDX1);
 
                     if (flag != 65535u) {
                         return false;
@@ -65,8 +65,7 @@ namespace AvxUInt {
                     a0 = Load(va, va0, arr_a.Length);
                     b0 = Load(vb, vb0, arr_b.Length);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(a0, b0).AsSingle()));
+                    uint flag = MaskEqual(a0, b0);
 
                     if (flag != 255u) {
                         return false;
@@ -82,8 +81,7 @@ namespace AvxUInt {
                     a0 = MaskLoad(va, mask, va0, arr_a.Length);
                     b0 = MaskLoad(vb, mask, vb0, arr_b.Length);
 
-                    uint flag =
-                        ((uint)MoveMask(CompareEqual(a0, b0).AsSingle()));
+                    uint flag = MaskEqual(a0, b0);
 
                     if (flag != 255u) {
                         return false;
@@ -92,6 +90,11 @@ namespace AvxUInt {
             }
 
             return true;
+        }
+
+        /// <summary>Comparate vector a == b bits</summary>
+        private static unsafe uint MaskEqual(Vector256<uint> a0, Vector256<uint> b0) {
+            return (uint)MoveMask(CompareEqual(a0, b0).AsSingle());
         }
 
         /// <summary>Comparate uint32 array a &lt;= b</summary>
@@ -123,16 +126,16 @@ namespace AvxUInt {
                     (b0, b1, b2, b3) = LoadX4(vb - MM256UInt32s * 4, vb0, arr_b.Length);
 
                     uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1) |
-                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << ShiftIDX2) |
-                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << ShiftIDX3);
+                        (MaskGreaterThan(a0, b0)) |
+                        (MaskGreaterThan(a1, b1) << ShiftIDX1) |
+                        (MaskGreaterThan(a2, b2) << ShiftIDX2) |
+                        (MaskGreaterThan(a3, b3) << ShiftIDX3);
 
                     uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1) |
-                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << ShiftIDX2) |
-                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << ShiftIDX3);
+                        (MaskLessThan(a0, b0)) |
+                        (MaskLessThan(a1, b1) << ShiftIDX1) |
+                        (MaskLessThan(a2, b2) << ShiftIDX2) |
+                        (MaskLessThan(a3, b3) << ShiftIDX3);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag < lt_flag;
@@ -147,12 +150,12 @@ namespace AvxUInt {
                     (b0, b1) = LoadX2(vb - MM256UInt32s * 2, vb0, arr_b.Length);
 
                     uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1);
+                        (MaskGreaterThan(a0, b0)) |
+                        (MaskGreaterThan(a1, b1) << ShiftIDX1);
 
                     uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1);
+                        (MaskLessThan(a0, b0)) |
+                        (MaskLessThan(a1, b1) << ShiftIDX1);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag < lt_flag;
@@ -166,11 +169,9 @@ namespace AvxUInt {
                     a0 = Load(va - MM256UInt32s, va0, arr_a.Length);
                     b0 = Load(vb - MM256UInt32s, vb0, arr_b.Length);
 
-                    uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle()));
+                    uint gt_flag = MaskGreaterThan(a0, b0);
 
-                    uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle()));
+                    uint lt_flag = MaskLessThan(a0, b0);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag < lt_flag;
@@ -184,11 +185,9 @@ namespace AvxUInt {
                     a0 = MaskLoad(va0, mask, va0, arr_a.Length);
                     b0 = MaskLoad(vb0, mask, vb0, arr_b.Length);
 
-                    uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle()));
+                    uint gt_flag = MaskGreaterThan(a0, b0);
 
-                    uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle()));
+                    uint lt_flag = MaskLessThan(a0, b0);
 
                     return gt_flag <= lt_flag;
                 }
@@ -196,7 +195,7 @@ namespace AvxUInt {
 
             return true;
         }
-
+        
         /// <summary>Comparate uint32 array a &gt;= b</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool GreaterThanOrEqual(uint length, UInt32[] arr_a, UInt32[] arr_b) {
@@ -226,16 +225,16 @@ namespace AvxUInt {
                     (b0, b1, b2, b3) = LoadX4(vb - MM256UInt32s * 4, vb0, arr_b.Length);
 
                     uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1) |
-                        ((uint)MoveMask(CompareGreaterThan(a2, b2).AsSingle()) << ShiftIDX2) |
-                        ((uint)MoveMask(CompareGreaterThan(a3, b3).AsSingle()) << ShiftIDX3);
+                        (MaskGreaterThan(a0, b0)) |
+                        (MaskGreaterThan(a1, b1) << ShiftIDX1) |
+                        (MaskGreaterThan(a2, b2) << ShiftIDX2) |
+                        (MaskGreaterThan(a3, b3) << ShiftIDX3);
 
                     uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1) |
-                        ((uint)MoveMask(CompareLessThan(a2, b2).AsSingle()) << ShiftIDX2) |
-                        ((uint)MoveMask(CompareLessThan(a3, b3).AsSingle()) << ShiftIDX3);
+                        (MaskLessThan(a0, b0)) |
+                        (MaskLessThan(a1, b1) << ShiftIDX1) |
+                        (MaskLessThan(a2, b2) << ShiftIDX2) |
+                        (MaskLessThan(a3, b3) << ShiftIDX3);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag > lt_flag;
@@ -250,12 +249,12 @@ namespace AvxUInt {
                     (b0, b1) = LoadX2(vb - MM256UInt32s * 2, vb0, arr_b.Length);
 
                     uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareGreaterThan(a1, b1).AsSingle()) << ShiftIDX1);
+                        (MaskGreaterThan(a0, b0)) |
+                        (MaskGreaterThan(a1, b1) << ShiftIDX1);
 
                     uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle())) |
-                        ((uint)MoveMask(CompareLessThan(a1, b1).AsSingle()) << ShiftIDX1);
+                        (MaskLessThan(a0, b0)) |
+                        (MaskLessThan(a1, b1) << ShiftIDX1);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag > lt_flag;
@@ -269,11 +268,9 @@ namespace AvxUInt {
                     a0 = Load(va - MM256UInt32s, va0, arr_a.Length);
                     b0 = Load(vb - MM256UInt32s, vb0, arr_b.Length);
 
-                    uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle()));
+                    uint gt_flag = MaskGreaterThan(a0, b0);
 
-                    uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle()));
+                    uint lt_flag = MaskLessThan(a0, b0);
 
                     if ((gt_flag | lt_flag) != 0u) {
                         return gt_flag > lt_flag;
@@ -287,17 +284,27 @@ namespace AvxUInt {
                     a0 = MaskLoad(va0, mask, va0, arr_a.Length);
                     b0 = MaskLoad(vb0, mask, vb0, arr_b.Length);
 
-                    uint gt_flag =
-                        ((uint)MoveMask(CompareGreaterThan(a0, b0).AsSingle()));
+                    uint gt_flag = MaskGreaterThan(a0, b0);
 
-                    uint lt_flag =
-                        ((uint)MoveMask(CompareLessThan(a0, b0).AsSingle()));
+                    uint lt_flag = MaskLessThan(a0, b0);
 
                     return gt_flag >= lt_flag;
                 }
             }
 
             return true;
+        }
+
+        /// <summary>Comparate vector a &lt;= b bits</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe uint MaskLessThan(Vector256<uint> a, Vector256<uint> b) {
+            return (uint)MoveMask(CompareLessThan(a, b).AsSingle());
+        }
+
+        /// <summary>Comparate vector a &gt;= b bits</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe uint MaskGreaterThan(Vector256<uint> a, Vector256<uint> b) {
+            return (uint)MoveMask(CompareGreaterThan(a, b).AsSingle());
         }
 
         /// <summary>Judge uint32 array is zero</summary>
