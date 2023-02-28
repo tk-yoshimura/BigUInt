@@ -42,6 +42,22 @@ namespace AvxUIntTest {
                     if (n <= maxn) {
                         Assert.AreEqual(n, (BigInteger)(v1 + v2));
 
+                        if (v1.Digits <= 2) { 
+                            Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) + v2));
+                        }
+
+                        if (v1.Digits <= 1) { 
+                            Assert.AreEqual(n, (BigInteger)(v1.Value[0] + v2));
+                        }
+
+                        if (v2.Digits <= 2) { 
+                            Assert.AreEqual(n, (BigInteger)(v1 + UIntUtil.Pack(v2.Value[1], v2.Value[0])));
+                        }
+
+                        if (v2.Digits <= 1) { 
+                            Assert.AreEqual(n, (BigInteger)(v1 + v2.Value[0]));
+                        }
+
                         normal_passes++;
                     }
                     else {
@@ -92,6 +108,22 @@ namespace AvxUIntTest {
 
                 if (n <= maxn) {
                     Assert.AreEqual(n, (BigInteger)(v1 + v2));
+
+                    if (v1.Digits <= 2) { 
+                        Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) + v2));
+                    }
+
+                    if (v1.Digits <= 1) { 
+                        Assert.AreEqual(n, (BigInteger)(v1.Value[0] + v2));
+                    }
+
+                    if (v2.Digits <= 2) { 
+                        Assert.AreEqual(n, (BigInteger)(v1 + UIntUtil.Pack(v2.Value[1], v2.Value[0])));
+                    }
+
+                    if (v2.Digits <= 1) { 
+                        Assert.AreEqual(n, (BigInteger)(v1 + v2.Value[0]));
+                    }
 
                     normal_passes++;
                 }

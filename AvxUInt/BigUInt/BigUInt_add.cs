@@ -21,37 +21,37 @@
             return Add(b, a);
         }
 
-        private static BigUInt<N> Add(BigUInt<N> v1, BigUInt<N> v2) {
-            uint v1_digits = v1.Digits, v2_digits = v2.Digits;
+        public static BigUInt<N> Add(BigUInt<N> a, BigUInt<N> b) {
+            uint v1_digits = a.Digits, v2_digits = b.Digits;
 
             if (v1_digits >= v2_digits) {
-                BigUInt<N> ret = v1.Copy();
+                BigUInt<N> ret = a.Copy();
 
-                UIntUtil.Add(ret.value, v2.value);
+                UIntUtil.Add(ret.value, b.value);
 
                 return ret;
             }
             else {
-                BigUInt<N> ret = v2.Copy();
+                BigUInt<N> ret = b.Copy();
 
-                UIntUtil.Add(ret.value, v1.value);
+                UIntUtil.Add(ret.value, a.value);
 
                 return ret;
             }
         }
 
-        private static BigUInt<N> Add(BigUInt<N> v1, UInt32 v2) {
-            BigUInt<N> ret = v1.Copy();
+        public static BigUInt<N> Add(BigUInt<N> a, UInt32 b) {
+            BigUInt<N> ret = a.Copy();
 
-            UIntUtil.Add(ret.value, v2);
+            UIntUtil.Add(ret.value, b);
 
             return ret;
         }
 
-        private static BigUInt<N> Add(BigUInt<N> v1, UInt64 v2) {
-            BigUInt<N> ret = v1.Copy();
+        public static BigUInt<N> Add(BigUInt<N> a, UInt64 b) {
+            BigUInt<N> ret = a.Copy();
 
-            UIntUtil.Add(ret.value, v2);
+            UIntUtil.Add(ret.value, b);
 
             return ret;
         }

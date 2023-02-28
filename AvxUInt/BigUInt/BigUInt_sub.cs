@@ -10,6 +10,42 @@
         }
 
         public static BigUInt<N> operator -(UInt32 a, BigUInt<N> b) {
+            return Sub(a, b);
+        }
+
+        public static BigUInt<N> operator -(BigUInt<N> a, UInt64 b) {
+            return Sub(a, b);
+        }
+
+        public static BigUInt<N> operator -(UInt64 a, BigUInt<N> b) {
+            return Sub(a, b);
+        }
+
+        public static BigUInt<N> Sub(BigUInt<N> a, BigUInt<N> b) {
+            BigUInt<N> ret = a.Copy();
+
+            UIntUtil.Sub(ret.value, b.value);
+
+            return ret;
+        }
+
+        public static BigUInt<N> Sub(BigUInt<N> a, UInt32 b) {
+            BigUInt<N> ret = a.Copy();
+
+            UIntUtil.Sub(ret.value, b);
+
+            return ret;
+        }
+
+        public static BigUInt<N> Sub(BigUInt<N> a, UInt64 b) {
+            BigUInt<N> ret = a.Copy();
+
+            UIntUtil.Sub(ret.value, b);
+
+            return ret;
+        }
+
+        public static BigUInt<N> Sub(UInt32 a, BigUInt<N> b) {
             if (b.Digits > 1) {
                 throw new OverflowException();
             }
@@ -22,11 +58,7 @@
             return a - n;
         }
 
-        public static BigUInt<N> operator -(BigUInt<N> a, UInt64 b) {
-            return Sub(a, b);
-        }
-
-        public static BigUInt<N> operator -(UInt64 a, BigUInt<N> b) {
+        public static BigUInt<N> Sub(UInt64 a, BigUInt<N> b) {
             if (b.Digits > 2) {
                 throw new OverflowException();
             }
@@ -37,30 +69,6 @@
             }
 
             return a - n;
-        }
-
-        private static BigUInt<N> Sub(BigUInt<N> v1, BigUInt<N> v2) {
-            BigUInt<N> ret = v1.Copy();
-
-            UIntUtil.Sub(ret.value, v2.value);
-
-            return ret;
-        }
-
-        private static BigUInt<N> Sub(BigUInt<N> v1, UInt32 v2) {
-            BigUInt<N> ret = v1.Copy();
-
-            UIntUtil.Sub(ret.value, v2);
-
-            return ret;
-        }
-
-        private static BigUInt<N> Sub(BigUInt<N> v1, UInt64 v2) {
-            BigUInt<N> ret = v1.Copy();
-
-            UIntUtil.Sub(ret.value, v2);
-
-            return ret;
         }
     }
 }

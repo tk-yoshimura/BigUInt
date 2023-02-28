@@ -10,7 +10,7 @@
         }
 
         public static BigUInt<N> operator *(UInt32 a, BigUInt<N> b) {
-            return Mul(b, a);
+            return Mul(a, b);
         }
 
         public static BigUInt<N> operator *(BigUInt<N> a, UInt64 b) {
@@ -18,37 +18,53 @@
         }
 
         public static BigUInt<N> operator *(UInt64 a, BigUInt<N> b) {
-            return Mul(b, a);
+            return Mul(a, b);
         }
 
-        private static BigUInt<N> Mul(BigUInt<N> v1, BigUInt<N> v2) {
+        public static BigUInt<N> Mul(BigUInt<N> a, BigUInt<N> b) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Fma(ret.value, v1.value, v2.value);
+            UIntUtil.Fma(ret.value, a.value, b.value);
 
             return ret;
         }
 
-        private static BigUInt<N> Mul(BigUInt<N> v1, UInt32 v2) {
+        public static BigUInt<N> Mul(BigUInt<N> a, UInt32 b) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Fma(ret.value, v1.value, v2);
+            UIntUtil.Fma(ret.value, a.value, b);
 
             return ret;
         }
 
-        private static BigUInt<N> Mul(BigUInt<N> v1, UInt64 v2) {
+        public static BigUInt<N> Mul(BigUInt<N> a, UInt64 b) {
             BigUInt<N> ret = Zero.Copy();
 
-            UIntUtil.Fma(ret.value, v1.value, v2);
+            UIntUtil.Fma(ret.value, a.value, b);
 
             return ret;
         }
 
-        public static BigUInt<Double<N>> ExpandMul(BigUInt<N> v1, BigUInt<N> v2) {
+        public static BigUInt<N> Mul(UInt32 a, BigUInt<N> b) {
+            BigUInt<N> ret = Zero.Copy();
+
+            UIntUtil.Fma(ret.value, b.value, a);
+
+            return ret;
+        }
+
+        public static BigUInt<N> Mul(UInt64 a, BigUInt<N> b) {
+            BigUInt<N> ret = Zero.Copy();
+
+            UIntUtil.Fma(ret.value, b.value, a);
+
+            return ret;
+        }
+
+        public static BigUInt<Double<N>> ExpandMul(BigUInt<N> a, BigUInt<N> b) {
             BigUInt<Double<N>> ret = BigUInt<Double<N>>.Zero;
 
-            UIntUtil.Fma(ret.value, v1.value, v2.value);
+            UIntUtil.Fma(ret.value, a.value, b.value);
 
             return ret;
         }
