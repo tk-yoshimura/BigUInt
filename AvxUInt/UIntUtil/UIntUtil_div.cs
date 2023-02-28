@@ -88,7 +88,7 @@ namespace AvxUInt {
                 UInt32 n1 = arr_b[digits_b - 2u];
                 (UInt64 n_hi, UInt32 n_lo) = Unpack(Pack(n0, n1) << lzc);
 
-                if ((n_lo > 0u) || (digits_b > 2u && !IsZero(arr_b[..(int)(digits_b - 2)]))){
+                if ((n_lo > 0u) || !IsZero(digits_b - 2u, arr_b)){
                     return n_hi + 1uL;
                 }
 

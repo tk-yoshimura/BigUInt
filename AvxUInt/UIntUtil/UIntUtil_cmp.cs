@@ -13,8 +13,11 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length <= arr_a.Length);
             Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
+            if (length <= 0u) {
+                return true;
+            }
 
-            if (arr_a[0] != arr_b[0] || arr_a[length - 1] != arr_b[length - 1]) {
+            if (arr_a[0] != arr_b[0] || arr_a[length - 1u] != arr_b[length - 1u]) {
                 return false;
             }
 
@@ -98,11 +101,14 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length <= arr_a.Length);
             Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
-
-            if (arr_a[length - 1] < arr_b[length - 1]) {
+            if (length <= 0u) {
                 return true;
             }
-            if (arr_a[length - 1] > arr_b[length - 1]) {
+
+            if (arr_a[length - 1u] < arr_b[length - 1u]) {
+                return true;
+            }
+            if (arr_a[length - 1u] > arr_b[length - 1u]) {
                 return false;
             }
 
@@ -198,11 +204,14 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length <= arr_a.Length);
             Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
-
-            if (arr_a[length - 1] > arr_b[length - 1]) {
+            if (length <= 0u) {
                 return true;
             }
-            if (arr_a[length - 1] < arr_b[length - 1]) {
+
+            if (arr_a[length - 1u] > arr_b[length - 1u]) {
+                return true;
+            }
+            if (arr_a[length - 1u] < arr_b[length - 1u]) {
                 return false;
             }
 
@@ -293,8 +302,12 @@ namespace AvxUInt {
 
         /// <summary>Judge uint32 array is zero</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool IsZero(UInt32[] arr) {
-            if (arr[0] != 0u || arr[^1] != 0u) {
+        public static unsafe bool IsZero(uint length, UInt32[] arr) {
+            if (length <= 0u) {
+                return true;
+            }
+
+            if (arr[0] != 0u || arr[length - 1u] != 0u) {
                 return false;
             }
 
@@ -303,7 +316,7 @@ namespace AvxUInt {
 
                 Vector256<UInt32> x0, x1, x2, x3;
 
-                uint r = (uint)arr.Length;
+                uint r = length;
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadX4(v, v0, arr.Length);
 
@@ -348,8 +361,12 @@ namespace AvxUInt {
 
         /// <summary>Judge uint32 array is full</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool IsFull(UInt32[] arr) {
-            if (arr[0] != ~0u || arr[^1] != ~0u) {
+        public static unsafe bool IsFull(uint length, UInt32[] arr) {
+            if (length <= 0u) {
+                return false;
+            }
+
+            if (arr[0] != ~0u || arr[length - 1u] != ~0u) {
                 return false;
             }
 
@@ -359,7 +376,7 @@ namespace AvxUInt {
 
                 Vector256<UInt32> x0, x1, x2, x3;
 
-                uint r = (uint)arr.Length;
+                uint r = length;
                 while (r >= MM256UInt32s * 4) {
                     (x0, x1, x2, x3) = LoadX4(v, v0, arr.Length);
 
@@ -411,6 +428,10 @@ namespace AvxUInt {
             Debug<ArgumentException>.Assert(length <= arr_a.Length);
             Debug<ArgumentException>.Assert(length <= arr_b.Length);
 #endif
+
+            if (length <= 0u) {
+                return 0;
+            }
 
             int matches = 0;
 

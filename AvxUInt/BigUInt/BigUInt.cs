@@ -83,13 +83,13 @@ namespace AvxUInt {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static BigUInt<N> Zero { get; } = new();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool IsZero => UIntUtil.IsZero(value);
+        public bool IsZero => UIntUtil.IsZero((uint)Length, value);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public static BigUInt<N> Full { get; } =
             new((new UInt32[Length]).Select(_ => ~0u).ToArray(), enable_clone: false);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool IsFull => UIntUtil.IsFull(value);
+        public bool IsFull => UIntUtil.IsFull((uint)Length, value);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int Digits => UIntUtil.Digits(value);
