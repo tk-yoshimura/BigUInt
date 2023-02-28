@@ -1,15 +1,16 @@
 ﻿namespace AvxUInt {
     internal static partial class UIntUtil {
         public static UInt32[] Random(Random random, int length, int bits) {
-            int blocks = bits / UIntUtil.UInt32Bits;
-            if (blocks >= length) {
+            int block = bits / UIntUtil.UInt32Bits, rem = bits % UIntUtil.UInt32Bits;
+
+            if (block > length || (block == length && rem > 0)) {
                 throw new ArgumentOutOfRangeException(nameof(bits));
             }
             
-            UInt32[] value = (new UInt32[length]).Select((_, idx) => idx < blocks ? (UInt32)random.NextUInt32() : 0u).ToArray();
+            UInt32[] value = (new UInt32[length]).Select((_, idx) => idx < block ? (UInt32)random.NextUInt32() : 0u).ToArray();
 
-            if (bits % UIntUtil.UInt32Bits > 0) {
-                value[blocks] = (UInt32)random.NextUInt32() >> (UIntUtil.UInt32Bits - bits % UIntUtil.UInt32Bits);
+            if (rem > 0) {
+                value[block] = (UInt32)random.NextUInt32() >> (UIntUtil.UInt32Bits - rem);
             }
 
             return value;
