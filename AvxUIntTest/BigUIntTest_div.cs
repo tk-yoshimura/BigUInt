@@ -63,7 +63,7 @@ namespace AvxUIntTest {
             List<(BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2)> vs = new();
             BigInteger maxn = BigUInt<N>.Full, v = maxn / 2;
 
-            while (v > 0) {
+            while (v > 1) {
                 BigInteger u = maxn / v;
 
                 BigInteger v0 = v - 1, v1 = v, v2 = v + 1;
@@ -118,7 +118,7 @@ namespace AvxUIntTest {
     public class DivTests {
         [TestMethod]
         public void DivTest() {
-            BigUInt<N4> v1 = 17881969753796, v2 = 1577;
+            BigUInt<N9> v1 = "8516936223647602322473865698301194978485550553075320721198", v2 = "262143";
 
             _ = v1 / v2;
 

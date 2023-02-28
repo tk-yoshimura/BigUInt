@@ -10,6 +10,10 @@ namespace AvxUInt {
         public BigUInt(string s)
             : this(ParseCore(s), enable_clone: false) { }
 
+        public static implicit operator BigUInt<N>(string s) {
+            return new BigUInt<N>(s);
+        }
+
         public static BigUInt<N> Parse(string s) {
             return new BigUInt<N>(ParseCore(s), enable_clone: false);
         }

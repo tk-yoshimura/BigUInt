@@ -65,6 +65,12 @@ namespace AvxUInt {
                     return (Pack(value[1], value[0]) << (int)lzc, lzc_all);
                 }
 
+                if (lzc == 0) {
+                    UInt64 n = Pack(value[idx - 1u], value[idx - 2u]);
+
+                    return (n, lzc_all);
+                }
+
                 unchecked {
                     UInt64 n = (Pack(value[idx - 1u], value[idx - 2u]) << (int)lzc) | (value[idx - 3u] >> (int)(UInt32Bits - lzc));
 

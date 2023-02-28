@@ -197,10 +197,10 @@ namespace AvxUInt {
                     }
 
                     if (rem_d < MM256UInt32s) {
-                        MaskStore(vd, d0, mask_d, vd0, arr_dst.Length);
                         if (d0.GetElement((int)rem_d) > 0u) {
                             throw new OverflowException();
                         }
+                        MaskStore(vd, d0, mask_d, vd0, arr_dst.Length);
                     }
                     else {
                         Store(vd, d0, vd0, arr_dst.Length);
