@@ -25,6 +25,7 @@ namespace AvxUInt {
         }
 
         /// <summary>Vector mul with carry</summary>
+        /// <remarks>Parameter 'b' must have the same value every other one. e.g.&lt;v,0,v,0,v,0,v,0&gt;</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector256<UInt32> ret, Vector256<UInt32> carry) Mul(Vector256<UInt32> a, Vector256<UInt32> b) {
             Vector256<UInt32> zero = Vector256<UInt32>.Zero;
