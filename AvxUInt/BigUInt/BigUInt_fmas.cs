@@ -24,24 +24,24 @@
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fma(BigUInt<Double<N>> c, BigUInt<N> a, BigUInt<N> b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fma<M>(BigUInt<M> c, BigUInt<N> a, BigUInt<N> b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b.value);
 
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fma(BigUInt<Double<N>> c, BigUInt<N> a, UInt32 b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fma<M>(BigUInt<M> c, BigUInt<N> a, UInt32 b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b);
 
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fma(BigUInt<Double<N>> c, BigUInt<N> a, UInt64 b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fma<M>(BigUInt<M> c, BigUInt<N> a, UInt64 b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b);
 
@@ -72,24 +72,24 @@
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fms(BigUInt<Double<N>> c, BigUInt<N> a, BigUInt<N> b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fms<M>(BigUInt<M> c, BigUInt<N> a, BigUInt<N> b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fms(ret.value, a.value, b.value);
 
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fms(BigUInt<Double<N>> c, BigUInt<N> a, UInt32 b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fms<M>(BigUInt<M> c, BigUInt<N> a, UInt32 b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fms(ret.value, a.value, b);
 
             return ret;
         }
 
-        public static BigUInt<Double<N>> Fms(BigUInt<Double<N>> c, BigUInt<N> a, UInt64 b) {
-            BigUInt<Double<N>> ret = c.Copy();
+        public static BigUInt<M> Fms<M>(BigUInt<M> c, BigUInt<N> a, UInt64 b) where M: struct, IConstant {
+            BigUInt<M> ret = c.Copy();
 
             UIntUtil.Fms(ret.value, a.value, b);
 

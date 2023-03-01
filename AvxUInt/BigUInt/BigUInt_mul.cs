@@ -61,8 +61,8 @@
             return ret;
         }
 
-        public static BigUInt<Double<N>> ExpandMul(BigUInt<N> a, BigUInt<N> b) {
-            BigUInt<Double<N>> ret = BigUInt<Double<N>>.Zero;
+        public static BigUInt<M> Mul<M>(BigUInt<N> a, BigUInt<N> b) where M: struct, IConstant {
+            BigUInt<M> ret = BigUInt<M>.Zero;
 
             UIntUtil.Fma(ret.value, a.value, b.value);
 
