@@ -7,12 +7,18 @@ namespace AvxUInt {
             uint digits_a = Digits(arr_a), digits_b = Digits(arr_b);
 
             if (digits_a >= digits_b) {
-                for (uint i = 0; i < digits_b; i++) {
+                for (uint i = 0; i < (digits_b & (~1u)); i += 2) {
+                    Fma(i, digits_a, arr_dst, arr_a, Pack(arr_b[i + 1u], arr_b[i]));
+                }
+                for (uint i = (digits_b & (~1u)); i < digits_b; i++) { 
                     Fma(i, digits_a, arr_dst, arr_a, arr_b[i]);
                 }
             }
             else {
-                for (uint i = 0; i < digits_a; i++) {
+                for (uint i = 0; i < (digits_a & (~1u)); i += 2) {
+                    Fma(i, digits_b, arr_dst, arr_b, Pack(arr_a[i + 1u], arr_a[i]));
+                }
+                for (uint i = (digits_a & (~1u)); i < digits_a; i++) {
                     Fma(i, digits_b, arr_dst, arr_b, arr_a[i]);
                 }
             }
