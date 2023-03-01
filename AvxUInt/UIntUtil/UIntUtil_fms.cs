@@ -51,7 +51,7 @@ namespace AvxUInt {
             fixed (UInt32* va0 = arr_a, vd0 = arr_dst) {
                 UInt32* va = va0, vd = vd0 + offset;
 
-                Vector256<UInt32> y = Vector256.Create((UInt64)b).AsUInt32();
+                Vector256<UInt32> b0 = Vector256.Create((UInt64)b).AsUInt32();
                 uint r = digits_a;
 
                 Vector256<UInt32> a0, a1, a2, a3, d0, d1, d2, d3, r0, r1, r2, r3, c0, c1, c2, c3;
@@ -60,10 +60,10 @@ namespace AvxUInt {
                     (a0, a1, a2, a3) = LoadX4(va, va0, arr_a.Length);
                     (d0, d1, d2, d3) = LoadX4(vd, vd0, arr_dst.Length);
 
-                    (r0, c0) = Mul(a0, y);
-                    (r1, c1) = Mul(a1, y);
-                    (r2, c2) = Mul(a2, y);
-                    (r3, c3) = Mul(a3, y);
+                    (r0, c0) = Mul(a0, b0);
+                    (r1, c1) = Mul(a1, b0);
+                    (r2, c2) = Mul(a2, b0);
+                    (r3, c3) = Mul(a3, b0);
 
                     (c0, c1, c2, c3, UInt32 carry) = CarryShiftX4(c0, c1, c2, c3, 0u);
 
@@ -104,8 +104,8 @@ namespace AvxUInt {
                     (a0, a1) = LoadX2(va, va0, arr_a.Length);
                     (d0, d1) = LoadX2(vd, vd0, arr_dst.Length);
 
-                    (r0, c0) = Mul(a0, y);
-                    (r1, c1) = Mul(a1, y);
+                    (r0, c0) = Mul(a0, b0);
+                    (r1, c1) = Mul(a1, b0);
 
                     (c0, c1, UInt32 carry) = CarryShiftX2(c0, c1, 0u);
 
@@ -140,7 +140,7 @@ namespace AvxUInt {
                     a0 = Load(va, va0, arr_a.Length);
                     d0 = Load(vd, vd0, arr_dst.Length);
 
-                    (r0, c0) = Mul(a0, y);
+                    (r0, c0) = Mul(a0, b0);
 
                     (c0, UInt32 carry) = CarryShift(c0, 0u);
 
@@ -169,14 +169,14 @@ namespace AvxUInt {
                     offset += MM256UInt32s;
                 }
                 if (r > 0u) {
-                    uint rem_d = (uint)arr_dst.Length - offset;
                     Vector256<UInt32> mask_a = Mask256.Lower(r);
-                    Vector256<UInt32> mask_d = Mask256.Lower(rem_d);
-
                     a0 = MaskLoad(va, mask_a, va0, arr_a.Length);
+
+                    uint rem_d = (uint)arr_dst.Length - offset;
+                    Vector256<UInt32> mask_d = Mask256.Lower(rem_d);
                     d0 = MaskLoad(vd, mask_d, vd0, arr_dst.Length);
 
-                    (r0, c0) = Mul(a0, y);
+                    (r0, c0) = Mul(a0, b0);
 
                     (c0, UInt32 carry) = CarryShift(c0, 0u);
 

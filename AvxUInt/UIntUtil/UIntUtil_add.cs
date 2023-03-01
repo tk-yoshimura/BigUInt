@@ -9,11 +9,11 @@ namespace AvxUInt {
                 return;
             }
             if (digits_b == 1u) {
-                Add(arr_a, arr_b[0]);
+                Add(0u, arr_a, arr_b[0]);
                 return;
             }
             if (digits_b == 2u) {
-                Add(arr_a, Pack(arr_b[1], arr_b[0]));
+                Add(0u, arr_a, Pack(arr_b[1], arr_b[0]));
                 return;
             }
             if (digits_b > arr_a.Length) {
@@ -24,63 +24,13 @@ namespace AvxUInt {
         }
 
         /// <summary>Operate uint32 array a += b</summary>
-        public static unsafe void Add(UInt32[] arr_a, UInt32 b) {
-            fixed (UInt32* va0 = arr_a) {
-                for (uint i = 0u, length = (uint)arr_a.Length; i < length && b > 0u; i++) {
-                    UInt32 a = va0[i];
-
-                    va0[i] = unchecked(a + b);
-                    b = (va0[i] >= a) ? 0u : 1u;
-                }
-            }
-
-            if (b > 0u) {
-                throw new OverflowException();
-            }
+        public static void Add(UInt32[] arr_a, UInt32 b) {
+            Add(0u, arr_a, b);
         }
 
         /// <summary>Operate uint32 array a += b</summary>
-        public static unsafe void Add(UInt32[] arr_a, UInt64 b) {
-            if (b == 0uL) {
-                return;
-            }
-
-            (UInt32 b_hi, UInt32 b_lo) = Unpack(b);
-
-            fixed (UInt32* va0 = arr_a) {
-                for (uint i = 0u, length = (uint)arr_a.Length; i < length && b_lo > 0u; i++) {
-                    UInt32 a = va0[i];
-
-                    va0[i] = unchecked(a + b_lo);
-                    b_lo = (va0[i] >= a) ? 0u : 1u;
-                }
-                for (uint i = 1u, length = (uint)arr_a.Length; i < length && b_hi > 0u; i++) {
-                    UInt32 a = va0[i];
-
-                    va0[i] = unchecked(a + b_hi);
-                    b_hi = (va0[i] >= a) ? 0u : 1u;
-                }
-            }
-
-            if ((b_lo | b_hi) > 0u) {
-                throw new OverflowException();
-            }
-        }
-
-        /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
-        private static unsafe void Add(uint offset, UInt32[] arr_a, UInt32 b) {
-            fixed (UInt32* va0 = arr_a) {
-                for (uint i = offset, length = (uint)arr_a.Length; i < length && b > 0u; i++) {
-                    UInt32 a = va0[i];
-
-                    va0[i] = unchecked(a + b);
-                    b = (va0[i] >= a) ? 0u : 1u;
-                }
-            }
-
-            if (b > 0u) {
-                throw new OverflowException();
-            }
+        public static void Add(UInt32[] arr_a, UInt64 b) {
+            Add(0u, arr_a, b);
         }
 
         /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
@@ -199,6 +149,50 @@ namespace AvxUInt {
 
                     Add(digit + offset + ShiftIDX1, arr_a, carry);
                 }
+            }
+        }
+
+        /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
+        private static unsafe void Add(uint offset, UInt32[] arr_a, UInt32 b) {
+            fixed (UInt32* va0 = arr_a) {
+                for (uint i = offset, length = (uint)arr_a.Length; i < length && b > 0u; i++) {
+                    UInt32 a = va0[i];
+
+                    va0[i] = unchecked(a + b);
+                    b = (va0[i] >= a) ? 0u : 1u;
+                }
+            }
+
+            if (b > 0u) {
+                throw new OverflowException();
+            }
+        }
+
+        /// <summary>Operate uint32 array a += b &lt;&lt; offset</summary>
+        private static unsafe void Add(uint offset, UInt32[] arr_a, UInt64 b) {
+            if (b == 0uL) {
+                return;
+            }
+
+            (UInt32 b_hi, UInt32 b_lo) = Unpack(b);
+
+            fixed (UInt32* va0 = arr_a) {
+                for (uint i = offset, length = (uint)arr_a.Length; i < length && b_lo > 0u; i++) {
+                    UInt32 a = va0[i];
+
+                    va0[i] = unchecked(a + b_lo);
+                    b_lo = (va0[i] >= a) ? 0u : 1u;
+                }
+                for (uint i = offset + 1u, length = (uint)arr_a.Length; i < length && b_hi > 0u; i++) {
+                    UInt32 a = va0[i];
+
+                    va0[i] = unchecked(a + b_hi);
+                    b_hi = (va0[i] >= a) ? 0u : 1u;
+                }
+            }
+
+            if ((b_lo | b_hi) > 0u) {
+                throw new OverflowException();
             }
         }
     }
