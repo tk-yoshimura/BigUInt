@@ -85,7 +85,7 @@
             return (a / denom, a % denom);
         }
 
-        public static (BigUInt<M> q, BigUInt<N> r) DivRem<M>(BigUInt<M> a, BigUInt<N> b) where M: struct, IConstant {
+        public static (BigUInt<M> q, BigUInt<N> r) DivRem<M>(BigUInt<M> a, BigUInt<N> b) where M : struct, IConstant {
             BigUInt<M> q = BigUInt<M>.Zero.Copy();
             BigUInt<M> r = a.Copy();
 
@@ -123,7 +123,7 @@
             return q;
         }
 
-        public static BigUInt<M> RoundDiv<M>(BigUInt<M> a, BigUInt<N> b) where M: struct, IConstant {
+        public static BigUInt<M> RoundDiv<M>(BigUInt<M> a, BigUInt<N> b) where M : struct, IConstant {
             (BigUInt<M> q, BigUInt<N> r) = DivRem(a, b);
 
             uint lzc_r = r.LeadingZeroCount;
