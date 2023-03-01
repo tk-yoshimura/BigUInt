@@ -38,22 +38,22 @@ namespace AvxUIntTest {
                     BigInteger n = n1 - n2;
 
                     if (n >= 0) {
-                        Assert.AreEqual(n, (BigInteger)(v1 - v2));
+                        Assert.AreEqual(n, (BigInteger)(v1 - v2), $"{n1}-{n2}");
 
                         if (v1.Digits <= 2) { 
-                            Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) - v2));
+                            Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) - v2), $"{n1}-{n2}");
                         }
 
                         if (v1.Digits <= 1) { 
-                            Assert.AreEqual(n, (BigInteger)(v1.Value[0] - v2));
+                            Assert.AreEqual(n, (BigInteger)(v1.Value[0] - v2), $"{n1}-{n2}");
                         }
 
                         if (v2.Digits <= 2) { 
-                            Assert.AreEqual(n, (BigInteger)(v1 - UIntUtil.Pack(v2.Value[1], v2.Value[0])));
+                            Assert.AreEqual(n, (BigInteger)(v1 - UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}-{n2}");
                         }
 
                         if (v2.Digits <= 1) { 
-                            Assert.AreEqual(n, (BigInteger)(v1 - v2.Value[0]));
+                            Assert.AreEqual(n, (BigInteger)(v1 - v2.Value[0]), $"{n1}-{n2}");
                         }
 
                         normal_passes++;
@@ -105,22 +105,22 @@ namespace AvxUIntTest {
                 BigInteger n = n1 - n2;
 
                 if (n >= 0) {
-                    Assert.AreEqual(n, (BigInteger)(v1 - v2));
+                    Assert.AreEqual(n, (BigInteger)(v1 - v2), $"{n1}-{n2}");
 
                     if (v1.Digits <= 2) { 
-                        Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) - v2));
+                        Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) - v2), $"{n1}-{n2}");
                     }
 
                     if (v1.Digits <= 1) { 
-                        Assert.AreEqual(n, (BigInteger)(v1.Value[0] - v2));
+                        Assert.AreEqual(n, (BigInteger)(v1.Value[0] - v2), $"{n1}-{n2}");
                     }
 
                     if (v2.Digits <= 2) { 
-                        Assert.AreEqual(n, (BigInteger)(v1 - UIntUtil.Pack(v2.Value[1], v2.Value[0])));
+                        Assert.AreEqual(n, (BigInteger)(v1 - UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}-{n2}");
                     }
 
                     if (v2.Digits <= 1) { 
-                        Assert.AreEqual(n, (BigInteger)(v1 - v2.Value[0]));
+                        Assert.AreEqual(n, (BigInteger)(v1 - v2.Value[0]), $"{n1}-{n2}");
                     }
 
                     normal_passes++;
