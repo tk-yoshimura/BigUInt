@@ -14,10 +14,16 @@ namespace AvxUIntTest {
                 UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, i);
                 UInt32[] bits_swapbit = (UInt32[])bits.Clone();
                 bits_swapbit[random.Next(length)] ^= 1u << random.Next(UIntUtil.UInt32Bits);
+                UInt32[] bits_reverse = bits_swapbit.Reverse().ToArray();
 
-                BigUInt<N> b = new(bits, enable_clone: false), b_swapbit = new(bits_swapbit, enable_clone: false);
+                BigUInt<N> b = new(bits, enable_clone: false);
+                BigUInt<N> b_swapbit = new(bits_swapbit, enable_clone: false);
+                BigUInt<N> b_reverse = new(bits_reverse, enable_clone: false);
+
                 vs.Add((b, (BigInteger)b));
                 vs.Add((b_swapbit, (BigInteger)b_swapbit));
+                vs.Add((b_swapbit, (BigInteger)b_swapbit));
+                vs.Add((b_reverse, (BigInteger)b_reverse));
             }
             {
                 BigUInt<N> v = BigUInt<N>.Full;
@@ -40,23 +46,7 @@ namespace AvxUIntTest {
                     BigInteger n = n1 + n2;
 
                     if (n <= maxn) {
-                        Assert.AreEqual(n, (BigInteger)(v1 + v2), $"{n1}+{n2}");
-
-                        if (v1.Digits <= 2) { 
-                            Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) + v2), $"{n1}+{n2}");
-                        }
-
-                        if (v1.Digits <= 1) { 
-                            Assert.AreEqual(n, (BigInteger)(v1.Value[0] + v2), $"{n1}+{n2}");
-                        }
-
-                        if (v2.Digits <= 2) { 
-                            Assert.AreEqual(n, (BigInteger)(v1 + UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}+{n2}");
-                        }
-
-                        if (v2.Digits <= 1) { 
-                            Assert.AreEqual(n, (BigInteger)(v1 + v2.Value[0]), $"{n1}+{n2}");
-                        }
+                        NormalTest(n, v1, v2, n1, n2);
 
                         normal_passes++;
                     }
@@ -107,23 +97,7 @@ namespace AvxUIntTest {
                 BigInteger n = n1 + n2;
 
                 if (n <= maxn) {
-                    Assert.AreEqual(n, (BigInteger)(v1 + v2), $"{n1}+{n2}");
-
-                    if (v1.Digits <= 2) { 
-                        Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) + v2), $"{n1}+{n2}");
-                    }
-
-                    if (v1.Digits <= 1) { 
-                        Assert.AreEqual(n, (BigInteger)(v1.Value[0] + v2), $"{n1}+{n2}");
-                    }
-
-                    if (v2.Digits <= 2) { 
-                        Assert.AreEqual(n, (BigInteger)(v1 + UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}+{n2}");
-                    }
-
-                    if (v2.Digits <= 1) { 
-                        Assert.AreEqual(n, (BigInteger)(v1 + v2.Value[0]), $"{n1}+{n2}");
-                    }
+                    NormalTest(n, v1, v2, n1, n2);
 
                     normal_passes++;
                 }
@@ -138,6 +112,76 @@ namespace AvxUIntTest {
 
             Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
             Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
+        }
+
+        public static void AddSparseTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : 1u << random.Next(32)).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : 1u << random.Next(32)).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+
+            BigInteger maxn = BigUInt<N>.Full;
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    BigInteger n = n1 + n2;
+
+                    if (n <= maxn) {
+                        NormalTest(n, v1, v2, n1, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            _ = v1 + v2;
+                        });
+
+                        overflow_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
+        }
+
+        private static void NormalTest(BigInteger n, BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) {
+            Assert.AreEqual(n, (BigInteger)(v1 + v2), $"{n1}+{n2}");
+
+            if (v1.Digits <= 2) { 
+                Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) + v2), $"{n1}+{n2}");
+            }
+
+            if (v1.Digits <= 1) { 
+                Assert.AreEqual(n, (BigInteger)(v1.Value[0] + v2), $"{n1}+{n2}");
+            }
+
+            if (v2.Digits <= 2) { 
+                Assert.AreEqual(n, (BigInteger)(v1 + UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}+{n2}");
+            }
+
+            if (v2.Digits <= 1) { 
+                Assert.AreEqual(n, (BigInteger)(v1 + v2.Value[0]), $"{n1}+{n2}");
+            }
         }
     }
 
@@ -207,6 +251,39 @@ namespace AvxUIntTest {
             AddTests<N63>.AddFullTest();
             AddTests<N64>.AddFullTest();
             AddTests<N65>.AddFullTest();
+        }
+
+        [TestMethod]
+        public void AddSparseTest() {
+            AddTests<N4>.AddSparseTest();
+            AddTests<N5>.AddSparseTest();
+            AddTests<N6>.AddSparseTest();
+            AddTests<N7>.AddSparseTest();
+            AddTests<N8>.AddSparseTest();
+            AddTests<N9>.AddSparseTest();
+            AddTests<N10>.AddSparseTest();
+            AddTests<N11>.AddSparseTest();
+            AddTests<N12>.AddSparseTest();
+            AddTests<N13>.AddSparseTest();
+            AddTests<N14>.AddSparseTest();
+            AddTests<N15>.AddSparseTest();
+            AddTests<N16>.AddSparseTest();
+            AddTests<N17>.AddSparseTest();
+            AddTests<N23>.AddSparseTest();
+            AddTests<N24>.AddSparseTest();
+            AddTests<N25>.AddSparseTest();
+            AddTests<N31>.AddSparseTest();
+            AddTests<N32>.AddSparseTest();
+            AddTests<N33>.AddSparseTest();
+            AddTests<N47>.AddSparseTest();
+            AddTests<N48>.AddSparseTest();
+            AddTests<N50>.AddSparseTest();
+            AddTests<N53>.AddSparseTest();
+            AddTests<N56>.AddSparseTest();
+            AddTests<N59>.AddSparseTest();
+            AddTests<N63>.AddSparseTest();
+            AddTests<N64>.AddSparseTest();
+            AddTests<N65>.AddSparseTest();
         }
     }
 }

@@ -14,10 +14,16 @@ namespace AvxUIntTest {
                 UInt32[] bits = UIntUtil.Random(random, BigUInt<N>.Length, i);
                 UInt32[] bits_swapbit = (UInt32[])bits.Clone();
                 bits_swapbit[random.Next(length)] ^= 1u << random.Next(UIntUtil.UInt32Bits);
+                UInt32[] bits_reverse = bits_swapbit.Reverse().ToArray();
 
-                BigUInt<N> b = new(bits, enable_clone: false), b_swapbit = new(bits_swapbit, enable_clone: false);
+                BigUInt<N> b = new(bits, enable_clone: false);
+                BigUInt<N> b_swapbit = new(bits_swapbit, enable_clone: false);
+                BigUInt<N> b_reverse = new(bits_reverse, enable_clone: false);
+
                 vs.Add((b, (BigInteger)b));
                 vs.Add((b_swapbit, (BigInteger)b_swapbit));
+                vs.Add((b_swapbit, (BigInteger)b_swapbit));
+                vs.Add((b_reverse, (BigInteger)b_reverse));
             }
             {
                 BigUInt<N> v = BigUInt<N>.Full;
@@ -38,30 +44,7 @@ namespace AvxUIntTest {
             foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
                 foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
                     if (n2 > 0) {
-                        BigInteger q = n1 / n2, r = n1 % n2;
-
-                        Assert.AreEqual(q, (BigInteger)(v1 / v2), $"{n1}/{n2}");
-                        Assert.AreEqual(r, (BigInteger)(v1 % v2), $"{n1}%{n2}");
-
-                        if (v1.Digits <= 2) { 
-                            Assert.AreEqual(q, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) / v2), $"{n1}/{n2}");
-                            Assert.AreEqual(r, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) % v2), $"{n1}%{n2}");
-                        }
-                        
-                        if (v1.Digits <= 1) { 
-                            Assert.AreEqual(q, (BigInteger)(v1.Value[0] / v2), $"{n1}/{n2}");
-                            Assert.AreEqual(r, (BigInteger)(v1.Value[0] % v2), $"{n1}%{n2}");
-                        }
-                        
-                        if (v2.Digits <= 2) { 
-                            Assert.AreEqual(q, (BigInteger)(v1 / UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}/{n2}");
-                            Assert.AreEqual(r, (BigInteger)(v1 % UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}%{n2}");
-                        }
-                        
-                        if (v2.Digits <= 1) { 
-                            Assert.AreEqual(q, (BigInteger)(v1 / v2.Value[0]), $"{n1}/{n2}");
-                            Assert.AreEqual(r, (BigInteger)(v1 % v2.Value[0]), $"{n1}%{n2}");
-                        }
+                        NormalTest(v1, n1, v2, n2);
 
                         normal_passes++;
                     }
@@ -113,30 +96,7 @@ namespace AvxUIntTest {
 
             foreach ((BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) in vs) {
                 if (n2 > 0) {
-                    BigInteger q = n1 / n2, r = n1 % n2;
-
-                    Assert.AreEqual(q, (BigInteger)(v1 / v2), $"{n1}/{n2}");
-                    Assert.AreEqual(r, (BigInteger)(v1 % v2), $"{n1}%{n2}");
-
-                    if (v1.Digits <= 2) { 
-                        Assert.AreEqual(q, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) / v2), $"{n1}/{n2}");
-                        Assert.AreEqual(r, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) % v2), $"{n1}%{n2}");
-                    }
-                        
-                    if (v1.Digits <= 1) { 
-                        Assert.AreEqual(q, (BigInteger)(v1.Value[0] / v2), $"{n1}/{n2}");
-                        Assert.AreEqual(r, (BigInteger)(v1.Value[0] % v2), $"{n1}%{n2}");
-                    }
-                        
-                    if (v2.Digits <= 2) { 
-                        Assert.AreEqual(q, (BigInteger)(v1 / UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}/{n2}");
-                        Assert.AreEqual(r, (BigInteger)(v1 % UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}%{n2}");
-                    }
-                        
-                    if (v2.Digits <= 1) { 
-                        Assert.AreEqual(q, (BigInteger)(v1 / v2.Value[0]), $"{n1}/{n2}");
-                        Assert.AreEqual(r, (BigInteger)(v1 % v2.Value[0]), $"{n1}%{n2}");
-                    }
+                    NormalTest(v1, n1, v2, n2);
 
                     normal_passes++;
                 }
@@ -154,6 +114,93 @@ namespace AvxUIntTest {
 
             Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
             Console.WriteLine($"{nameof(divzero_passes)}: {divzero_passes}");
+        }
+
+        public static void DivSparseTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : 1u << random.Next(32)).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : 1u << random.Next(32)).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            {
+                BigUInt<N> v = BigUInt<N>.Full;
+                while (v > 0) {
+                    vs.Add((v, v));
+                    v >>= 15;
+                }
+            }
+
+            vs.Add((1, 1));
+
+            BigInteger maxn = BigUInt<N>.Full;
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, divzero_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    if (n2 > 0) {
+                        NormalTest(v1, n1, v2, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<DivideByZeroException>(() => {
+                            _ = v1 / v2;
+                        });
+                        Assert.ThrowsException<DivideByZeroException>(() => {
+                            _ = v1 % v2;
+                        });
+
+                        divzero_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(divzero_passes)}: {divzero_passes}");
+        }
+
+        private static void NormalTest(BigUInt<N> v1, BigInteger n1, BigUInt<N> v2, BigInteger n2) {
+            BigInteger q = n1 / n2, r = n1 % n2;
+
+            Assert.AreEqual(q, (BigInteger)(v1 / v2), $"{n1}/{n2}");
+            Assert.AreEqual(r, (BigInteger)(v1 % v2), $"{n1}%{n2}");
+
+            if (v1.Digits <= 2) {
+                Assert.AreEqual(q, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) / v2), $"{n1}/{n2}");
+                Assert.AreEqual(r, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) % v2), $"{n1}%{n2}");
+            }
+
+            if (v1.Digits <= 1) {
+                Assert.AreEqual(q, (BigInteger)(v1.Value[0] / v2), $"{n1}/{n2}");
+                Assert.AreEqual(r, (BigInteger)(v1.Value[0] % v2), $"{n1}%{n2}");
+            }
+
+            if (v2.Digits <= 2) {
+                Assert.AreEqual(q, (BigInteger)(v1 / UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}/{n2}");
+                Assert.AreEqual(r, (BigInteger)(v1 % UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}%{n2}");
+            }
+
+            if (v2.Digits <= 1) {
+                Assert.AreEqual(q, (BigInteger)(v1 / v2.Value[0]), $"{n1}/{n2}");
+                Assert.AreEqual(r, (BigInteger)(v1 % v2.Value[0]), $"{n1}%{n2}");
+            }
         }
     }
 
@@ -223,6 +270,39 @@ namespace AvxUIntTest {
             DivTests<N63>.DivFullTest();
             DivTests<N64>.DivFullTest();
             DivTests<N65>.DivFullTest();
+        }
+
+        [TestMethod]
+        public void DivSparseTest() {
+            DivTests<N4>.DivSparseTest();
+            DivTests<N5>.DivSparseTest();
+            DivTests<N6>.DivSparseTest();
+            DivTests<N7>.DivSparseTest();
+            DivTests<N8>.DivSparseTest();
+            DivTests<N9>.DivSparseTest();
+            DivTests<N10>.DivSparseTest();
+            DivTests<N11>.DivSparseTest();
+            DivTests<N12>.DivSparseTest();
+            DivTests<N13>.DivSparseTest();
+            DivTests<N14>.DivSparseTest();
+            DivTests<N15>.DivSparseTest();
+            DivTests<N16>.DivSparseTest();
+            DivTests<N17>.DivSparseTest();
+            DivTests<N23>.DivSparseTest();
+            DivTests<N24>.DivSparseTest();
+            DivTests<N25>.DivSparseTest();
+            DivTests<N31>.DivSparseTest();
+            DivTests<N32>.DivSparseTest();
+            DivTests<N33>.DivSparseTest();
+            DivTests<N47>.DivSparseTest();
+            DivTests<N48>.DivSparseTest();
+            DivTests<N50>.DivSparseTest();
+            DivTests<N53>.DivSparseTest();
+            DivTests<N56>.DivSparseTest();
+            DivTests<N59>.DivSparseTest();
+            DivTests<N63>.DivSparseTest();
+            DivTests<N64>.DivSparseTest();
+            DivTests<N65>.DivSparseTest();
         }
     }
 }
