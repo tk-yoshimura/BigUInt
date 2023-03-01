@@ -176,6 +176,66 @@ namespace AvxUIntTest {
             Console.WriteLine($"{nameof(divzero_passes)}: {divzero_passes}");
         }
 
+        public static void DivBlockTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            {
+                BigUInt<N> v = BigUInt<N>.Full;
+                while (v > 0) {
+                    vs.Add((v, v));
+                    v >>= 15;
+                }
+            }
+
+            vs.Add((1, 1));
+
+            BigInteger maxn = BigUInt<N>.Full;
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, divzero_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    if (n2 > 0) {
+                        NormalTest(v1, n1, v2, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<DivideByZeroException>(() => {
+                            _ = v1 / v2;
+                        });
+                        Assert.ThrowsException<DivideByZeroException>(() => {
+                            _ = v1 % v2;
+                        });
+
+                        divzero_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(divzero_passes)}: {divzero_passes}");
+        }
+
         private static void NormalTest(BigUInt<N> v1, BigInteger n1, BigUInt<N> v2, BigInteger n2) {
             BigInteger q = n1 / n2, r = n1 % n2;
 
@@ -303,6 +363,39 @@ namespace AvxUIntTest {
             DivTests<N63>.DivSparseTest();
             DivTests<N64>.DivSparseTest();
             DivTests<N65>.DivSparseTest();
+        }
+
+        [TestMethod]
+        public void DivBlockTest() {
+            DivTests<N4>.DivBlockTest();
+            DivTests<N5>.DivBlockTest();
+            DivTests<N6>.DivBlockTest();
+            DivTests<N7>.DivBlockTest();
+            DivTests<N8>.DivBlockTest();
+            DivTests<N9>.DivBlockTest();
+            DivTests<N10>.DivBlockTest();
+            DivTests<N11>.DivBlockTest();
+            DivTests<N12>.DivBlockTest();
+            DivTests<N13>.DivBlockTest();
+            DivTests<N14>.DivBlockTest();
+            DivTests<N15>.DivBlockTest();
+            DivTests<N16>.DivBlockTest();
+            DivTests<N17>.DivBlockTest();
+            DivTests<N23>.DivBlockTest();
+            DivTests<N24>.DivBlockTest();
+            DivTests<N25>.DivBlockTest();
+            DivTests<N31>.DivBlockTest();
+            DivTests<N32>.DivBlockTest();
+            DivTests<N33>.DivBlockTest();
+            DivTests<N47>.DivBlockTest();
+            DivTests<N48>.DivBlockTest();
+            DivTests<N50>.DivBlockTest();
+            DivTests<N53>.DivBlockTest();
+            DivTests<N56>.DivBlockTest();
+            DivTests<N59>.DivBlockTest();
+            DivTests<N63>.DivBlockTest();
+            DivTests<N64>.DivBlockTest();
+            DivTests<N65>.DivBlockTest();
         }
     }
 }

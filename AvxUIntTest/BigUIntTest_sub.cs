@@ -169,6 +169,63 @@ namespace AvxUIntTest {
             Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
         }
 
+        public static void SubBlockTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            {
+                BigUInt<N> v = BigUInt<N>.Full;
+                while (v > 0) {
+                    vs.Add((v, v));
+                    v >>= 15;
+                }
+            }
+
+            vs.Add((1, 1));
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    BigInteger n = n1 - n2;
+
+                    if (n >= 0) {
+                        NormalTest(n, v1, v2, n1, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            _ = v1 - v2;
+                        });
+
+                        overflow_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
+        }
+
         private static void NormalTest(BigInteger n, BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) {
             Assert.AreEqual(n, (BigInteger)(v1 - v2), $"{n1}-{n2}");
 
@@ -289,6 +346,39 @@ namespace AvxUIntTest {
             SubTests<N63>.SubSparseTest();
             SubTests<N64>.SubSparseTest();
             SubTests<N65>.SubSparseTest();
+        }
+
+        [TestMethod]
+        public void SubBlockTest() {
+            SubTests<N4>.SubBlockTest();
+            SubTests<N5>.SubBlockTest();
+            SubTests<N6>.SubBlockTest();
+            SubTests<N7>.SubBlockTest();
+            SubTests<N8>.SubBlockTest();
+            SubTests<N9>.SubBlockTest();
+            SubTests<N10>.SubBlockTest();
+            SubTests<N11>.SubBlockTest();
+            SubTests<N12>.SubBlockTest();
+            SubTests<N13>.SubBlockTest();
+            SubTests<N14>.SubBlockTest();
+            SubTests<N15>.SubBlockTest();
+            SubTests<N16>.SubBlockTest();
+            SubTests<N17>.SubBlockTest();
+            SubTests<N23>.SubBlockTest();
+            SubTests<N24>.SubBlockTest();
+            SubTests<N25>.SubBlockTest();
+            SubTests<N31>.SubBlockTest();
+            SubTests<N32>.SubBlockTest();
+            SubTests<N33>.SubBlockTest();
+            SubTests<N47>.SubBlockTest();
+            SubTests<N48>.SubBlockTest();
+            SubTests<N50>.SubBlockTest();
+            SubTests<N53>.SubBlockTest();
+            SubTests<N56>.SubBlockTest();
+            SubTests<N59>.SubBlockTest();
+            SubTests<N63>.SubBlockTest();
+            SubTests<N64>.SubBlockTest();
+            SubTests<N65>.SubBlockTest();
         }
     }
 }

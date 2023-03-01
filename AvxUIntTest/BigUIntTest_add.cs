@@ -164,6 +164,56 @@ namespace AvxUIntTest {
             Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
         }
 
+        public static void AddBlockTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+
+            BigInteger maxn = BigUInt<N>.Full;
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    BigInteger n = n1 + n2;
+
+                    if (n <= maxn) {
+                        NormalTest(n, v1, v2, n1, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            _ = v1 + v2;
+                        });
+
+                        overflow_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
+        }
+
         private static void NormalTest(BigInteger n, BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) {
             Assert.AreEqual(n, (BigInteger)(v1 + v2), $"{n1}+{n2}");
 
@@ -284,6 +334,39 @@ namespace AvxUIntTest {
             AddTests<N63>.AddSparseTest();
             AddTests<N64>.AddSparseTest();
             AddTests<N65>.AddSparseTest();
+        }
+
+        [TestMethod]
+        public void AddBlockTest() {
+            AddTests<N4>.AddBlockTest();
+            AddTests<N5>.AddBlockTest();
+            AddTests<N6>.AddBlockTest();
+            AddTests<N7>.AddBlockTest();
+            AddTests<N8>.AddBlockTest();
+            AddTests<N9>.AddBlockTest();
+            AddTests<N10>.AddBlockTest();
+            AddTests<N11>.AddBlockTest();
+            AddTests<N12>.AddBlockTest();
+            AddTests<N13>.AddBlockTest();
+            AddTests<N14>.AddBlockTest();
+            AddTests<N15>.AddBlockTest();
+            AddTests<N16>.AddBlockTest();
+            AddTests<N17>.AddBlockTest();
+            AddTests<N23>.AddBlockTest();
+            AddTests<N24>.AddBlockTest();
+            AddTests<N25>.AddBlockTest();
+            AddTests<N31>.AddBlockTest();
+            AddTests<N32>.AddBlockTest();
+            AddTests<N33>.AddBlockTest();
+            AddTests<N47>.AddBlockTest();
+            AddTests<N48>.AddBlockTest();
+            AddTests<N50>.AddBlockTest();
+            AddTests<N53>.AddBlockTest();
+            AddTests<N56>.AddBlockTest();
+            AddTests<N59>.AddBlockTest();
+            AddTests<N63>.AddBlockTest();
+            AddTests<N64>.AddBlockTest();
+            AddTests<N65>.AddBlockTest();
         }
     }
 }

@@ -173,6 +173,65 @@ namespace AvxUIntTest {
             Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
         }
 
+        public static void MulBlockTest() {
+            Random random = new(1234);
+
+            List<(BigUInt<N> b, BigInteger n)> vs = new();
+
+            int length = default(N).Value;
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(4) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            for (int i = 0; i < 100; i++) {
+                UInt32[] bits = (new UInt32[length]).Select(_ => random.Next(8) > 1 ? 0u : ~0u).ToArray();
+
+                BigUInt<N> b = new(bits, enable_clone: false);
+
+                vs.Add((b, (BigInteger)b));
+            }
+            {
+                BigUInt<N> v = BigUInt<N>.Full;
+                while (v > 0) {
+                    vs.Add((v, v));
+                    v >>= 15;
+                }
+            }
+
+            vs.Add((1, 1));
+
+            BigInteger maxn = BigUInt<N>.Full;
+
+            Console.WriteLine($"length={BigUInt<N>.Length}");
+
+            int normal_passes = 0, overflow_passes = 0;
+
+            foreach ((BigUInt<N> v1, BigInteger n1) in vs) {
+                foreach ((BigUInt<N> v2, BigInteger n2) in vs) {
+                    BigInteger n = n1 * n2;
+
+                    if (n <= maxn) {
+                        NormalTest(n, v1, v2, n1, n2);
+
+                        normal_passes++;
+                    }
+                    else {
+                        Assert.ThrowsException<OverflowException>(() => {
+                            _ = v1 * v2;
+                        });
+
+                        overflow_passes++;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{nameof(normal_passes)}: {normal_passes}");
+            Console.WriteLine($"{nameof(overflow_passes)}: {overflow_passes}");
+        }
+
         private static void NormalTest(BigInteger n, BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) {
             Assert.AreEqual(n, (BigInteger)(v1 * v2), $"{n1}*{n2}");
 
@@ -293,6 +352,39 @@ namespace AvxUIntTest {
             MulTests<N63>.MulSparseTest();
             MulTests<N64>.MulSparseTest();
             MulTests<N65>.MulSparseTest();
+        }
+
+        [TestMethod]
+        public void MulBlockTest() {
+            MulTests<N4>.MulBlockTest();
+            MulTests<N5>.MulBlockTest();
+            MulTests<N6>.MulBlockTest();
+            MulTests<N7>.MulBlockTest();
+            MulTests<N8>.MulBlockTest();
+            MulTests<N9>.MulBlockTest();
+            MulTests<N10>.MulBlockTest();
+            MulTests<N11>.MulBlockTest();
+            MulTests<N12>.MulBlockTest();
+            MulTests<N13>.MulBlockTest();
+            MulTests<N14>.MulBlockTest();
+            MulTests<N15>.MulBlockTest();
+            MulTests<N16>.MulBlockTest();
+            MulTests<N17>.MulBlockTest();
+            MulTests<N23>.MulBlockTest();
+            MulTests<N24>.MulBlockTest();
+            MulTests<N25>.MulBlockTest();
+            MulTests<N31>.MulBlockTest();
+            MulTests<N32>.MulBlockTest();
+            MulTests<N33>.MulBlockTest();
+            MulTests<N47>.MulBlockTest();
+            MulTests<N48>.MulBlockTest();
+            MulTests<N50>.MulBlockTest();
+            MulTests<N53>.MulBlockTest();
+            MulTests<N56>.MulBlockTest();
+            MulTests<N59>.MulBlockTest();
+            MulTests<N63>.MulBlockTest();
+            MulTests<N64>.MulBlockTest();
+            MulTests<N65>.MulBlockTest();
         }
     }
 }
