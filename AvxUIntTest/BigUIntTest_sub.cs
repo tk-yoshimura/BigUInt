@@ -172,19 +172,19 @@ namespace AvxUIntTest {
         private static void NormalTest(BigInteger n, BigUInt<N> v1, BigUInt<N> v2, BigInteger n1, BigInteger n2) {
             Assert.AreEqual(n, (BigInteger)(v1 - v2), $"{n1}-{n2}");
 
-            if (v1.Digits <= 2) { 
+            if (v1.Digits <= 2) {
                 Assert.AreEqual(n, (BigInteger)(UIntUtil.Pack(v1.Value[1], v1.Value[0]) - v2), $"{n1}-{n2}");
             }
 
-            if (v1.Digits <= 1) { 
+            if (v1.Digits <= 1) {
                 Assert.AreEqual(n, (BigInteger)(v1.Value[0] - v2), $"{n1}-{n2}");
             }
 
-            if (v2.Digits <= 2) { 
+            if (v2.Digits <= 2) {
                 Assert.AreEqual(n, (BigInteger)(v1 - UIntUtil.Pack(v2.Value[1], v2.Value[0])), $"{n1}-{n2}");
             }
 
-            if (v2.Digits <= 1) { 
+            if (v2.Digits <= 1) {
                 Assert.AreEqual(n, (BigInteger)(v1 - v2.Value[0]), $"{n1}-{n2}");
             }
         }

@@ -10,7 +10,7 @@ namespace AvxUInt {
                 for (uint i = 0; i < (digits_b & (~1u)); i += 2) {
                     Fms(i, digits_a, arr_dst, arr_a, Pack(arr_b[i + 1u], arr_b[i]));
                 }
-                for (uint i = (digits_b & (~1u)); i < digits_b; i++) { 
+                for (uint i = (digits_b & (~1u)); i < digits_b; i++) {
                     Fms(i, digits_a, arr_dst, arr_a, arr_b[i]);
                 }
             }
@@ -212,7 +212,7 @@ namespace AvxUInt {
                 }
             }
         }
-                
+
         /// <summary>Operate uint32 array arr_dst -= a * b &lt;&lt; offset</summary>
         private static unsafe void Fms(uint offset, uint digits_a, UInt32[] arr_dst, UInt32[] arr_a, UInt64 b) {
             if (b == 0uL) {
@@ -246,7 +246,8 @@ namespace AvxUInt {
                 while (r >= MM256UInt32s * 4) {
                     (a0, a1, a2, a3) = LoadX4(va, va0, arr_a.Length);
 
-                    /*mul lo*/{
+                    /*mul lo*/
+                    {
                         (d0, d1, d2, d3) = LoadX4(vd, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b0);
@@ -285,7 +286,8 @@ namespace AvxUInt {
                         Sub(offset + ShiftIDX4, arr_dst, carry);
                     }
 
-                    /*mul hi*/{
+                    /*mul hi*/
+                    {
                         (d0, d1, d2, d3) = LoadX4(vd + 1u, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b1);
@@ -332,7 +334,8 @@ namespace AvxUInt {
                 if (r >= MM256UInt32s * 2) {
                     (a0, a1) = LoadX2(va, va0, arr_a.Length);
 
-                    /*mul lo*/{
+                    /*mul lo*/
+                    {
                         (d0, d1) = LoadX2(vd, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b0);
@@ -363,7 +366,8 @@ namespace AvxUInt {
                         Sub(offset + ShiftIDX2, arr_dst, carry);
                     }
 
-                    /*mul hi*/{
+                    /*mul hi*/
+                    {
                         (d0, d1) = LoadX2(vd + 1u, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b1);
@@ -401,8 +405,9 @@ namespace AvxUInt {
                 }
                 if (r >= MM256UInt32s) {
                     a0 = Load(va, va0, arr_a.Length);
-                    
-                    /*mul lo*/{
+
+                    /*mul lo*/
+                    {
                         d0 = Load(vd, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b0);
@@ -429,7 +434,8 @@ namespace AvxUInt {
                         Sub(offset + ShiftIDX1, arr_dst, carry);
                     }
 
-                    /*mul hi*/{
+                    /*mul hi*/
+                    {
                         d0 = Load(vd + 1u, vd0, arr_dst.Length);
 
                         (r0, c0) = Mul(a0, b1);
@@ -465,7 +471,8 @@ namespace AvxUInt {
                     Vector256<UInt32> mask_a = Mask256.Lower(r);
                     a0 = MaskLoad(va, mask_a, va0, arr_a.Length);
 
-                    /*mul lo*/{
+                    /*mul lo*/
+                    {
                         uint rem_d = (uint)arr_dst.Length - offset;
                         Vector256<UInt32> mask_d = Mask256.Lower(rem_d);
                         d0 = MaskLoad(vd, mask_d, vd0, arr_dst.Length);
@@ -503,7 +510,8 @@ namespace AvxUInt {
                         Sub(offset + ShiftIDX1, arr_dst, carry);
                     }
 
-                    /*mul hi*/{
+                    /*mul hi*/
+                    {
                         uint rem_d = (uint)arr_dst.Length - offset - 1u;
                         Vector256<UInt32> mask_d = Mask256.Lower(rem_d);
                         d0 = MaskLoad(vd + 1u, mask_d, vd0, arr_dst.Length);
