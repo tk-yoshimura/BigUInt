@@ -34,13 +34,10 @@
                 uint sft_block = (uint)sft / UInt32Bits;
                 int sft_rem = sft % UInt32Bits;
 
-                (UInt32 n_hi, UInt32 n_lo) = Unpack(n << sft_rem);
+                n <<= sft_rem;
 
-                Add(sft_block, arr_q, n_lo);
-                Add(sft_block + 1u, arr_q, n_hi);
-
-                Fms(sft_block, digits_b, arr_a, arr_b, n_lo);
-                Fms(sft_block + 1u, digits_b, arr_a, arr_b, n_hi);
+                Add(sft_block, arr_q, n);
+                Fms(sft_block, digits_b, arr_a, arr_b, n);
             }
 
             uint digits_a = Digits(arr_a);
