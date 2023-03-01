@@ -1,19 +1,37 @@
-﻿namespace AvxUInt {
+﻿using System;
+
+namespace AvxUInt {
     internal static partial class UIntUtil {
 
         /// <summary>Operate uint32 array q += a / b, a = a % b</summary>
         public static void DivRem(UInt32[] arr_q, UInt32[] arr_a, UInt32[] arr_b) {
+            uint digits_b = Digits(arr_b);
+
+            if (digits_b == 0u) {
+                throw new DivideByZeroException();
+            }
+            if (digits_b == 1u) {
+                DivRem(arr_q, arr_a, arr_b[0]);
+                return;
+            }
+            if (digits_b == 2u) {
+                DivRem(arr_q, arr_a, Pack(arr_b[1], arr_b[0]));
+                return;
+            }
+
+            uint digits_a = Digits(arr_a);
+            if (digits_a >= digits_b) {
+                DivRem(digits_b, arr_q, arr_a, arr_b[..(int)digits_b]);
+            }
+        }
+                
+        /// <summary>Operate uint32 array q += a / b, a = a % b</summary>
+        private static void DivRem(uint digits_b, UInt32[] arr_q, UInt32[] arr_a, UInt32[] arr_b) {
             if (arr_a.Length < 1 || arr_b.Length < 1 || arr_a.Length < arr_b.Length) {
                 throw new ArgumentException("invalid length", $"{nameof(arr_a)},{nameof(arr_b)}");
             }
 
-            uint digits_b = Digits(arr_b);
             UInt64 numer, denom = RoundDenom(digits_b, arr_b);
-
-            if (denom == 0uL) {
-                throw new DivideByZeroException();
-            }
-
             uint offset_r, offset_b = LeadingZeroCount(arr_b) + (uint)(arr_a.Length - arr_b.Length) * UInt32Bits;
 
             while (true) {
@@ -50,14 +68,19 @@
 
         /// <summary>Operate uint32 array q += a / b, a = a % b</summary>
         public static void DivRem(UInt32[] arr_q, UInt32[] arr_a, UInt32 b) {
-            DivRem(arr_q, arr_a, new UInt32[] { b });
+            DivRem(1u, arr_q, arr_a, new UInt32[] { b });
         }
 
         /// <summary>Operate uint32 array q += a / b, a = a % b</summary>
         public static void DivRem(UInt32[] arr_q, UInt32[] arr_a, UInt64 b) {
             (UInt32 b_hi, UInt32 b_lo) = Unpack(b);
 
-            DivRem(arr_q, arr_a, new UInt32[] { b_lo, b_hi });
+            if (b_hi == 0u) { 
+                DivRem(arr_q, arr_a, b_lo);
+                return;
+            }
+
+            DivRem(2u, arr_q, arr_a, new UInt32[] { b_lo, b_hi });
         }
 
         private static UInt64 RoundDenom(uint digits_b, UInt32[] arr_b) {
