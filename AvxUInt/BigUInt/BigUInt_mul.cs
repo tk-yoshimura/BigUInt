@@ -62,7 +62,7 @@
         }
 
         public static BigUInt<M> Mul<M>(BigUInt<N> a, BigUInt<N> b) where M: struct, IConstant {
-            BigUInt<M> ret = BigUInt<M>.Zero;
+            BigUInt<M> ret = BigUInt<M>.Zero.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b.value);
 

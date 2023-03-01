@@ -97,21 +97,26 @@
         public static BigUInt<N> RoundDiv(BigUInt<N> a, BigUInt<N> b) {
             (BigUInt<N> q, BigUInt<N> r) = DivRem(a, b);
 
-            uint digits_b = b.Digits;
-            
-            if (digits_b == 1u) { 
-                UInt64 nb = b.value[0], nr = r.value[0];
+            uint lzc_r = r.LeadingZeroCount;
 
-                if ((nr << 1) >= nb) {
+            if (lzc_r == 0u) {
+                // e.g. r: 0x8000... b: 0xFFFF...
+                UIntUtil.Add(q.value, 1u);
+            }
+            else {
+                uint lzc_b = b.LeadingZeroCount;
+
+                if (lzc_r == lzc_b) {
+                    // e.g. r: 0x1000... b: 0x1FFF...
                     UIntUtil.Add(q.value, 1u);
                 }
-            }
-            if (digits_b >= 2u) {
-                UInt64 nb = UIntUtil.Pack(b.value[digits_b - 1u], b.value[digits_b - 2u]);
-                UInt64 nr = UIntUtil.Pack(r.value[digits_b - 1u], r.value[digits_b - 2u]);
+                else if ((lzc_r - lzc_b) == 1u) {
+                    // e.g. r: 0x0800... b: 0x1000...
+                    UIntUtil.LeftShift(r.value, 1);
 
-                if ((nr > UInt64.MaxValue / 2) || ((nr << 1) >= nb)) {
-                    UIntUtil.Add(q.value, 1u);
+                    if (UIntUtil.GreaterThanOrEqual((uint)Length, r.value, b.value)) {
+                        UIntUtil.Add(q.value, 1u);
+                    }
                 }
             }
 
@@ -121,21 +126,26 @@
         public static BigUInt<M> RoundDiv<M>(BigUInt<M> a, BigUInt<N> b) where M: struct, IConstant {
             (BigUInt<M> q, BigUInt<N> r) = DivRem(a, b);
 
-            uint digits_b = b.Digits;
-            
-            if (digits_b == 1u) { 
-                UInt64 nb = b.value[0], nr = r.value[0];
+            uint lzc_r = r.LeadingZeroCount;
 
-                if ((nr << 1) >= nb) {
+            if (lzc_r == 0u) {
+                // e.g. r: 0x8000... b: 0xFFFF...
+                UIntUtil.Add(q.value, 1u);
+            }
+            else {
+                uint lzc_b = b.LeadingZeroCount;
+
+                if (lzc_r == lzc_b) {
+                    // e.g. r: 0x1000... b: 0x1FFF...
                     UIntUtil.Add(q.value, 1u);
                 }
-            }
-            if (digits_b >= 2u) {
-                UInt64 nb = UIntUtil.Pack(b.value[digits_b - 1u], b.value[digits_b - 2u]);
-                UInt64 nr = UIntUtil.Pack(r.value[digits_b - 1u], r.value[digits_b - 2u]);
+                else if ((lzc_r - lzc_b) == 1u) {
+                    // e.g. r: 0x0800... b: 0x1000...
+                    UIntUtil.LeftShift(r.value, 1);
 
-                if ((nr > UInt64.MaxValue / 2) || ((nr << 1) >= nb)) {
-                    UIntUtil.Add(q.value, 1u);
+                    if (UIntUtil.GreaterThanOrEqual((uint)Length, r.value, b.value)) {
+                        UIntUtil.Add(q.value, 1u);
+                    }
                 }
             }
 
