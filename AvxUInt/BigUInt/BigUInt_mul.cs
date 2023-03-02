@@ -30,6 +30,10 @@
         }
 
         public static BigUInt<N> Mul(BigUInt<N> a, UInt32 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return a << UIntUtil.Power2(b);
+            }
+
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b);
@@ -38,6 +42,10 @@
         }
 
         public static BigUInt<N> Mul(BigUInt<N> a, UInt64 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return a << UIntUtil.Power2(b);
+            }
+            
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b);
@@ -46,6 +54,10 @@
         }
 
         public static BigUInt<N> Mul(UInt32 a, BigUInt<N> b) {
+            if (UIntUtil.IsPower2(a)) {
+                return b << UIntUtil.Power2(a);
+            }
+
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, b.value, a);
@@ -54,6 +66,10 @@
         }
 
         public static BigUInt<N> Mul(UInt64 a, BigUInt<N> b) {
+            if (UIntUtil.IsPower2(a)) {
+                return b << UIntUtil.Power2(a);
+            }
+            
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, b.value, a);

@@ -58,6 +58,10 @@
         }
 
         public static (BigUInt<N> q, UInt32 r) DivRem(BigUInt<N> a, UInt32 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return (a >> UIntUtil.Power2(b), a.value[0] & (b - 1u));
+            }
+
             BigUInt<N> q = Zero.Copy(), r = a.Copy();
 
             UIntUtil.DivRem(q.value, r.value, b);
@@ -66,26 +70,46 @@
         }
 
         public static BigUInt<N> Div(BigUInt<N> a, UInt32 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return a >> UIntUtil.Power2(b);
+            }
+
             return DivRem(a, b).q;
         }
 
         public static UInt32 Rem(BigUInt<N> a, UInt32 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return a.value[0] & (b - 1u);
+            }
+            
             return DivRem(a, b).r;
         }
 
         public static (BigUInt<N> q, UInt64 r) DivRem(BigUInt<N> a, UInt64 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return (a >> UIntUtil.Power2(b), UIntUtil.Pack(a.value[1], a.value[0]) & (b - 1uL));
+            }
+
             BigUInt<N> q = Zero.Copy(), r = a.Copy();
 
             UIntUtil.DivRem(q.value, r.value, b);
 
-            return (q, UIntUtil.Pack(r[1], r[0]));
+            return (q, UIntUtil.Pack(r.value[1], r.value[0]));
         }
 
         public static BigUInt<N> Div(BigUInt<N> a, UInt64 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return a >> UIntUtil.Power2(b);
+            }
+
             return DivRem(a, b).q;
         }
 
         public static UInt64 Rem(BigUInt<N> a, UInt64 b) {
+            if (UIntUtil.IsPower2(b)) {
+                return UIntUtil.Pack(a.value[1], a.value[0]) & (b - 1uL);
+            }
+
             return DivRem(a, b).r;
         }
 
