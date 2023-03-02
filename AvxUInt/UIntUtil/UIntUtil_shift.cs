@@ -248,5 +248,32 @@ namespace AvxUInt {
 
             Zeroset(value, count, (uint)sft);
         }
+
+        /// <summary>Shift uint32 array v &gt;&gt;= sft with round</summary>
+        public static unsafe void RightRoundShift(UInt32[] value, int sft) {
+            if (sft < 0) {
+                throw new ArgumentOutOfRangeException(nameof(sft));
+            }
+            if (sft == 0) {
+                return;
+            }
+
+            int roundbit = sft - 1;
+
+            int roundbit_block = roundbit / UInt32Bits, roundbit_rem = roundbit % UInt32Bits;
+
+            if (roundbit_block >= value.Length) {
+                Zeroset(value);
+                return;
+            }
+
+            UInt32 round = (value[roundbit_block] >> roundbit_rem) & 1u;
+
+            RightShift(value, sft);
+
+            if (round > 0u) {
+                Add(value, 1u);
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace AvxUInt {
         public static BigUInt<N> LeftShift(BigUInt<N> n, int sft) {
             BigUInt<N> ret = n.Copy();
 
-            ret.LeftShift(sft);
+            UIntUtil.LeftShift(ret.value, sft);
 
             return ret;
         }
@@ -30,7 +30,7 @@ namespace AvxUInt {
         public static BigUInt<N> RightShift(BigUInt<N> n, int sft) {
             BigUInt<N> ret = n.Copy();
 
-            ret.RightShift(sft);
+            UIntUtil.RightShift(ret.value, sft);
 
             return ret;
         }
@@ -38,7 +38,7 @@ namespace AvxUInt {
         public static BigUInt<N> LeftBlockShift(BigUInt<N> n, int sft) {
             BigUInt<N> ret = n.Copy();
 
-            ret.LeftBlockShift(sft);
+            UIntUtil.LeftBlockShift(ret.value, sft);
 
             return ret;
         }
@@ -46,30 +46,17 @@ namespace AvxUInt {
         public static BigUInt<N> RightBlockShift(BigUInt<N> n, int sft) {
             BigUInt<N> ret = n.Copy();
 
-            ret.RightBlockShift(sft);
+            UIntUtil.RightBlockShift(ret.value, sft);
 
             return ret;
         }
 
-        /// <summary>Shift uint32 array v &lt;&lt;= sft</summary>
-        private void LeftShift(int sft) {
-            UIntUtil.LeftShift(value, sft);
-        }
+        public static BigUInt<N> RightRoundShift(BigUInt<N> n, int sft) {
+            BigUInt<N> ret = n.Copy();
 
-        /// <summary>Shift uint32 array v &gt;&gt;= sft</summary>
-        private void RightShift(int sft) {
-            UIntUtil.RightShift(value, sft);
-        }
+            UIntUtil.RightRoundShift(ret.value, sft);
 
-        /// <summary>Shift uint32 array v &lt;&lt;= sft * UInt32Bits</summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void LeftBlockShift(int sft) {
-            UIntUtil.LeftBlockShift(value, sft);
-        }
-
-        /// <summary>Shift uint32 array v &gt;&gt;= sft * UInt32Bits</summary>
-        private void RightBlockShift(int sft) {
-            UIntUtil.RightBlockShift(value, sft);
+            return ret;
         }
     }
 }
