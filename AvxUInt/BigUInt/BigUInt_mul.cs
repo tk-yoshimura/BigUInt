@@ -45,7 +45,7 @@
             if (UIntUtil.IsPower2(b)) {
                 return a << UIntUtil.Power2(b);
             }
-            
+
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b);
@@ -69,7 +69,7 @@
             if (UIntUtil.IsPower2(a)) {
                 return b << UIntUtil.Power2(a);
             }
-            
+
             BigUInt<N> ret = Zero.Copy();
 
             UIntUtil.Fma(ret.value, b.value, a);
@@ -77,7 +77,7 @@
             return ret;
         }
 
-        public static BigUInt<M> Mul<M>(BigUInt<N> a, BigUInt<N> b) where M: struct, IConstant {
+        public static BigUInt<M> Mul<M>(BigUInt<N> a, BigUInt<N> b) where M : struct, IConstant {
             BigUInt<M> ret = BigUInt<M>.Zero.Copy();
 
             UIntUtil.Fma(ret.value, a.value, b.value);

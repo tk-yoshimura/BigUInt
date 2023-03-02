@@ -81,7 +81,7 @@
             if (UIntUtil.IsPower2(b)) {
                 return a.value[0] & (b - 1u);
             }
-            
+
             return DivRem(a, b).r;
         }
 

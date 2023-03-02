@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics;
-using System.Numerics;
 
 namespace AvxUInt {
     public sealed partial class BigUInt<N> {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Dictionary<int, BigUInt<N>> decimals = new();
-    
+
         public static BigUInt<N> Decimal(int digits) {
             if (!decimals.ContainsKey(digits)) {
                 decimals.Add(digits, GenerateDecimal(digits));

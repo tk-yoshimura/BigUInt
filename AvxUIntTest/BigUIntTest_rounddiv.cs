@@ -43,7 +43,7 @@ namespace AvxUIntTest {
 
                         normal_passes++;
                     }
-                    else { 
+                    else {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             _ = BigUInt<N>.RoundDiv(va, vb);
                         });
@@ -104,7 +104,7 @@ namespace AvxUIntTest {
 
                         normal_passes++;
                     }
-                    else { 
+                    else {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             _ = BigUInt<N>.RoundDiv(va, vb);
                         });
@@ -159,7 +159,7 @@ namespace AvxUIntTest {
 
                         normal_passes++;
                     }
-                    else { 
+                    else {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             _ = BigUInt<N>.RoundDiv(va, vb);
                         });
@@ -220,7 +220,7 @@ namespace AvxUIntTest {
 
                         normal_passes++;
                     }
-                    else { 
+                    else {
                         Assert.ThrowsException<DivideByZeroException>(() => {
                             _ = BigUInt<N>.RoundDiv(va, vb);
                         });

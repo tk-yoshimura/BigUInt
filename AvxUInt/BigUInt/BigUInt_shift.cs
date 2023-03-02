@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace AvxUInt {
+﻿namespace AvxUInt {
     public sealed partial class BigUInt<N> {
 
         public static BigUInt<N> operator <<(BigUInt<N> n, int sft) {
