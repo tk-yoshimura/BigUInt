@@ -172,18 +172,15 @@
             uint lzc_r = r.LeadingZeroCount;
 
             if (lzc_r == 0u) {
-                // e.g. r: 0x8000... b: 0xFFFF...
                 UIntUtil.Add(q.value, 1u);
             }
             else {
                 uint lzc_b = b.LeadingZeroCount;
 
                 if (lzc_r == lzc_b) {
-                    // e.g. r: 0x1000... b: 0x1FFF...
                     UIntUtil.Add(q.value, 1u);
                 }
                 else if ((lzc_r - lzc_b) == 1u) {
-                    // e.g. r: 0x0800... b: 0x1000...
                     UIntUtil.LeftShift(r.value, 1);
 
                     if (UIntUtil.GreaterThanOrEqual((uint)Length, r.value, b.value)) {
@@ -201,18 +198,15 @@
             uint lzc_r = r.LeadingZeroCount;
 
             if (lzc_r == 0u) {
-                // e.g. r: 0x8000... b: 0xFFFF...
                 UIntUtil.Add(q.value, 1u);
             }
             else {
                 uint lzc_b = b.LeadingZeroCount;
 
                 if (lzc_r == lzc_b) {
-                    // e.g. r: 0x1000... b: 0x1FFF...
                     UIntUtil.Add(q.value, 1u);
                 }
                 else if ((lzc_r - lzc_b) == 1u) {
-                    // e.g. r: 0x0800... b: 0x1000...
                     UIntUtil.LeftShift(r.value, 1);
 
                     if (UIntUtil.GreaterThanOrEqual((uint)Length, r.value, b.value)) {
